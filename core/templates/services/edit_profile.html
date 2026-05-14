@@ -1,0 +1,141 @@
+{% extends "layout/provider_base.html" %}
+
+{% block title %}Edit Profile — HomeAssist{% endblock %}
+
+{% block nav_profile %}text-primary font-bold{% endblock %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+    <div class="mb-xl">
+        <a href="{% url 'provider_profile' %}"
+           class="flex items-center gap-xs text-label-lg text-on-surface-variant mb-md hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back to Profile
+        </a>
+        <h2 class="text-display-lg text-on-surface">Edit Profile</h2>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-[24px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] border border-surface-container p-xl">
+        <form method="POST" enctype="multipart/form-data" class="space-y-lg">
+            {% csrf_token %}
+
+            <!-- PROFILE IMAGE -->
+            <div class="flex flex-col items-center gap-md mb-lg">
+                <div class="relative">
+                    <div class="w-24 h-24 rounded-full overflow-hidden bg-primary-fixed" id="avatar-container">
+                        {% if request.user.profile.profile_image %}
+                        <img src="{{ request.user.profile.profile_image.url }}" alt="Profile" id="avatar-preview"
+                             class="w-full h-full object-cover"/>
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center" id="avatar-placeholder">
+                            <span class="text-[40px] font-bold text-primary">{{ request.user.username|first|upper }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <button type="button"
+                            onclick="document.getElementById('id_profile_image').click()"
+                            class="absolute bottom-0 right-0 bg-primary text-on-primary p-xs rounded-full shadow-md hover:scale-105 transition-transform">
+                        <span class="material-symbols-outlined text-[18px]">camera_alt</span>
+                    </button>
+                </div>
+                <input type="file" name="profile_image" id="id_profile_image" accept="image/*"
+                       class="hidden" onchange="previewAvatar(this)"/>
+                <p class="text-label-sm text-on-surface-variant">Tap to change profile photo</p>
+            </div>
+
+            <!-- USER FIELDS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+                <div class="flex flex-col gap-sm">
+                    <label class="text-label-lg text-on-surface">First Name</label>
+                    <input type="text" name="first_name" value="{{ request.user.first_name }}"
+                           class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"/>
+                </div>
+                <div class="flex flex-col gap-sm">
+                    <label class="text-label-lg text-on-surface">Last Name</label>
+                    <input type="text" name="last_name" value="{{ request.user.last_name }}"
+                           class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"/>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-sm">
+                <label class="text-label-lg text-on-surface">Email</label>
+                <input type="email" name="email" value="{{ request.user.email }}"
+                       class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"/>
+            </div>
+
+            <!-- WORKING HOURS -->
+            <div class="grid grid-cols-2 gap-md">
+
+                <div>
+
+                    <label class="block text-label-lg mb-sm">
+                        Start Time
+                    </label>
+
+                    <input type="time"
+                        name="working_start_time"
+                        value="{{ profile.working_start_time|time:'H:i' }}"
+                        class="w-full h-14 px-md rounded-[16px] border border-outline-variant bg-surface-container-lowest outline-none">
+
+                </div>
+
+                <div>
+
+                    <label class="block text-label-lg mb-sm">
+                        End Time
+                    </label>
+
+                    <input type="time"
+                        name="working_end_time"
+                        value="{{ profile.working_end_time|time:'H:i' }}"
+                        class="w-full h-14 px-md rounded-[16px] border border-outline-variant bg-surface-container-lowest outline-none">
+
+                </div>
+
+            </div>
+            <!-- PROFILE FIELDS -->
+            <div class="flex flex-col gap-sm">
+                <label class="text-label-lg text-on-surface">Phone Number</label>
+                <input type="tel" name="phone" value="{{ request.user.profile.phone|default:'' }}"
+                       placeholder="+1 (555) 000-0000"
+                       class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"/>
+            </div>
+
+            <div class="flex flex-col gap-sm">
+                <label class="text-label-lg text-on-surface">Address</label>
+                <textarea name="address" rows="3" placeholder="Your service area or address"
+                          class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none">{{ request.user.profile.address|default:'' }}</textarea>
+            </div>
+
+            <div class="flex gap-sm pt-sm">
+                <a href="{% url 'provider_profile' %}"
+                   class="flex-1 flex items-center justify-center py-md rounded-xl border border-outline-variant text-label-lg text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">
+                    Cancel
+                </a>
+                <button type="submit"
+                        class="flex-1 bg-primary text-on-primary py-md rounded-xl text-label-lg font-semibold hover:opacity-90 transition-opacity active:scale-95 shadow-md">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function previewAvatar(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const container = document.getElementById('avatar-container');
+            container.innerHTML = `<img src="${e.target.result}" id="avatar-preview" class="w-full h-full object-cover"/>`;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}

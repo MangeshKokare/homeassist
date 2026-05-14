@@ -1,0 +1,130 @@
+{% extends "layout/provider_base.html" %}
+
+{% block title %}Profile — HomeAssist{% endblock %}
+
+{% block nav_profile %}text-primary font-bold{% endblock %}
+{% block nav_profile_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<div class="max-w-md mx-auto">
+
+    <!-- PROFILE HEADER -->
+    <section class="flex flex-col items-center text-center mb-xl">
+        <div class="relative mb-md">
+            <div class="w-32 h-32 rounded-full overflow-hidden shadow-[0px_4px_20px_rgba(51,65,85,0.1)] border-4 border-white">
+                {% if request.user.profile.profile_image %}
+                <img src="{{ request.user.profile.profile_image.url }}" alt="{{ request.user.username }}"
+                     class="w-full h-full object-cover"/>
+                {% else %}
+                <div class="w-full h-full bg-primary-fixed flex items-center justify-center">
+                    <span class="text-[48px] font-bold text-primary">{{ request.user.username|first|upper }}</span>
+                </div>
+                {% endif %}
+            </div>
+            <a href="{% url 'edit_profile' %}"
+               class="absolute bottom-1 right-1 bg-primary text-on-primary p-sm rounded-full shadow-lg hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-[20px]">edit</span>
+            </a>
+        </div>
+        <h1 class="text-headline-lg text-on-surface">
+            {{ request.user.get_full_name|default:request.user.username }}
+        </h1>
+        <p class="text-body-md text-on-surface-variant">{{ request.user.email }}</p>
+        {% if request.user.profile.phone %}
+        <p class="text-body-md text-on-surface-variant flex items-center gap-xs mt-xs">
+            <span class="material-symbols-outlined text-[16px]">phone</span>
+            {{ request.user.profile.phone }}
+        </p>
+        {% endif %}
+        {% if request.user.profile.address %}
+        <p class="text-body-md text-on-surface-variant flex items-center gap-xs mt-xs">
+            <span class="material-symbols-outlined text-[16px]">location_on</span>
+            {{ request.user.profile.address }}
+        </p>
+        {% endif %}
+    </section>
+
+    <!-- STATS GRID -->
+    <section class="grid grid-cols-2 gap-gutter mb-xl">
+        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
+            <span class="text-headline-md text-primary font-bold">{{ services_count }}</span>
+            <span class="text-label-sm text-secondary mt-xs">Active Services</span>
+        </div>
+        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
+            <span class="text-headline-md text-primary font-bold">{{ total_bookings }}</span>
+            <span class="text-label-sm text-secondary mt-xs">Total Bookings</span>
+        </div>
+        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
+            <span class="text-headline-md text-primary font-bold">{{ completed_bookings }}</span>
+            <span class="text-label-sm text-secondary mt-xs">Completed</span>
+        </div>
+        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
+            <span class="text-headline-md text-primary font-bold">{{ pending_bookings }}</span>
+            <span class="text-label-sm text-secondary mt-xs">Pending</span>
+        </div>
+    </section>
+
+    <!-- MENU LIST -->
+    <section class="space-y-sm mb-xl">
+        <h2 class="text-label-lg text-outline ml-base mb-sm">Account</h2>
+        <div class="bg-surface-container-lowest rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] overflow-hidden">
+
+            <a href="{% url 'edit_profile' %}"
+               class="w-full flex items-center justify-between p-md hover:bg-surface-container-low transition-colors group">
+                <div class="flex items-center gap-md">
+                    <div class="w-10 h-10 rounded-xl bg-primary-fixed/50 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined">manage_accounts</span>
+                    </div>
+                    <span class="text-body-lg text-on-surface">Edit Profile</span>
+                </div>
+                <span class="material-symbols-outlined text-outline-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </a>
+
+            <div class="h-px bg-surface-container mx-md"></div>
+
+            <a href="{% url 'provider_bookings' %}"
+               class="w-full flex items-center justify-between p-md hover:bg-surface-container-low transition-colors group">
+                <div class="flex items-center gap-md">
+                    <div class="w-10 h-10 rounded-xl bg-primary-fixed/50 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined">history</span>
+                    </div>
+                    <span class="text-body-lg text-on-surface">Booking History</span>
+                </div>
+                <span class="material-symbols-outlined text-outline-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </a>
+
+            <div class="h-px bg-surface-container mx-md"></div>
+
+            <a href="{% url 'provider_messages' %}"
+               class="w-full flex items-center justify-between p-md hover:bg-surface-container-low transition-colors group">
+                <div class="flex items-center gap-md">
+                    <div class="w-10 h-10 rounded-xl bg-primary-fixed/50 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined">chat_bubble</span>
+                    </div>
+                    <span class="text-body-lg text-on-surface">Messages</span>
+                </div>
+                <span class="material-symbols-outlined text-outline-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </a>
+
+            <div class="h-px bg-surface-container mx-md"></div>
+
+            <a href="{% url 'logout' %}"
+               class="w-full flex items-center justify-between p-md hover:bg-surface-container-low transition-colors group">
+                <div class="flex items-center gap-md">
+                    <div class="w-10 h-10 rounded-xl bg-error-container/50 flex items-center justify-center text-error">
+                        <span class="material-symbols-outlined">logout</span>
+                    </div>
+                    <span class="text-body-lg text-on-surface">Logout</span>
+                </div>
+                <span class="material-symbols-outlined text-outline-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="text-center pb-xxl">
+        <p class="text-label-sm text-outline">HomeAssist • Provider Portal</p>
+    </section>
+</div>
+
+{% endblock %}

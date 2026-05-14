@@ -1,0 +1,104 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}{{ service.service_name }} — HomeAssist{% endblock %}
+
+{% block content %}
+
+<!-- BACK -->
+<div class="mb-md">
+    <a href="{% url 'resident_home' %}"
+       class="flex items-center gap-xs text-label-lg text-on-surface-variant hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Back
+    </a>
+</div>
+
+<!-- SERVICE IMAGE -->
+{% if service.image %}
+<div class="w-full h-56 rounded-[20px] overflow-hidden mb-lg">
+    <img src="{{ service.image.url }}" alt="{{ service.service_name }}" class="w-full h-full object-cover"/>
+</div>
+{% else %}
+<div class="w-full h-56 rounded-[20px] bg-surface-container flex items-center justify-center mb-lg">
+    <span class="material-symbols-outlined text-[64px] text-on-surface-variant">home_repair_service</span>
+</div>
+{% endif %}
+
+<!-- SERVICE INFO CARD -->
+<div class="bg-surface-container-lowest rounded-[20px] border border-surface-container shadow-[0px_4px_20px_rgba(51,65,85,0.05)] p-gutter mb-lg">
+    <div class="flex justify-between items-start mb-md">
+        <div class="flex-1 min-w-0 mr-sm">
+            <h2 class="text-headline-lg text-on-surface">{{ service.service_name }}</h2>
+            <span class="inline-flex items-center gap-xs mt-xs bg-secondary-container text-on-secondary-container px-sm py-xs rounded-lg text-label-sm">
+                <span class="material-symbols-outlined text-[14px]">category</span>
+                {{ service.category }}
+            </span>
+        </div>
+        <div class="text-right flex-shrink-0">
+            <span class="text-label-sm text-on-surface-variant">Starts at</span>
+            <p class="text-display-lg text-primary font-bold">₹{{ service.price }}</p>
+        </div>
+    </div>
+
+    <div class="border-t border-surface-container pt-md mb-md">
+        <h3 class="text-label-lg text-on-surface mb-sm">About this service</h3>
+        <p class="text-body-md text-on-surface-variant leading-relaxed">{{ service.description }}</p>
+    </div>
+</div>
+
+<!-- PROVIDER CARD -->
+<div class="bg-surface-container-lowest rounded-[20px] border border-surface-container shadow-[0px_4px_20px_rgba(51,65,85,0.05)] p-gutter mb-xl">
+    <h3 class="text-label-lg text-on-surface-variant mb-md">Service Provider</h3>
+    <div class="flex items-center gap-md">
+        {% if service.provider.profile.profile_image %}
+        <img src="{{ service.provider.profile.profile_image.url }}" alt="{{ service.provider.username }}"
+             class="w-16 h-16 rounded-full object-cover"/>
+        {% else %}
+        <div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center">
+            <span class="text-headline-md text-primary font-bold">{{ service.provider.username|first|upper }}</span>
+        </div>
+        {% endif %}
+        <div class="flex-1">
+            <h4 class="text-headline-md text-on-surface">
+                {{ service.provider.get_full_name|default:service.provider.username }}
+            </h4>
+            {% if service.provider.profile.phone %}
+            <p class="text-body-md text-on-surface-variant flex items-center gap-xs mt-xs">
+                <span class="material-symbols-outlined text-[16px]">phone</span>
+                {{ service.provider.profile.phone }}
+            </p>
+            {% endif %}
+            {% if service.provider.profile.address %}
+            <p class="text-body-md text-on-surface-variant flex items-center gap-xs mt-xs">
+                <span class="material-symbols-outlined text-[16px]">location_on</span>
+                {{ service.provider.profile.address }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- CONTACT ACTIONS -->
+    <div class="flex gap-sm mt-md">
+        {% if service.provider.profile.phone %}
+        <a href="tel:{{ service.provider.profile.phone }}"
+           class="flex-1 flex items-center justify-center gap-sm py-sm bg-surface border border-outline-variant rounded-xl text-label-lg text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">
+            <span class="material-symbols-outlined text-[18px]">call</span>
+            Call
+        </a>
+        {% endif %}
+        <a href="{% url 'chat' service.provider.id %}"
+           class="flex-1 flex items-center justify-center gap-sm py-sm bg-secondary-container text-on-secondary-container rounded-xl text-label-lg hover:opacity-90 transition-opacity active:scale-95">
+            <span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+            Message
+        </a>
+    </div>
+</div>
+
+<!-- BOOK CTA -->
+<a href="{% url 'book_service' service.id %}"
+   class="w-full flex items-center justify-center gap-sm py-md bg-primary text-on-primary rounded-[16px] text-label-lg font-semibold hover:opacity-90 transition-opacity active:scale-95 shadow-lg">
+    <span class="material-symbols-outlined text-[20px]">calendar_add_on</span>
+    Book This Service — ₹{{ service.price }}
+</a>
+
+{% endblock %}

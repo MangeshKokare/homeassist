@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Service Provider Details - HomeAssist</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "outline": "#737685",
+                    "surface-dim": "#d9d9e4",
+                    "primary": "#003d9b",
+                    "on-error": "#ffffff",
+                    "tertiary": "#7b2600",
+                    "on-tertiary-fixed": "#380d00",
+                    "on-surface": "#191b23",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e1e2ec",
+                    "secondary-fixed": "#d5e3fd",
+                    "background": "#faf8ff",
+                    "tertiary-container": "#a33500",
+                    "on-secondary-container": "#57657b",
+                    "on-primary-fixed": "#001848",
+                    "surface-tint": "#0c56d0",
+                    "inverse-surface": "#2e3038",
+                    "on-primary-fixed-variant": "#0040a2",
+                    "on-secondary-fixed": "#0d1c2f",
+                    "secondary": "#515f74",
+                    "inverse-primary": "#b2c5ff",
+                    "primary-fixed": "#dae2ff",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#3a485c",
+                    "on-primary-container": "#c4d2ff",
+                    "surface-variant": "#e1e2ec",
+                    "inverse-on-surface": "#f0f0fb",
+                    "surface-container-low": "#f3f3fd",
+                    "surface": "#faf8ff",
+                    "secondary-container": "#d5e3fd",
+                    "outline-variant": "#c3c6d6",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "surface-bright": "#faf8ff",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-background": "#191b23",
+                    "on-tertiary-container": "#ffc6b2",
+                    "surface-container-high": "#e7e7f2",
+                    "primary-container": "#0052cc",
+                    "surface-container": "#ededf8",
+                    "secondary-fixed-dim": "#b9c7e0",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#434654"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "12px",
+                    "2xl": "20px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "safe-margin": "20px",
+                    "base": "4px",
+                    "sm": "8px",
+                    "gutter": "16px",
+                    "xl": "32px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "xxl": "48px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "label-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        -webkit-tap-highlight-color: transparent;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased mb-24">
+<!-- Header / Top Bar -->
+<header class="w-full sticky top-0 bg-surface/80 backdrop-blur-md z-50 shadow-sm flex justify-between items-center px-safe-margin h-16">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:opacity-80">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="font-headline-md text-headline-md text-primary">Provider Details</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:opacity-80">
+<span class="material-symbols-outlined text-primary">favorite</span>
+</button>
+</header>
+<main class="max-w-screen-md mx-auto">
+<!-- Provider Hero Section -->
+<section class="relative h-72 md:h-96 w-full overflow-hidden">
+<img alt="Professional Service Provider" class="w-full h-full object-cover" data-alt="A professional male electrician in a clean navy blue uniform standing confidently with a tool belt. He is in a brightly lit, high-end modern home kitchen with minimalist aesthetics and white surfaces. The lighting is soft and natural, emphasizing a trustworthy and professional corporate modern style. The color palette is dominated by clean whites, navy blues, and subtle slate grays." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_9dTF3U93OY5e7EuJRcg_xJDjkpwp22WwLzqb_RvetuSeXrzIoj0S_d8fgsX4vpOl-DvnprbAMGsa701VIF3_SR83t5eQ7QAsAY92q8lznltsM_uwOS09vTI9DIuSEx_uBacs6iRNfIHm5dvjjcxV_OBiVDOo00OY4NhCU2dpjv9kthNg4batdFdT2o7cVEXURE9mUylTqvW3R-yyOp7aUrP19KreIkaSviqki93lPk-1qJmNrYihyjKYW8i1Kjtb27gI1vdXR-ly"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute bottom-lg left-safe-margin right-safe-margin text-white">
+<div class="flex items-center gap-sm mb-xs">
+<span class="bg-primary-container text-white px-2 py-0.5 rounded-full text-label-sm font-label-sm">TOP RATED</span>
+</div>
+<h1 class="font-display-lg text-display-lg font-bold">Marcus Sterling</h1>
+<p class="font-body-md text-white/90">Master Electrician • 12+ Years Exp.</p>
+</div>
+</section>
+<!-- Profile Stats & About -->
+<section class="px-safe-margin mt-lg space-y-xl">
+<div class="grid grid-cols-3 gap-gutter py-md bg-white rounded-2xl shadow-[0px_4px_20px_rgba(51,65,85,0.05)] border border-surface-variant/50">
+<div class="text-center border-r border-surface-variant">
+<p class="font-headline-md text-primary">4.9</p>
+<p class="font-label-sm text-secondary">Rating</p>
+</div>
+<div class="text-center border-r border-surface-variant">
+<p class="font-headline-md text-primary">1.2k</p>
+<p class="font-label-sm text-secondary">Jobs Done</p>
+</div>
+<div class="text-center">
+<p class="font-headline-md text-primary">20m</p>
+<p class="font-label-sm text-secondary">Response</p>
+</div>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-sm">About</h2>
+<p class="text-on-surface-variant font-body-md leading-relaxed">
+                    Marcus specializes in smart home installations and complex electrical troubleshooting. Known for his meticulous attention to detail and clean workspaces, he ensures every job meets premium safety standards. Certified Master Electrician since 2012.
+                </p>
+</div>
+</section>
+<!-- Ratings & Reviews Scroll -->
+<section class="mt-xxl">
+<div class="px-safe-margin flex justify-between items-end mb-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">Reviews (142)</h2>
+<button class="text-primary font-label-lg hover:underline transition-all">View All</button>
+</div>
+<div class="flex overflow-x-auto no-scrollbar gap-gutter px-safe-margin pb-base">
+<!-- Review Card 1 -->
+<div class="min-w-[280px] bg-white p-lg rounded-2xl shadow-[0px_4px_20px_rgba(51,65,85,0.05)] border border-surface-variant/30">
+<div class="flex items-center gap-sm mb-md">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-primary font-bold">JD</div>
+<div>
+<p class="font-label-lg text-on-surface">Jane Doe</p>
+<div class="flex text-tertiary-container scale-75 origin-left">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant line-clamp-3 italic">"Marcus was incredible. He installed our entire smart lighting system in half the expected time. Very professional and tidy."</p>
+</div>
+<!-- Review Card 2 -->
+<div class="min-w-[280px] bg-white p-lg rounded-2xl shadow-[0px_4px_20px_rgba(51,65,85,0.05)] border border-surface-variant/30">
+<div class="flex items-center gap-sm mb-md">
+<div class="w-10 h-10 rounded-full bg-primary-fixed-dim flex items-center justify-center text-on-primary-fixed font-bold">RM</div>
+<div>
+<p class="font-label-lg text-on-surface">Robert M.</p>
+<div class="flex text-tertiary-container scale-75 origin-left">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant line-clamp-3 italic">"Reliable and fast. Fixed a wiring issue three other electricians couldn't find. Highly recommend for any home electrical needs."</p>
+</div>
+</div>
+</section>
+<!-- Services & Pricing -->
+<section class="px-safe-margin mt-xxl">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-lg">Services Offered</h2>
+<div class="space-y-md">
+<div class="flex justify-between items-center p-lg bg-white rounded-xl border border-surface-variant/50 hover:border-primary/30 transition-colors">
+<div>
+<p class="font-label-lg text-on-surface">Standard Safety Inspection</p>
+<p class="font-label-sm text-secondary">60 - 90 mins</p>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-primary">$85</p>
+<button class="text-primary font-label-sm flex items-center gap-1">Add <span class="material-symbols-outlined text-[16px]">add_circle</span></button>
+</div>
+</div>
+<div class="flex justify-between items-center p-lg bg-white rounded-xl border border-surface-variant/50 hover:border-primary/30 transition-colors">
+<div>
+<p class="font-label-lg text-on-surface">Smart Home Hub Setup</p>
+<p class="font-label-sm text-secondary">2 - 3 hours</p>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-primary">$150</p>
+<button class="text-primary font-label-sm flex items-center gap-1">Add <span class="material-symbols-outlined text-[16px]">add_circle</span></button>
+</div>
+</div>
+<div class="flex justify-between items-center p-lg bg-white rounded-xl border border-surface-variant/50 hover:border-primary/30 transition-colors">
+<div>
+<p class="font-label-lg text-on-surface">Emergency Repair Call-out</p>
+<p class="font-label-sm text-secondary">Varies</p>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-primary">$120</p>
+<button class="text-primary font-label-sm flex items-center gap-1">Add <span class="material-symbols-outlined text-[16px]">add_circle</span></button>
+</div>
+</div>
+</div>
+</section>
+<!-- Availability Calendar -->
+<section class="px-safe-margin mt-xxl pb-xxl">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-lg">Availability</h2>
+<div class="bg-surface-container-low p-lg rounded-2xl">
+<div class="flex items-center justify-between mb-lg">
+<p class="font-label-lg text-on-surface">October 2023</p>
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-secondary cursor-pointer">chevron_left</span>
+<span class="material-symbols-outlined text-secondary cursor-pointer">chevron_right</span>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-sm text-center mb-md">
+<span class="font-label-sm text-outline">S</span>
+<span class="font-label-sm text-outline">M</span>
+<span class="font-label-sm text-outline">T</span>
+<span class="font-label-sm text-outline">W</span>
+<span class="font-label-sm text-outline">T</span>
+<span class="font-label-sm text-outline">F</span>
+<span class="font-label-sm text-outline">S</span>
+</div>
+<div class="grid grid-cols-7 gap-sm text-center">
+<div class="h-10 flex items-center justify-center font-label-sm text-outline-variant">29</div>
+<div class="h-10 flex items-center justify-center font-label-sm text-outline-variant">30</div>
+<div class="h-10 flex items-center justify-center font-label-sm text-on-surface bg-white rounded-lg shadow-sm border border-primary-fixed-dim ring-1 ring-primary/20 font-bold">1</div>
+<div class="h-10 flex items-center justify-center font-label-sm text-on-surface bg-white rounded-lg">2</div>
+<div class="h-10 flex items-center justify-center font-label-sm text-on-surface bg-white rounded-lg">3</div>
+<div class="h-10 flex items-center justify-center font-label-sm text-on-surface bg-white rounded-lg opacity-50">4</div>
+<div class="h-10 flex items-center justify-center font-label-sm text-on-surface bg-white rounded-lg">5</div>
+</div>
+<div class="mt-lg">
+<p class="font-label-sm text-secondary mb-md">Selected: Wed, Oct 1st</p>
+<div class="flex flex-wrap gap-sm">
+<button class="px-md py-sm bg-primary text-on-primary rounded-full font-label-sm">09:00 AM</button>
+<button class="px-md py-sm bg-white text-on-surface border border-surface-variant rounded-full font-label-sm">11:30 AM</button>
+<button class="px-md py-sm bg-white text-on-surface border border-surface-variant rounded-full font-label-sm">02:00 PM</button>
+<button class="px-md py-sm bg-white text-on-surface border border-surface-variant rounded-full font-label-sm">04:30 PM</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Bar -->
+<footer class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-lg border-t border-surface-variant/30 px-safe-margin py-md z-50 shadow-[0px_-4px_24px_rgba(51,65,85,0.08)]">
+<div class="max-w-screen-md mx-auto flex items-center gap-md">
+<button class="w-14 h-14 flex items-center justify-center rounded-xl bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest active:scale-95 transition-all">
+<span class="material-symbols-outlined">call</span>
+</button>
+<button class="w-14 h-14 flex items-center justify-center rounded-xl bg-[#25D366] text-white hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+</button>
+<button class="flex-1 h-14 bg-primary text-on-primary font-label-lg rounded-xl flex items-center justify-center hover:bg-primary-container active:scale-[0.98] transition-all shadow-md">
+                Book Service
+            </button>
+</div>
+</footer>
+</body></html>

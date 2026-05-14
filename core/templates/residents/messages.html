@@ -1,0 +1,123 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}Messages — HomeAssist{% endblock %}
+
+{% block nav_messages %}text-primary font-bold{% endblock %}
+{% block nav_messages_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<section class="mb-xl">
+
+    <h2 class="text-display-lg text-on-surface mb-xs">
+        Messages
+    </h2>
+
+    <p class="text-body-md text-on-surface-variant">
+        Chat with your service providers
+    </p>
+
+</section>
+
+
+<!-- CONVERSATIONS -->
+{% if conversations %}
+
+<section class="space-y-md">
+
+    {% for convo in conversations %}
+
+    <a href="{% url 'chat' convo.other_user.id %}"
+       class="block bg-surface-container-lowest rounded-[20px] border border-surface-container p-gutter shadow-[0px_4px_20px_rgba(51,65,85,0.05)] hover:shadow-[0px_8px_30px_rgba(51,65,85,0.08)] transition-all active:scale-[0.99]">
+
+        <div class="flex items-center gap-md">
+
+            <!-- PROFILE IMAGE -->
+            <div class="relative flex-shrink-0">
+
+                {% if convo.other_user.profile.profile_image %}
+                <img src="{{ convo.other_user.profile.profile_image.url }}"
+                     class="w-16 h-16 rounded-full object-cover">
+                {% else %}
+                <div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center">
+                    <span class="text-headline-md text-primary font-bold">
+                        {{ convo.other_user.username|first|upper }}
+                    </span>
+                </div>
+                {% endif %}
+
+                <span class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
+
+            </div>
+
+
+            <!-- CONTENT -->
+            <div class="flex-1 min-w-0">
+
+                <div class="flex items-start justify-between gap-sm mb-xs">
+
+                    <h3 class="text-headline-md text-on-surface truncate">
+                        {{ convo.other_user.get_full_name|default:convo.other_user.username }}
+                    </h3>
+
+                    <span class="text-label-sm text-on-surface-variant whitespace-nowrap">
+                        {{ convo.last_message.timestamp|timesince }} ago
+                    </span>
+
+                </div>
+
+                <p class="text-body-md text-on-surface-variant truncate mb-sm">
+                    {{ convo.last_message.message }}
+                </p>
+
+                <div class="flex items-center gap-xs text-primary">
+
+                    <span class="material-symbols-outlined text-[16px]">
+                        chat_bubble
+                    </span>
+
+                    <span class="text-label-sm">
+                        Tap to open chat
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </a>
+
+    {% endfor %}
+
+</section>
+
+{% else %}
+
+<div class="bg-surface-container-low rounded-[20px] p-xxl flex flex-col items-center text-center">
+
+    <span class="material-symbols-outlined text-[56px] text-on-surface-variant mb-md">
+        chat_bubble_outline
+    </span>
+
+    <h3 class="text-headline-md text-on-surface mb-sm">
+        No conversations yet
+    </h3>
+
+    <p class="text-body-md text-on-surface-variant mb-lg">
+        Start booking services to chat with providers.
+    </p>
+
+    <a href="{% url 'resident_home' %}"
+       class="bg-primary text-on-primary px-lg py-sm rounded-full text-label-lg active:scale-95 transition-transform">
+
+        Browse Services
+
+    </a>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

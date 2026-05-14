@@ -1,0 +1,215 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}Explore Services — HomeAssist{% endblock %}
+
+{% block nav_explore %}text-primary font-bold{% endblock %}
+{% block nav_explore_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<section class="mb-xl">
+
+    <h2 class="text-display-lg text-on-surface mb-xs">
+        Explore Services
+    </h2>
+
+    <p class="text-body-md text-on-surface-variant">
+        Find trusted professionals near you
+    </p>
+
+</section>
+
+
+<!-- SEARCH -->
+<section class="mb-xl">
+
+    <form method="GET">
+
+        <div class="flex items-center gap-md mb-lg">
+
+            <div class="relative flex-1">
+
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
+                    search
+                </span>
+
+                <input type="text"
+                       name="search"
+                       value="{{ search_query }}"
+                       placeholder="Search electricians, plumbers..."
+                       class="w-full h-14 pl-12 pr-4 rounded-[16px] bg-surface-container-lowest border border-outline-variant outline-none focus:ring-2 focus:ring-primary">
+
+            </div>
+
+            <button type="submit"
+                    class="w-14 h-14 rounded-[16px] bg-primary text-on-primary flex items-center justify-center shadow-lg active:scale-95">
+
+                <span class="material-symbols-outlined">
+                    search
+                </span>
+
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- CATEGORY FILTERS -->
+    <div class="flex gap-sm overflow-x-auto hide-scrollbar pb-2">
+
+        <a href="{% url 'explore_services' %}"
+           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
+           {% if not active_category %}
+           bg-primary text-on-primary
+           {% else %}
+           bg-surface-container-high text-on-surface-variant
+           {% endif %}">
+
+            All
+
+        </a>
+
+        {% for category in categories %}
+
+        <a href="{% url 'explore_services' %}?category={{ category }}"
+           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
+           {% if active_category == category %}
+           bg-primary text-on-primary
+           {% else %}
+           bg-surface-container-high text-on-surface-variant
+           {% endif %}">
+
+            {{ category }}
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- SERVICES GRID -->
+{% if services %}
+
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+
+    {% for service in services %}
+
+    <div class="bg-surface-container-lowest rounded-[24px] overflow-hidden border border-surface-container shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+
+        <!-- IMAGE -->
+        <div class="relative h-52 overflow-hidden">
+
+            {% if service.image %}
+            <img src="{{ service.image.url }}"
+                 class="w-full h-full object-cover">
+            {% else %}
+            <div class="w-full h-full bg-surface-container flex items-center justify-center">
+
+                <span class="material-symbols-outlined text-[48px] text-primary">
+                    handyman
+                </span>
+
+            </div>
+            {% endif %}
+
+            <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow-md">
+
+                <span class="text-label-sm text-primary font-bold">
+                    {{ service.category }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTENT -->
+        <div class="p-gutter">
+
+            <div class="flex justify-between items-start gap-md mb-sm">
+
+                <div>
+
+                    <h3 class="text-headline-md text-on-surface">
+                        {{ service.provider.get_full_name|default:service.provider.username }}
+                    </h3>
+
+                    <p class="text-body-md text-on-surface-variant">
+                        {{ service.service_name }}
+                    </p>
+
+                </div>
+
+                <div class="text-right">
+
+                    <p class="text-label-sm text-on-surface-variant">
+                        Starts at
+                    </p>
+
+                    <h4 class="text-headline-md text-primary">
+                        ₹{{ service.price }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+
+            <p class="text-body-md text-on-surface-variant mb-lg line-clamp-2">
+                {{ service.description }}
+            </p>
+
+
+            <!-- ACTIONS -->
+            <div class="grid grid-cols-2 gap-sm">
+
+                <a href="{% url 'provider_details' service.id %}"
+                   class="h-12 rounded-[14px] border border-outline-variant flex items-center justify-center text-label-lg text-on-surface active:scale-95">
+
+                    View Details
+
+                </a>
+
+                <a href="{% url 'book_service' service.id %}"
+                   class="h-12 rounded-[14px] bg-primary text-on-primary flex items-center justify-center text-label-lg shadow-md active:scale-95">
+
+                    Book Now
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</section>
+
+{% else %}
+
+<div class="bg-surface-container-low rounded-[24px] p-xxl flex flex-col items-center text-center">
+
+    <span class="material-symbols-outlined text-[56px] text-on-surface-variant mb-md">
+        search_off
+    </span>
+
+    <h3 class="text-headline-md text-on-surface mb-sm">
+        No services found
+    </h3>
+
+    <p class="text-body-md text-on-surface-variant">
+        Try changing your search or category filter.
+    </p>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "services/provider_base.html" %}
+
+{% block title %}Chat with {{ receiver.get_full_name|default:receiver.username }} — HomeAssist{% endblock %}
+
+{% block nav_messages %}text-primary font-bold{% endblock %}
+{% block nav_messages_fill %}fill-icon{% endblock %}
+
+{% block extra_head %}
+<style>
+    .chat-bubble-received { border-bottom-left-radius: 4px; }
+    .chat-bubble-sent { border-bottom-right-radius: 4px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+
+    <!-- CHAT HEADER -->
+    <div class="sticky top-16 bg-background z-30 pb-md mb-md -mx-safe-margin px-safe-margin pt-sm border-b border-surface-container">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-md">
+                <a href="{% url 'provider_messages' %}"
+                   class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">
+                    <span class="material-symbols-outlined text-on-surface">arrow_back</span>
+                </a>
+                <div class="flex items-center gap-sm">
+                    <div class="relative">
+                        {% if receiver.profile.profile_image %}
+                        <img src="{{ receiver.profile.profile_image.url }}" alt="{{ receiver.username }}"
+                             class="w-11 h-11 rounded-full object-cover"/>
+                        {% else %}
+                        <div class="w-11 h-11 rounded-full bg-primary-fixed flex items-center justify-center">
+                            <span class="text-label-lg text-primary font-bold">{{ receiver.username|first|upper }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h2 class="text-headline-md text-on-surface leading-tight">
+                            {{ receiver.get_full_name|default:receiver.username }}
+                        </h2>
+                        <p class="text-label-sm text-on-surface-variant">Resident</p>
+                    </div>
+                </div>
+            </div>
+            {% if receiver.profile.phone %}
+            <a href="tel:{{ receiver.profile.phone }}"
+               class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant text-primary hover:bg-primary-fixed/20 transition-colors">
+                <span class="material-symbols-outlined">call</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="flex flex-col gap-lg pb-32 min-h-[400px]" id="chat-messages">
+        {% if chats %}
+            {% for msg in chats %}
+            <div class="flex flex-col gap-xs max-w-[85%]
+                {% if msg.sender == request.user %}self-end items-end{% else %}self-start items-start{% endif %}">
+
+                <div class="p-md rounded-[20px]
+                    {% if msg.sender == request.user %}
+                        bg-primary text-on-primary chat-bubble-sent shadow-[0px_4px_20px_rgba(0,61,155,0.1)]
+                    {% else %}
+                        bg-surface-container-lowest text-on-surface chat-bubble-received border border-outline-variant/30 shadow-[0px_4px_20px_rgba(51,65,85,0.05)]
+                    {% endif %}">
+                    <p class="text-body-md">{{ msg.message }}</p>
+                </div>
+
+                <span class="text-label-sm text-on-surface-variant px-sm flex items-center gap-xs">
+                    {{ msg.timestamp|date:"h:i A" }}
+                    {% if msg.sender == request.user %}
+                    <span class="material-symbols-outlined text-[14px] fill-icon">done_all</span>
+                    {% endif %}
+                </span>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="flex flex-col items-center justify-center py-xxl text-center">
+            <span class="material-symbols-outlined text-[48px] text-on-surface-variant mb-md">chat_bubble</span>
+            <p class="text-body-md text-on-surface-variant">Start a conversation with {{ receiver.get_full_name|default:receiver.username }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- FIXED CHAT INPUT (outside main padding) -->
+<div class="fixed bottom-20 left-0 w-full px-safe-margin pb-sm bg-gradient-to-t from-background via-background to-transparent z-40 pointer-events-none">
+    <div class="max-w-3xl mx-auto pointer-events-auto">
+        <form method="POST" id="chat-form" class="flex items-end gap-sm">
+            {% csrf_token %}
+            <div class="flex-1 bg-surface-container-lowest rounded-[24px] shadow-[0px_4px_24px_rgba(51,65,85,0.08)] border border-outline-variant/30 flex items-end p-sm pr-md">
+                <div class="flex-1 px-sm py-sm">
+                    <textarea
+                        name="message"
+                        id="message-input"
+                        rows="1"
+                        placeholder="Type a message..."
+                        required
+                        class="w-full border-0 focus:ring-0 text-body-md text-on-surface bg-transparent resize-none max-h-32 py-xs outline-none"
+                        onkeydown="handleEnter(event)"
+                        oninput="autoResize(this)"
+                    ></textarea>
+                </div>
+            </div>
+            <button type="submit"
+                    class="w-12 h-12 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-lg active:scale-95 transition-transform flex-shrink-0">
+                <span class="material-symbols-outlined fill-icon">send</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Scroll to bottom on load
+    const chatContainer = document.getElementById('chat-messages');
+    if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function handleEnter(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            document.getElementById('chat-form').submit();
+        }
+    }
+
+    function autoResize(el) {
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 128) + 'px';
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "layout/provider_base.html" %}
+
+{% block title %}Dashboard — HomeAssist{% endblock %}
+
+{% block nav_home %}text-primary font-bold{% endblock %}
+{% block nav_home_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<!-- DASHBOARD HEADER -->
+<div class="mb-xl">
+    <p class="text-body-md text-on-surface-variant mb-xs">Welcome back,</p>
+    <h2 class="text-display-lg text-on-surface">{{ request.user.get_full_name|default:request.user.username }}</h2>
+</div>
+
+<!-- STATS ROW -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter mb-xl">
+    <div class="bg-surface-container-low p-lg rounded-[20px] flex flex-col items-center text-center">
+        <span class="text-display-lg text-primary font-bold">{{ services.count }}</span>
+        <span class="text-label-sm text-secondary mt-xs">Active Services</span>
+    </div>
+    <div class="bg-surface-container-low p-lg rounded-[20px] flex flex-col items-center text-center">
+        <span class="text-display-lg text-secondary font-bold">{{ pending_count }}</span>
+        <span class="text-label-sm text-secondary mt-xs">Pending Bookings</span>
+    </div>
+    <div class="bg-surface-container-low p-lg rounded-[20px] flex flex-col items-center text-center">
+        <span class="text-display-lg text-secondary font-bold">{{ accepted_count }}</span>
+        <span class="text-label-sm text-secondary mt-xs">Accepted</span>
+    </div>
+    <div class="bg-surface-container-low p-lg rounded-[20px] flex flex-col items-center text-center">
+        <span class="text-display-lg text-secondary font-bold">{{ completed_count }}</span>
+        <span class="text-label-sm text-secondary mt-xs">Completed</span>
+    </div>
+</div>
+
+<!-- MY SERVICES -->
+<section class="mb-xl">
+    <div class="flex items-center justify-between mb-lg">
+        <h3 class="text-headline-md text-on-surface">My Services</h3>
+        <a href="{% url 'add_service' %}"
+           class="flex items-center gap-xs bg-primary text-on-primary px-md py-sm rounded-full text-label-sm font-medium active:scale-95 transition-transform">
+            <span class="material-symbols-outlined text-[16px]">add</span>
+            Add New
+        </a>
+    </div>
+
+    {% if services %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        {% for service in services %}
+        <div class="bg-surface-container-lowest rounded-[20px] overflow-hidden shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col group hover:shadow-[0px_8px_30px_rgba(51,65,85,0.1)] transition-shadow">
+            {% if service.image %}
+            <div class="h-40 overflow-hidden">
+                <img src="{{ service.image.url }}" alt="{{ service.service_name }}"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+            </div>
+            {% else %}
+            <div class="h-40 bg-surface-container flex items-center justify-center">
+                <span class="material-symbols-outlined text-on-surface-variant text-[48px]">home_repair_service</span>
+            </div>
+            {% endif %}
+
+            <div class="p-gutter flex flex-col flex-1">
+                <div class="flex justify-between items-start mb-sm">
+                    <div class="flex-1 min-w-0 mr-sm">
+                        <h4 class="text-headline-md text-on-surface truncate">{{ service.service_name }}</h4>
+                        <p class="text-body-md text-on-surface-variant">{{ service.category }}</p>
+                    </div>
+                    <span class="text-headline-md text-primary font-bold whitespace-nowrap">${{ service.price }}</span>
+                </div>
+                <p class="text-body-md text-on-surface-variant line-clamp-2 mb-md">{{ service.description }}</p>
+                <div class="mt-auto flex gap-sm">
+                    <a href="{% url 'edit_service' service.id %}"
+                       class="flex-1 flex items-center justify-center gap-xs py-sm bg-surface border border-outline-variant rounded-xl text-label-lg text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">
+                        <span class="material-symbols-outlined text-[16px]">edit</span>
+                        Edit
+                    </a>
+                    <a href="{% url 'delete_service' service.id %}"
+                       class="flex items-center justify-center px-md py-sm bg-error-container rounded-xl text-label-lg text-on-error-container hover:opacity-80 transition-opacity active:scale-95">
+                        <span class="material-symbols-outlined text-[16px]">delete</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="bg-surface-container-low rounded-[20px] p-xxl flex flex-col items-center text-center">
+        <span class="material-symbols-outlined text-[48px] text-on-surface-variant mb-md">home_repair_service</span>
+        <h4 class="text-headline-md text-on-surface mb-sm">No services yet</h4>
+        <p class="text-body-md text-on-surface-variant mb-lg">Add your first service to start receiving bookings.</p>
+        <a href="{% url 'add_service' %}"
+           class="bg-primary text-on-primary px-lg py-sm rounded-full text-label-lg active:scale-95 transition-transform">
+            Add Your First Service
+        </a>
+    </div>
+    {% endif %}
+</section>
+
+<!-- RECENT BOOKINGS -->
+<section>
+    <div class="flex items-center justify-between mb-lg">
+        <h3 class="text-headline-md text-on-surface">Recent Bookings</h3>
+        <a href="{% url 'provider_bookings' %}" class="text-label-lg text-primary">View all →</a>
+    </div>
+
+    {% if recent_bookings %}
+    <div class="space-y-sm">
+        {% for booking in recent_bookings %}
+        <div class="bg-surface-container-lowest rounded-[16px] p-gutter flex items-center justify-between border border-surface-container shadow-[0px_2px_8px_rgba(51,65,85,0.04)]">
+            <div class="flex items-center gap-md">
+                {% if booking.resident.profile.profile_image %}
+                <img src="{{ booking.resident.profile.profile_image.url }}" alt="{{ booking.resident.username }}"
+                     class="w-10 h-10 rounded-full object-cover"/>
+                {% else %}
+                <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center">
+                    <span class="text-label-lg text-primary font-bold">{{ booking.resident.username|first|upper }}</span>
+                </div>
+                {% endif %}
+                <div>
+                    <p class="text-label-lg text-on-surface">{{ booking.resident.get_full_name|default:booking.resident.username }}</p>
+                    <p class="text-label-sm text-on-surface-variant">{{ booking.service.service_name }} • {{ booking.booking_date }}</p>
+                </div>
+            </div>
+            <span class="px-sm py-xs rounded-lg text-label-sm font-medium
+                {% if booking.status == 'pending' %}bg-tertiary-fixed text-on-tertiary-fixed
+                {% elif booking.status == 'accepted' %}bg-secondary-container text-on-secondary-container
+                {% else %}bg-surface-container-high text-on-surface-variant{% endif %}">
+                {{ booking.get_status_display }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-surface-container-low rounded-[20px] p-xl text-center">
+        <p class="text-body-md text-on-surface-variant">No bookings yet.</p>
+    </div>
+    {% endif %}
+</section>
+
+{% endblock %}

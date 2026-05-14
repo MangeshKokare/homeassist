@@ -1,0 +1,118 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}Search — HomeAssist{% endblock %}
+
+{% block nav_search %}text-primary font-bold{% endblock %}
+{% block nav_search_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<!-- SEARCH + FILTER -->
+<section class="mb-lg">
+    <form method="GET" id="search-form">
+        <div class="flex items-center gap-sm mb-md">
+            <div class="relative flex-1">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+                <input type="text" name="search" id="search-input" value="{{ search_query|default:'' }}"
+                       placeholder="Search services..."
+                       class="w-full h-12 pl-12 pr-4 bg-surface-container-lowest border border-outline-variant rounded-[14px]
+                              focus:ring-2 focus:ring-primary focus:border-transparent text-body-md outline-none"/>
+            </div>
+            <button type="submit"
+                    class="w-12 h-12 bg-primary text-on-primary rounded-[14px] flex items-center justify-center active:scale-95 transition-transform flex-shrink-0">
+                <span class="material-symbols-outlined">search</span>
+            </button>
+        </div>
+
+        <!-- CATEGORY CHIPS -->
+        <div class="flex gap-sm overflow-x-auto hide-scrollbar pb-sm">
+            <a href="{% url 'resident_search' %}{% if search_query %}?search={{ search_query }}{% endif %}"
+               class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
+               {% if not active_category %}bg-primary text-on-primary{% else %}bg-surface-container-high text-on-surface-variant{% endif %}">
+                All
+            </a>
+            {% for label, cat in category_choices %}
+            <a href="{% url 'resident_search' %}?category={{ cat }}{% if search_query %}&search={{ search_query }}{% endif %}"
+               class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
+               {% if active_category == cat %}bg-primary text-on-primary{% else %}bg-surface-container-high text-on-surface-variant{% endif %}">
+                {{ label }}
+            </a>
+            {% endfor %}
+        </div>
+    </form>
+</section>
+
+<!-- RESULTS COUNT -->
+<div class="mb-md flex items-center justify-between">
+    <p class="text-body-md text-on-surface-variant">
+        {{ services.count }} service{{ services.count|pluralize }} found
+        {% if search_query %} for "{{ search_query }}"{% endif %}
+        {% if active_category %} in {{ active_category }}{% endif %}
+    </p>
+</div>
+
+<!-- RESULTS GRID -->
+{% if services %}
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+    {% for service in services %}
+    <div class="bg-surface-container-lowest rounded-[20px] overflow-hidden shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col group hover:shadow-[0px_8px_30px_rgba(51,65,85,0.1)] transition-shadow border border-surface-container">
+
+        {% if service.image %}
+        <div class="h-44 overflow-hidden">
+            <img src="{{ service.image.url }}" alt="{{ service.service_name }}"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+        </div>
+        {% else %}
+        <div class="h-44 bg-surface-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-[48px] text-on-surface-variant">home_repair_service</span>
+        </div>
+        {% endif %}
+
+        <div class="p-gutter flex flex-col flex-1">
+            <div class="flex justify-between items-start mb-sm">
+                <div class="flex-1 min-w-0 mr-sm">
+                    <h3 class="text-headline-md text-on-surface truncate">{{ service.service_name }}</h3>
+                    <p class="text-body-md text-on-surface-variant">{{ service.category }}</p>
+                </div>
+                <span class="text-headline-md text-primary font-bold whitespace-nowrap">₹{{ service.price }}</span>
+            </div>
+
+            <p class="text-body-md text-on-surface-variant line-clamp-2 mb-md flex-1">
+                {{ service.description|truncatechars:100 }}
+            </p>
+
+            <div class="flex items-center gap-xs mb-md text-on-surface-variant">
+                <span class="material-symbols-outlined text-[16px]">person</span>
+                <span class="text-label-sm">{{ service.provider.get_full_name|default:service.provider.username }}</span>
+            </div>
+
+            <div class="mt-auto grid grid-cols-2 gap-sm">
+                <a href="{% url 'provider_details' service.id %}"
+                   class="flex items-center justify-center gap-xs py-sm bg-surface border border-outline-variant rounded-xl text-label-lg text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">
+                    <span class="material-symbols-outlined text-[16px]">info</span>
+                    Details
+                </a>
+                <a href="{% url 'book_service' service.id %}"
+                   class="flex items-center justify-center gap-xs py-sm bg-primary text-on-primary rounded-xl text-label-lg font-medium hover:opacity-90 transition-opacity active:scale-95 shadow-md">
+                    <span class="material-symbols-outlined text-[16px]">calendar_add_on</span>
+                    Book
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+{% else %}
+<div class="bg-surface-container-low rounded-[20px] p-xxl flex flex-col items-center text-center">
+    <span class="material-symbols-outlined text-[48px] text-on-surface-variant mb-md">search_off</span>
+    <h4 class="text-headline-md text-on-surface mb-sm">No results found</h4>
+    <p class="text-body-md text-on-surface-variant">Try a different keyword or browse all categories.</p>
+    <a href="{% url 'resident_search' %}"
+       class="mt-lg bg-primary text-on-primary px-lg py-sm rounded-full text-label-lg active:scale-95 transition-transform">
+        Browse All Services
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

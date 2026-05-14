@@ -1,0 +1,492 @@
+{% extends "layout/provider_base.html" %}
+
+{% block title %}Bookings — HomeAssist{% endblock %}
+
+{% block nav_bookings %}text-primary font-bold{% endblock %}
+{% block nav_bookings_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<div class="mb-xl">
+    <h2 class="text-display-lg text-on-surface">Booking Requests</h2>
+    <p class="text-body-md text-secondary mt-xs">Manage your upcoming service schedule</p>
+</div>
+
+<!-- STATUS FILTER TABS -->
+<div class="sticky top-16 bg-background z-40 py-sm -mx-safe-margin px-safe-margin mb-lg">
+    <nav class="flex gap-sm overflow-x-auto no-scrollbar">
+        <a href="?status=all"
+        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
+        {% if active_status == 'all' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
+
+            All
+
+            {% if total_count > 0 %}
+            <span class="ml-xs bg-white text-primary px-xs rounded-full text-label-sm font-bold">
+                {{ total_count }}
+            </span>
+            {% endif %}
+
+        </a>
+        <a href="?status=pending"
+           class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
+           {% if active_status == 'pending' or not active_status %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
+            Pending
+            {% if pending_count > 0 %}<span class="ml-xs bg-yellow-100 text-yellow-700 px-xs rounded-full text-label-sm font-bold">{{ pending_count }}</span>{% endif %}
+        </a>
+        <a href="?status=accepted"
+        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
+        {% if active_status == 'accepted' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
+
+            Accepted
+
+            {% if accepted_count > 0 %}
+            <span class="ml-xs bg-green-100 text-green-700 px-xs rounded-full text-label-sm font-bold">
+                {{ accepted_count }}
+            </span>
+            {% endif %}
+
+        </a>
+        <a href="?status=completed"
+        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
+        {% if active_status == 'completed' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
+
+            Completed
+
+            {% if completed_count > 0 %}
+            <span class="ml-xs bg-blue-100 text-blue-700 px-xs rounded-full text-label-sm font-bold">
+                {{ completed_count }}
+            </span>
+            {% endif %}
+
+        </a>
+
+        <a href="?status=cancelled"
+        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
+        {% if active_status == 'cancelled' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
+
+            Rejected
+
+            {% if cancelled_count > 0 %}
+            <span class="ml-xs bg-red-100 text-red-700 px-xs rounded-full text-label-sm font-bold">
+                {{ cancelled_count }}
+            </span>
+            {% endif %}
+
+        </a>
+
+    </nav>
+</div>
+
+<!-- BOOKING CARDS -->
+{% if bookings %}
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-xxl">
+    {% for booking in bookings %}
+    <article class="bg-surface p-gutter rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] border border-surface-container flex flex-col gap-md">
+
+        <!-- RESIDENT INFO -->
+        <div class="flex justify-between items-start">
+            <div class="flex items-center gap-md">
+                {% if booking.resident.profile.profile_image %}
+                <img src="{{ booking.resident.profile.profile_image.url }}" alt="{{ booking.resident.username }}"
+                     class="w-12 h-12 rounded-full object-cover"/>
+                {% else %}
+                <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center">
+                    <span class="text-headline-md text-primary font-bold">{{ booking.resident.username|first|upper }}</span>
+                </div>
+                {% endif %}
+                <div>
+                    <h3 class="text-headline-md text-on-surface">
+                        {{ booking.resident.get_full_name|default:booking.resident.username }}
+                    </h3>
+                    <p class="text-label-sm text-primary flex items-center gap-xs">
+                        <span class="material-symbols-outlined text-[14px]">home_repair_service</span>
+                        {{ booking.service.service_name }}
+                    </p>
+                </div>
+            </div>
+            <span class="px-sm py-xs rounded-lg text-label-sm font-medium
+                {% if booking.status == 'pending' %}
+                bg-yellow-100 text-yellow-700
+
+                {% elif booking.status == 'accepted' %}
+                bg-green-100 text-green-700
+
+                {% elif booking.status == 'completed' %}
+                bg-blue-100 text-blue-700
+
+                {% else %}
+                bg-red-100 text-red-700
+
+                {% endif %}
+                {{ booking.get_status_display }}
+            </span>
+        </div>
+
+        <!-- DATE / TIME -->
+        <div class="flex flex-col gap-xs py-sm border-t border-surface-container">
+            <div class="flex items-center gap-sm text-secondary">
+                <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                <span class="text-body-md">{{ booking.booking_date|date:"l, M d, Y" }}</span>
+            </div>
+            <div class="flex items-center gap-sm text-secondary">
+                <span class="material-symbols-outlined text-[18px]">schedule</span>
+                <span class="text-body-md">{{ booking.booking_time|time:"h:i A" }}</span>
+            </div>
+            <div class="flex items-center gap-sm text-secondary">
+                <span class="material-symbols-outlined text-[18px]">payments</span>
+                <span class="text-body-md">₹{{ booking.service.price }}</span>
+            </div>
+        </div>
+
+        <!-- ACTIONS -->
+        {% if booking.status == 'pending' %}
+        <div class="grid grid-cols-2 gap-sm">
+
+            <!-- ACCEPT BUTTON -->
+            <button type="button"
+                    onclick="openAcceptModal('{{ booking.id }}')"
+                    class="flex items-center justify-center py-sm bg-primary text-on-primary rounded-xl text-label-lg active:scale-95 transition-transform">
+
+                Accept
+
+            </button>
+
+
+            <!-- REJECT BUTTON -->
+            <button type="button"
+                    onclick="openRejectModal('{{ booking.id }}')"
+                    class="flex items-center justify-center py-sm bg-surface border border-outline-variant text-on-surface-variant rounded-xl text-label-lg active:scale-95 transition-transform">
+
+                Reject
+
+            </button>
+
+        </div>
+        {% elif booking.status == 'accepted' %}
+
+        <button type="button"
+                onclick="openCompletedModal('{{ booking.id }}')"
+                class="flex items-center justify-center gap-sm py-sm bg-secondary-container text-on-secondary-container rounded-xl text-label-lg active:scale-95 transition-transform">
+
+            <span class="material-symbols-outlined text-[18px]">
+                check_circle
+            </span>
+
+            Mark as Completed
+
+        </button>
+
+        {% endif %}
+
+        <!-- CALL / MESSAGE -->
+        <div class="flex gap-sm">
+            {% if booking.resident.profile.phone %}
+            <a href="tel:{{ booking.resident.profile.phone }}"
+               class="flex-1 flex items-center justify-center gap-sm py-sm text-primary text-label-lg hover:bg-surface-container-low rounded-xl transition-colors">
+                <span class="material-symbols-outlined text-[18px]">call</span>
+                Call
+            </a>
+            {% endif %}
+            <a href="{% url 'chat' booking.resident.id %}"
+               class="flex-1 flex items-center justify-center gap-sm py-sm text-primary text-label-lg hover:bg-surface-container-low rounded-xl transition-colors">
+                <span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+                Message
+            </a>
+        </div>
+
+    </article>
+    {% endfor %}
+</section>
+
+<!-- STATS SECTION -->
+<section class="grid grid-cols-2 md:grid-cols-5 gap-gutter">
+    <div class="bg-surface-container-low p-lg rounded-xl flex flex-col items-center text-center">
+        <span class="text-display-lg text-primary font-bold">{{ pending_count }}</span>
+        <span class="text-label-sm text-secondary mt-xs">Pending Today</span>
+    </div>
+    <div class="bg-surface-container-low p-lg rounded-xl flex flex-col items-center text-center">
+        <span class="text-display-lg text-secondary font-bold">{{ accepted_count }}</span>
+        <span class="text-label-sm text-secondary mt-xs">Accepted</span>
+    </div>
+    <div class="bg-surface-container-low p-lg rounded-xl flex flex-col items-center text-center">
+        <span class="text-display-lg text-secondary font-bold">{{ completed_count }}</span>
+        <span class="text-label-sm text-secondary mt-xs">Completed</span>
+    </div>
+    <div class="bg-surface-container-low p-lg rounded-xl flex flex-col items-center text-center">
+        <span class="text-display-lg text-red-600 font-bold">
+            {{ cancelled_count }}
+        </span>
+
+        <span class="text-label-sm text-secondary mt-xs">
+            Rejected
+        </span>
+    </div>
+    <div class="bg-surface-container-low p-lg rounded-xl flex flex-col items-center text-center">
+        <span class="text-display-lg text-secondary font-bold">{{ total_count }}</span>
+        <span class="text-label-sm text-secondary mt-xs">Total Bookings</span>
+    </div>
+</section>
+
+{% else %}
+<div class="bg-surface-container-low rounded-[20px] p-xxl flex flex-col items-center text-center">
+    <span class="material-symbols-outlined text-[48px] text-on-surface-variant mb-md">calendar_today</span>
+    <h4 class="text-headline-md text-on-surface mb-sm">No bookings found</h4>
+    <p class="text-body-md text-on-surface-variant">
+        {% if active_status == 'pending' %}No pending booking requests right now.
+        {% elif active_status == 'accepted' %}No accepted bookings.
+        {% elif active_status == 'completed' %}
+        No completed bookings yet.
+
+        {% elif active_status == 'cancelled' %}
+        No rejected bookings.
+
+        {% else %}
+        You haven't received any bookings yet.
+
+        {% endif %}
+    </p>
+</div>
+{% endif %}
+<!-- ACCEPT MODAL -->
+<div id="acceptModal"
+     class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-lg">
+
+    <div class="bg-surface rounded-[28px] w-full max-w-md p-xl animate-in fade-in zoom-in duration-200">
+
+        <div class="flex flex-col items-center text-center">
+
+            <div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mb-lg">
+
+                <span class="material-symbols-outlined text-primary text-[32px]">
+                    check_circle
+                </span>
+
+            </div>
+
+            <h3 class="text-headline-md text-on-surface mb-sm">
+                Accept Booking?
+            </h3>
+
+            <p class="text-body-md text-on-surface-variant mb-xl">
+                Are you sure you want to accept this booking request?
+            </p>
+
+            <div class="grid grid-cols-2 gap-md w-full">
+
+                <button onclick="closeAcceptModal()"
+                        class="h-12 rounded-xl border border-outline-variant text-on-surface active:scale-95">
+
+                    Cancel
+
+                </button>
+
+                <a id="acceptConfirmBtn"
+                   href="#"
+                   class="h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center active:scale-95">
+
+                    Accept
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- REJECT MODAL -->
+<div id="rejectModal"
+     class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-lg">
+
+    <div class="bg-surface rounded-[28px] w-full max-w-md p-xl animate-in fade-in zoom-in duration-200">
+
+        <div class="flex flex-col items-center text-center">
+
+            <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-lg">
+
+                <span class="material-symbols-outlined text-red-600 text-[32px]">
+                    cancel
+                </span>
+
+            </div>
+
+            <h3 class="text-headline-md text-on-surface mb-sm">
+                Reject Booking?
+            </h3>
+
+            <p class="text-body-md text-on-surface-variant mb-xl">
+                Are you sure you want to reject this booking request?
+            </p>
+
+            <div class="grid grid-cols-2 gap-md w-full">
+
+                <button onclick="closeRejectModal()"
+                        class="h-12 rounded-xl border border-outline-variant text-on-surface active:scale-95">
+
+                    Cancel
+
+                </button>
+
+                <a id="rejectConfirmBtn"
+                   href="#"
+                   class="h-12 rounded-xl bg-red-600 text-white flex items-center justify-center active:scale-95">
+
+                    Reject
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- COMPLETED MODAL -->
+<div id="completedModal"
+     class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-lg">
+
+    <div class="bg-surface rounded-[28px] w-full max-w-md p-xl animate-in fade-in zoom-in duration-200">
+
+        <div class="flex flex-col items-center text-center">
+
+            <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-lg">
+
+                <span class="material-symbols-outlined text-green-600 text-[32px]">
+                    task_alt
+                </span>
+
+            </div>
+
+            <h3 class="text-headline-md text-on-surface mb-sm">
+                Complete Booking?
+            </h3>
+
+            <p class="text-body-md text-on-surface-variant mb-xl">
+                Are you sure you want to mark this booking as completed?
+            </p>
+
+            <div class="grid grid-cols-2 gap-md w-full">
+
+                <button onclick="closeCompletedModal()"
+                        class="h-12 rounded-xl border border-outline-variant text-on-surface active:scale-95">
+
+                    Cancel
+
+                </button>
+
+                <a id="completedConfirmBtn"
+                   href="#"
+                   class="h-12 rounded-xl bg-green-600 text-white flex items-center justify-center active:scale-95">
+
+                    Complete
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+function openAcceptModal(bookingId) {
+
+    document
+        .getElementById('acceptModal')
+        .classList
+        .remove('hidden')
+
+    document
+        .getElementById('acceptModal')
+        .classList
+        .add('flex')
+
+    document
+        .getElementById('acceptConfirmBtn')
+        .href = `/provider/bookings/${bookingId}/status/accepted/`
+}
+
+function closeAcceptModal() {
+
+    document
+        .getElementById('acceptModal')
+        .classList
+        .remove('flex')
+
+    document
+        .getElementById('acceptModal')
+        .classList
+        .add('hidden')
+}
+
+
+function openRejectModal(bookingId) {
+
+    document
+        .getElementById('rejectModal')
+        .classList
+        .remove('hidden')
+
+    document
+        .getElementById('rejectModal')
+        .classList
+        .add('flex')
+
+    document
+        .getElementById('rejectConfirmBtn')
+        .href = `/provider/bookings/${bookingId}/status/cancelled/`
+}
+
+function closeRejectModal() {
+
+    document
+        .getElementById('rejectModal')
+        .classList
+        .remove('flex')
+
+    document
+        .getElementById('rejectModal')
+        .classList
+        .add('hidden')
+}
+function openCompletedModal(bookingId) {
+
+    document
+        .getElementById('completedModal')
+        .classList
+        .remove('hidden')
+
+    document
+        .getElementById('completedModal')
+        .classList
+        .add('flex')
+
+    document
+        .getElementById('completedConfirmBtn')
+        .href = `/provider/bookings/${bookingId}/status/completed/`
+}
+
+
+function closeCompletedModal() {
+
+    document
+        .getElementById('completedModal')
+        .classList
+        .remove('flex')
+
+    document
+        .getElementById('completedModal')
+        .classList
+        .add('hidden')
+}
+</script>
+{% endblock %}

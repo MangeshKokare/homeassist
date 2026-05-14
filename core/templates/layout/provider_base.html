@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+    <title>{% block title %}HomeAssist Provider{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#003d9b",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#0052cc",
+                        "on-primary-container": "#c4d2ff",
+                        "primary-fixed": "#dae2ff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "on-primary-fixed": "#001848",
+                        "secondary": "#515f74",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#d5e3fd",
+                        "on-secondary-container": "#57657b",
+                        "surface": "#faf8ff",
+                        "surface-dim": "#d9d9e4",
+                        "surface-bright": "#faf8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f3fd",
+                        "surface-container": "#ededf8",
+                        "surface-container-high": "#e7e7f2",
+                        "surface-container-highest": "#e1e2ec",
+                        "on-surface": "#191b23",
+                        "on-surface-variant": "#434654",
+                        "outline": "#737685",
+                        "outline-variant": "#c3c6d6",
+                        "background": "#faf8ff",
+                        "on-background": "#191b23",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#7b2600",
+                        "tertiary-container": "#a33500",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#380d00",
+                        "inverse-surface": "#2e3038",
+                        "inverse-on-surface": "#f0f0fb",
+                        "inverse-primary": "#b2c5ff",
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px",
+                    },
+                    spacing: {
+                        "safe-margin": "20px",
+                        base: "4px",
+                        sm: "8px",
+                        gutter: "16px",
+                        xl: "32px",
+                        xs: "4px",
+                        lg: "24px",
+                        xxl: "48px",
+                        md: "16px",
+                    },
+                    fontSize: {
+                        "headline-lg": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "label-lg": ["14px", { lineHeight: "20px", fontWeight: "600" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "display-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "600" }],
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            display: inline-block; line-height: 1;
+        }
+        .fill-icon { font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { min-height: max(884px, 100dvh); }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-background text-on-surface min-h-screen pb-24">
+
+    <!-- TOP APP BAR -->
+    <header class="w-full sticky top-0 bg-surface shadow-sm flex justify-between items-center px-safe-margin h-16 z-50">
+        <div class="flex items-center gap-sm">
+            <span class="material-symbols-outlined text-primary">home_repair_service</span>
+            <h1 class="text-headline-lg font-bold text-primary">HomeAssist</h1>
+        </div>
+        <div class="flex items-center gap-md relative">
+
+            <span class="text-body-md text-on-surface-variant font-medium">
+
+                Welcome,
+
+                <span class="text-primary font-semibold">
+                    {{ request.user.first_name }} {{ request.user.last_name }}
+                </span>
+
+            </span>
+
+
+            <!-- PROFILE BUTTON -->
+            <button onclick="toggleProfileMenu()"
+                    class="w-11 h-11 rounded-full overflow-hidden border-2 border-primary-fixed active:scale-95 transition-transform shadow-sm">
+
+                {% if request.user.profile.profile_image %}
+
+                <img src="{{ request.user.profile.profile_image.url }}"
+                    class="w-full h-full object-cover">
+
+                {% else %}
+
+                <div class="w-full h-full bg-primary text-white flex items-center justify-center text-label-lg font-semibold">
+
+                    {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+
+                </div>
+
+                {% endif %}
+
+            </button>
+
+
+            <!-- DROPDOWN -->
+            <div id="profileDropdown"
+                class="hidden absolute top-14 right-0 w-56 bg-surface border border-outline-variant rounded-2xl shadow-[0px_8px_32px_rgba(15,23,42,0.12)] overflow-hidden z-50">
+
+                <!-- USER INFO -->
+                <div class="px-lg py-md border-b border-outline-variant bg-surface-container-low">
+
+                    <h4 class="text-label-lg text-on-surface">
+                        {{ request.user.first_name }} {{ request.user.last_name }}
+                    </h4>
+
+                    <p class="text-label-sm text-on-surface-variant mt-xs">
+                        {{ request.user.email }}
+                    </p>
+
+                </div>
+
+
+                <!-- PROFILE -->
+                <a href="{% url 'provider_profile' %}"
+                class="flex items-center gap-md px-lg py-md hover:bg-surface-container-low transition-colors">
+
+                    <span class="material-symbols-outlined text-primary">
+                        person
+                    </span>
+
+                    <span class="text-body-md">
+                        Profile
+                    </span>
+
+                </a>
+
+
+                <!-- LOGOUT -->
+                <a href="{% url 'logout' %}"
+                class="flex items-center gap-md px-lg py-md text-error hover:bg-error-container transition-colors">
+
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
+
+                    <span class="text-body-md">
+                        Logout
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+    </header>
+
+    <!-- FLASH MESSAGES -->
+    {% if messages %}
+    <div class="max-w-5xl mx-auto px-safe-margin mt-md space-y-sm">
+        {% for message in messages %}
+        <div class="p-md rounded-xl
+            {% if message.tags == 'error' %}bg-error-container text-on-error-container
+            {% else %}bg-secondary-container text-on-secondary-container{% endif %}
+            flex items-center gap-sm">
+            <span class="material-symbols-outlined text-[18px]">
+                {% if message.tags == 'error' %}error{% else %}check_circle{% endif %}
+            </span>
+            <span class="text-body-md">{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-5xl mx-auto px-safe-margin py-lg">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- BOTTOM NAVBAR -->
+    <nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-20 px-2 bg-surface shadow-[0px_-4px_24px_rgba(51,65,85,0.08)]">
+
+        <a href="{% url 'provider_dashboard' %}"
+           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
+           {% block nav_home %}text-secondary{% endblock %}">
+            <span class="material-symbols-outlined {% block nav_home_fill %}{% endblock %}">home</span>
+            <span class="text-label-sm mt-0.5">Home</span>
+        </a>
+
+        <a href="{% url 'add_service' %}"
+           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
+           {% block nav_add %}text-secondary{% endblock %}">
+            <span class="material-symbols-outlined {% block nav_add_fill %}{% endblock %}">add_circle</span>
+            <span class="text-label-sm mt-0.5">Add Service</span>
+        </a>
+
+        <a href="{% url 'provider_bookings' %}"
+           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
+           {% block nav_bookings %}text-secondary{% endblock %}">
+            <span class="material-symbols-outlined {% block nav_bookings_fill %}{% endblock %}">calendar_today</span>
+            <span class="text-label-sm mt-0.5">Bookings</span>
+        </a>
+
+        <a href="{% url 'provider_messages' %}"
+           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
+           {% block nav_messages %}text-secondary{% endblock %}">
+            <span class="material-symbols-outlined {% block nav_messages_fill %}{% endblock %}">chat_bubble</span>
+            <span class="text-label-sm mt-0.5">Messages</span>
+        </a>
+
+        <a href="{% url 'provider_profile' %}"
+           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
+           {% block nav_profile %}text-secondary{% endblock %}">
+            <span class="material-symbols-outlined {% block nav_profile_fill %}{% endblock %}">person</span>
+            <span class="text-label-sm mt-0.5">Profile</span>
+        </a>
+
+    </nav>
+
+    {% block extra_scripts %}{% endblock %}
+
+
+<script>
+
+function toggleProfileMenu() {
+
+    document
+        .getElementById('profileDropdown')
+        .classList
+        .toggle('hidden')
+}
+
+
+document.addEventListener('click', function(event) {
+
+    const dropdown = document.getElementById('profileDropdown')
+
+    if (!event.target.closest('#profileDropdown') &&
+        !event.target.closest('button')) {
+
+        dropdown.classList.add('hidden')
+    }
+})
+
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}Home — HomeAssist{% endblock %}
+
+{% block nav_home %}text-primary font-bold{% endblock %}
+{% block nav_home_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<!-- SEARCH BAR -->
+<section class="mb-xl">
+    <form method="GET">
+        <div class="relative">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+            <input type="text" name="search" value="{{ search_query|default:'' }}"
+                   placeholder="Search services, electricians, plumbers..."
+                   class="w-full h-14 pl-12 pr-4 bg-surface-container-lowest border border-outline-variant rounded-[14px]
+                          focus:ring-2 focus:ring-primary focus:border-transparent text-body-md shadow-sm outline-none"/>
+        </div>
+    </form>
+</section>
+
+<!-- PROMO BANNER -->
+{% if not search_query %}
+<section class="mb-xl">
+    <div class="relative w-full h-40 rounded-[20px] overflow-hidden bg-primary">
+        <div class="absolute inset-0 flex flex-col justify-center px-lg space-y-sm">
+            <span class="bg-white/20 text-white px-sm py-xs rounded-full text-[10px] font-bold uppercase tracking-wider w-fit">
+                Special Offer
+            </span>
+            <h3 class="text-headline-md text-white leading-tight">Find Trusted Pros<br/>Near You</h3>
+            <a href="{% url 'explore_services' %}"
+               class="mt-sm bg-white text-primary px-md py-sm rounded-xl text-label-lg w-fit active:scale-95 transition-transform">
+                Browse All
+            </a>
+        </div>
+        <div class="absolute right-0 top-0 bottom-0 w-32 flex items-center justify-center opacity-10">
+            <span class="material-symbols-outlined text-white" style="font-size: 120px;">home_repair_service</span>
+        </div>
+    </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="mb-xl">
+    <div class="flex justify-between items-center mb-md">
+        <h2 class="text-headline-md text-on-surface">Categories</h2>
+        <a href="{% url 'explore_services' %}" class="text-label-lg text-primary">View All</a>
+    </div>
+    <div class="grid grid-cols-4 gap-gutter">
+        {% for icon, label, cat in categories %}
+        <a href="{% url 'explore_services' %}?category={{ cat }}"
+           class="flex flex-col items-center gap-sm group cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl bg-primary-fixed/40 flex items-center justify-center text-primary group-active:scale-90 transition-transform">
+                <span class="material-symbols-outlined text-[28px]">{{ icon }}</span>
+            </div>
+            <span class="text-label-sm text-center text-on-surface-variant">{{ label }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- SERVICES LIST -->
+<section>
+    <div class="flex justify-between items-center mb-md">
+        <h2 class="text-headline-md text-on-surface">
+            {% if search_query %}Results for "{{ search_query }}"{% else %}Available Services{% endif %}
+        </h2>
+        {% if search_query %}
+        <a href="{% url 'resident_home' %}" class="text-label-lg text-on-surface-variant">Clear</a>
+        {% endif %}
+    </div>
+
+    {% if services %}
+    <div class="space-y-gutter pb-sm">
+        {% for service in services %}
+        <div class="bg-surface-container-lowest rounded-[20px] overflow-hidden shadow-[0px_4px_20px_rgba(51,65,85,0.05)] border border-surface-container">
+
+            {% if service.image %}
+            <img src="{{ service.image.url }}" alt="{{ service.service_name }}"
+                 class="w-full h-48 object-cover"/>
+            {% else %}
+            <div class="w-full h-36 bg-surface-container flex items-center justify-center">
+                <span class="material-symbols-outlined text-[48px] text-on-surface-variant">home_repair_service</span>
+            </div>
+            {% endif %}
+
+            <div class="p-gutter">
+                <div class="flex justify-between items-start mb-sm">
+                    <div class="flex-1 min-w-0 mr-sm">
+                        <h3 class="text-headline-md text-on-surface">{{ service.service_name }}</h3>
+                        <p class="text-label-sm text-primary flex items-center gap-xs mt-xs">
+                            <span class="material-symbols-outlined text-[14px]">category</span>
+                            {{ service.category }}
+                        </p>
+                        <p class="text-label-sm text-on-surface-variant flex items-center gap-xs mt-xs">
+                            <span class="material-symbols-outlined text-[14px]">person</span>
+                            {{ service.provider.get_full_name|default:service.provider.username }}
+                        </p>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <span class="text-label-sm text-on-surface-variant block">Starts at</span>
+                        <span class="text-headline-md text-primary font-bold">₹{{ service.price }}</span>
+                    </div>
+                </div>
+
+                <p class="text-body-md text-on-surface-variant mb-md line-clamp-2">
+                    {{ service.description|truncatechars:120 }}
+                </p>
+
+                <div class="flex gap-sm">
+                    <a href="{% url 'provider_details' service.id %}"
+                       class="flex-1 flex items-center justify-center gap-xs py-sm bg-surface border border-outline-variant rounded-xl text-label-lg text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">
+                        <span class="material-symbols-outlined text-[18px]">info</span>
+                        Details
+                    </a>
+                    <a href="{% url 'book_service' service.id %}"
+                       class="flex-1 flex items-center justify-center gap-xs py-sm bg-primary text-on-primary rounded-xl text-label-lg font-medium hover:opacity-90 transition-opacity active:scale-95 shadow-md">
+                        <span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+                        Book Now
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="bg-surface-container-low rounded-[20px] p-xxl flex flex-col items-center text-center">
+        <span class="material-symbols-outlined text-[48px] text-on-surface-variant mb-md">search_off</span>
+        <h4 class="text-headline-md text-on-surface mb-sm">No services found</h4>
+        <p class="text-body-md text-on-surface-variant">
+            {% if search_query %}No results for "{{ search_query }}". Try a different search.
+            {% else %}No services available right now. Check back later.{% endif %}
+        </p>
+    </div>
+    {% endif %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}Edit Profile — HomeAssist{% endblock %}
+
+{% block nav_profile %}text-primary font-bold{% endblock %}
+{% block nav_profile_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<section class="mb-xl">
+
+    <h2 class="text-display-lg text-on-surface mb-xs">
+        Edit Profile
+    </h2>
+
+    <p class="text-body-md text-on-surface-variant">
+        Update your personal information
+    </p>
+
+</section>
+
+
+<form method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+    <!-- PROFILE IMAGE -->
+    <section class="flex flex-col items-center mb-xl">
+
+        <div class="relative mb-md">
+
+            {% if profile.profile_image %}
+            <img src="{{ profile.profile_image.url }}"
+                 class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+            {% else %}
+            <div class="w-32 h-32 rounded-full bg-primary-fixed flex items-center justify-center shadow-lg">
+                <span class="text-display-lg text-primary font-bold">
+                    {{ user_obj.username|first|upper }}
+                </span>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <label class="bg-primary text-on-primary px-lg py-sm rounded-full text-label-lg cursor-pointer active:scale-95 transition-transform">
+
+            Change Photo
+
+            <input type="file"
+                   name="profile_image"
+                   class="hidden">
+
+        </label>
+
+    </section>
+
+
+    <!-- FORM -->
+    <section class="space-y-md">
+
+        <!-- FIRST NAME -->
+        <div>
+
+            <label class="block text-label-lg text-on-surface mb-sm">
+                First Name
+            </label>
+
+            <input type="text"
+                   name="first_name"
+                   value="{{ user_obj.first_name }}"
+                   class="w-full h-14 px-md bg-surface-container-lowest border border-outline-variant rounded-[16px] outline-none focus:ring-2 focus:ring-primary">
+
+        </div>
+
+
+        <!-- LAST NAME -->
+        <div>
+
+            <label class="block text-label-lg text-on-surface mb-sm">
+                Last Name
+            </label>
+
+            <input type="text"
+                   name="last_name"
+                   value="{{ user_obj.last_name }}"
+                   class="w-full h-14 px-md bg-surface-container-lowest border border-outline-variant rounded-[16px] outline-none focus:ring-2 focus:ring-primary">
+
+        </div>
+
+
+        <!-- EMAIL -->
+        <div>
+
+            <label class="block text-label-lg text-on-surface mb-sm">
+                Email Address
+            </label>
+
+            <input type="email"
+                   name="email"
+                   value="{{ user_obj.email }}"
+                   class="w-full h-14 px-md bg-surface-container-lowest border border-outline-variant rounded-[16px] outline-none focus:ring-2 focus:ring-primary">
+
+        </div>
+
+
+        <!-- PHONE -->
+        <div>
+
+            <label class="block text-label-lg text-on-surface mb-sm">
+                Phone Number
+            </label>
+
+            <input type="text"
+                   name="phone"
+                   value="{{ profile.phone }}"
+                   class="w-full h-14 px-md bg-surface-container-lowest border border-outline-variant rounded-[16px] outline-none focus:ring-2 focus:ring-primary">
+
+        </div>
+
+
+        <!-- ADDRESS -->
+        <div>
+
+            <label class="block text-label-lg text-on-surface mb-sm">
+                Address
+            </label>
+
+            <textarea name="address"
+                      rows="4"
+                      class="w-full px-md py-md bg-surface-container-lowest border border-outline-variant rounded-[16px] outline-none focus:ring-2 focus:ring-primary resize-none">{{ profile.address }}</textarea>
+
+        </div>
+
+    </section>
+
+
+    <!-- ACTION BUTTONS -->
+    <section class="grid grid-cols-2 gap-md mt-xl">
+
+        <a href="{% url 'resident_profile' %}"
+           class="flex items-center justify-center h-14 rounded-[16px] border border-outline-variant text-on-surface text-label-lg active:scale-95 transition-transform">
+
+            Cancel
+
+        </a>
+
+        <button type="submit"
+                class="h-14 rounded-[16px] bg-primary text-on-primary text-label-lg font-medium shadow-lg active:scale-95 transition-transform">
+
+            Save Changes
+
+        </button>
+
+    </section>
+
+</form>
+
+{% endblock %}

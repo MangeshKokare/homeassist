@@ -1,0 +1,254 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}Profile — HomeAssist{% endblock %}
+
+{% block nav_profile %}text-primary font-bold{% endblock %}
+{% block nav_profile_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<!-- PROFILE HEADER -->
+<section class="flex flex-col items-center text-center mb-xl">
+
+    <div class="relative mb-md">
+
+        {% if profile.profile_image %}
+        <img src="{{ profile.profile_image.url }}"
+             class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+        {% else %}
+        <div class="w-32 h-32 rounded-full bg-primary-fixed flex items-center justify-center shadow-lg">
+            <span class="text-display-lg text-primary font-bold">
+                {{ user_obj.username|first|upper }}
+            </span>
+        </div>
+        {% endif %}
+
+        <a href="{% url 'resident_edit_profile' %}"
+           class="absolute bottom-1 right-1 bg-primary text-white p-3 rounded-full shadow-lg active:scale-95 transition-transform">
+
+            <span class="material-symbols-outlined text-[20px]">
+                edit
+            </span>
+
+        </a>
+
+    </div>
+
+    <h1 class="text-headline-lg text-on-surface">
+        {{ user_obj.get_full_name|default:user_obj.username }}
+    </h1>
+
+    <p class="text-body-md text-on-surface-variant mt-xs">
+        {{ user_obj.email }}
+    </p>
+
+    {% if profile.phone %}
+    <p class="text-body-md text-on-surface-variant mt-xs flex items-center gap-xs">
+        <span class="material-symbols-outlined text-[16px]">
+            call
+        </span>
+
+        {{ profile.phone }}
+    </p>
+    {% endif %}
+
+    {% if profile.address %}
+    <p class="text-body-md text-on-surface-variant mt-xs flex items-center gap-xs text-center">
+        <span class="material-symbols-outlined text-[16px]">
+            location_on
+        </span>
+
+        {{ profile.address }}
+    </p>
+    {% endif %}
+
+</section>
+
+
+<!-- STATS -->
+<section class="grid grid-cols-2 gap-gutter mb-xl">
+
+    <div class="bg-surface-container-low rounded-[20px] p-lg text-center shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+
+        <h3 class="text-display-lg text-primary font-bold">
+            {{ active_bookings }}
+        </h3>
+
+        <p class="text-label-lg text-on-surface-variant">
+            Active Bookings
+        </p>
+
+    </div>
+
+    <div class="bg-surface-container-low rounded-[20px] p-lg text-center shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+
+        <h3 class="text-display-lg text-primary font-bold">
+            {{ completed_bookings }}
+        </h3>
+
+        <p class="text-label-lg text-on-surface-variant">
+            Completed Services
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ACCOUNT OPTIONS -->
+<section class="space-y-sm mb-xl">
+
+    <h2 class="text-label-lg text-outline ml-xs mb-sm">
+        Account Preferences
+    </h2>
+
+    <div class="bg-surface-container-lowest rounded-[20px] overflow-hidden border border-surface-container shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+
+
+        <!-- BOOKINGS -->
+        <a href="{% url 'resident_bookings' %}"
+           class="flex items-center justify-between p-md hover:bg-surface-container-low transition-colors">
+
+            <div class="flex items-center gap-md">
+
+                <div class="w-11 h-11 rounded-xl bg-primary-fixed/40 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined">
+                        calendar_today
+                    </span>
+                </div>
+
+                <div>
+                    <h3 class="text-body-lg text-on-surface">
+                        My Bookings
+                    </h3>
+
+                    <p class="text-label-sm text-on-surface-variant">
+                        View your booking history
+                    </p>
+                </div>
+
+            </div>
+
+            <span class="material-symbols-outlined text-outline">
+                chevron_right
+            </span>
+
+        </a>
+
+
+        <div class="h-[1px] bg-surface-container mx-md"></div>
+
+
+        <!-- MESSAGES -->
+        <a href="{% url 'resident_messages' %}"
+           class="flex items-center justify-between p-md hover:bg-surface-container-low transition-colors">
+
+            <div class="flex items-center gap-md">
+
+                <div class="w-11 h-11 rounded-xl bg-primary-fixed/40 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined">
+                        chat_bubble
+                    </span>
+                </div>
+
+                <div>
+                    <h3 class="text-body-lg text-on-surface">
+                        Messages
+                    </h3>
+
+                    <p class="text-label-sm text-on-surface-variant">
+                        {{ total_messages }} total messages
+                    </p>
+                </div>
+
+            </div>
+
+            <span class="material-symbols-outlined text-outline">
+                chevron_right
+            </span>
+
+        </a>
+
+
+        <div class="h-[1px] bg-surface-container mx-md"></div>
+
+
+        <!-- EDIT PROFILE -->
+        <a href="{% url 'resident_edit_profile' %}"
+           class="flex items-center justify-between p-md hover:bg-surface-container-low transition-colors">
+
+            <div class="flex items-center gap-md">
+
+                <div class="w-11 h-11 rounded-xl bg-primary-fixed/40 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined">
+                        person
+                    </span>
+                </div>
+
+                <div>
+                    <h3 class="text-body-lg text-on-surface">
+                        Edit Profile
+                    </h3>
+
+                    <p class="text-label-sm text-on-surface-variant">
+                        Update your account information
+                    </p>
+                </div>
+
+            </div>
+
+            <span class="material-symbols-outlined text-outline">
+                chevron_right
+            </span>
+
+        </a>
+
+
+        <div class="h-[1px] bg-surface-container mx-md"></div>
+
+
+        <!-- LOGOUT -->
+        <a href="{% url 'logout' %}"
+           class="flex items-center justify-between p-md hover:bg-red-50 transition-colors">
+
+            <div class="flex items-center gap-md">
+
+                <div class="w-11 h-11 rounded-xl bg-error-container flex items-center justify-center text-error">
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
+                </div>
+
+                <div>
+                    <h3 class="text-body-lg text-on-surface">
+                        Logout
+                    </h3>
+
+                    <p class="text-label-sm text-on-surface-variant">
+                        Sign out from your account
+                    </p>
+                </div>
+
+            </div>
+
+            <span class="material-symbols-outlined text-outline">
+                chevron_right
+            </span>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- APP INFO -->
+<section class="text-center py-lg">
+
+    <p class="text-label-sm text-outline">
+        HomeAssist v1.0
+    </p>
+
+</section>
+
+{% endblock %}

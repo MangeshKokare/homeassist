@@ -1,0 +1,283 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}Book Service — HomeAssist{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <!-- HEADER -->
+    <section class="flex items-center gap-md mb-xl">
+
+        <a href="javascript:history.back()"
+           class="w-11 h-11 rounded-full bg-surface-container-low flex items-center justify-center active:scale-95">
+
+            <span class="material-symbols-outlined">
+                arrow_back
+            </span>
+
+        </a>
+
+        <div>
+
+            <h1 class="text-display-lg text-on-surface">
+                Book Service
+            </h1>
+
+            <p class="text-body-md text-on-surface-variant">
+                Confirm your booking details
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- SERVICE HERO -->
+    <section class="relative h-56 rounded-[24px] overflow-hidden mb-xl shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+
+        {% if service.image %}
+        <img src="{{ service.image.url }}"
+             class="w-full h-full object-cover">
+        {% else %}
+        <div class="w-full h-full bg-surface-container flex items-center justify-center">
+
+            <span class="material-symbols-outlined text-[56px] text-primary">
+                handyman
+            </span>
+
+        </div>
+        {% endif %}
+
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+
+        <div class="absolute bottom-0 left-0 right-0 p-lg">
+
+            <div class="flex justify-between items-end gap-md">
+
+                <div>
+
+                    <span class="inline-block bg-white/20 backdrop-blur-sm text-white px-sm py-xs rounded-full text-label-sm mb-sm">
+                        {{ service.category }}
+                    </span>
+
+                    <h2 class="text-headline-lg text-white">
+                        {{ service.service_name }}
+                    </h2>
+
+                    <p class="text-white/90 text-body-md mt-xs">
+                        {{ service.provider.get_full_name|default:service.provider.username }}
+                    </p>
+
+                </div>
+
+                <div class="text-right">
+
+                    <span class="text-white/70 text-label-sm">
+                        Starting At
+                    </span>
+
+                    <h3 class="text-white text-headline-lg">
+                        ₹{{ service.price }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- BOOKING FORM -->
+    <section class="space-y-xl">
+
+        <!-- DATE -->
+        <div>
+
+            <label class="block text-headline-md mb-md">
+                Select Date
+            </label>
+
+            <input type="date"
+                   name="booking_date"
+                   required
+                   class="w-full h-14 px-md rounded-[16px] border border-outline-variant bg-surface-container-lowest outline-none focus:ring-2 focus:ring-primary">
+
+        </div>
+
+
+        <!-- TIME -->
+        <div>
+
+            <label class="block text-headline-md mb-md">
+                Preferred Time
+            </label>
+
+            <input type="time"
+                name="booking_time"
+                required
+                min="{{ service.provider.profile.working_start_time|time:'H:i' }}"
+                max="{{ service.provider.profile.working_end_time|time:'H:i' }}"
+                class="w-full h-14 px-md rounded-[16px] border border-outline-variant bg-surface-container-lowest outline-none focus:ring-2 focus:ring-primary">
+
+            {% if service.provider.profile.working_start_time and service.provider.profile.working_end_time %}
+
+            <p class="text-label-sm text-on-surface-variant mt-sm">
+
+                Available between
+                {{ service.provider.profile.working_start_time|time:"g:i A" }}
+                -
+                {{ service.provider.profile.working_end_time|time:"g:i A" }}
+
+            </p>
+
+            {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ADDRESS -->
+        <div>
+
+            <div class="flex justify-between items-center mb-md">
+
+                <label class="text-headline-md">
+                    Service Address
+                </label>
+
+            </div>
+
+            <div class="p-md rounded-[18px] border border-outline-variant bg-surface-container-low">
+
+                <div class="flex gap-md">
+
+                    <span class="material-symbols-outlined text-primary">
+                        location_on
+                    </span>
+
+                    <div>
+
+                        <h4 class="text-label-lg text-on-surface">
+                            Home Address
+                        </h4>
+
+                        <p class="text-body-md text-on-surface-variant mt-xs">
+                            {{ request.user.profile.address|default:"Please update your address in profile." }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PAYMENT -->
+        <div>
+
+            <label class="block text-headline-md mb-md">
+                Payment Method
+            </label>
+
+            <div class="space-y-sm">
+
+                {% for method in payment_methods %}
+
+                <label class="cursor-pointer block">
+
+                    <input type="radio"
+                           name="payment_method"
+                           value="{{ method }}"
+                           class="hidden peer"
+                           {% if forloop.first %}checked{% endif %}>
+
+                    <div class="p-md rounded-[18px] border border-outline-variant bg-surface-container-lowest flex justify-between items-center peer-checked:border-primary peer-checked:bg-primary-fixed transition-all">
+
+                        <div class="flex items-center gap-md">
+
+                            <span class="material-symbols-outlined text-primary">
+                                {% if method == 'UPI' %}
+                                account_balance_wallet
+                                {% elif method == 'Card' %}
+                                credit_card
+                                {% else %}
+                                payments
+                                {% endif %}
+                            </span>
+
+                            <span class="text-label-lg">
+                                {{ method }}
+                            </span>
+
+                        </div>
+
+                        <div class="w-5 h-5 rounded-full border-2 border-outline peer-checked:border-primary"></div>
+
+                    </div>
+
+                </label>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <section class="mt-xxl sticky bottom-24">
+
+        <div class="bg-surface rounded-[24px] shadow-[0px_-4px_24px_rgba(51,65,85,0.08)] p-lg border border-surface-container">
+
+            <div class="flex justify-between items-center mb-lg">
+
+                <div>
+
+                    <p class="text-label-sm text-on-surface-variant">
+                        Total Amount
+                    </p>
+
+                    <h2 class="text-display-lg text-primary">
+                        ₹{{ service.price }}
+                    </h2>
+
+                </div>
+
+                <div class="text-right">
+
+                    <p class="text-label-sm text-on-surface-variant">
+                        Provider
+                    </p>
+
+                    <h4 class="text-label-lg text-on-surface">
+                        {{ service.provider.first_name }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+            <button type="submit"
+                    class="w-full h-14 rounded-[18px] bg-primary text-on-primary text-headline-md shadow-lg active:scale-[0.98] transition-transform">
+
+                Confirm Booking
+
+            </button>
+
+        </div>
+
+    </section>
+
+</form>
+
+{% endblock %}
