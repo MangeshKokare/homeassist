@@ -7,207 +7,641 @@
 
 {% block content %}
 
-<!-- HEADER -->
-<section class="mb-xl">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
-    <h2 class="text-display-lg text-on-surface mb-xs">
-        Explore Services
-    </h2>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <p class="text-body-md text-on-surface-variant">
-        Find trusted professionals near you
-    </p>
+:root {
+  --uc-purple:       #7C3AED;
+  --uc-purple-mid:   #6D28D9;
+  --uc-purple-light: #EDE9FE;
+  --uc-purple-soft:  #F5F3FF;
+  --uc-green:        #16A34A;
+  --uc-green-light:  #DCFCE7;
+  --uc-amber:        #D97706;
+  --uc-amber-light:  #FEF3C7;
+  --uc-red:          #DC2626;
+  --uc-white:        #FFFFFF;
+  --uc-gray-50:      #F8FAFC;
+  --uc-gray-100:     #F1F5F9;
+  --uc-gray-200:     #E2E8F0;
+  --uc-gray-300:     #CBD5E1;
+  --uc-gray-400:     #94A3B8;
+  --uc-gray-500:     #64748B;
+  --uc-gray-600:     #475569;
+  --uc-gray-700:     #334155;
+  --uc-gray-900:     #0F172A;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --radius-pill: 100px;
+}
 
-</section>
+body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-white); color: var(--uc-gray-900); }
 
+/* ── Page header ── */
+.page-header { padding: 4px 0 20px; }
+.page-header h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--uc-gray-900);
+  letter-spacing: -.5px;
+  line-height: 1.15;
+}
+.page-header p {
+  font-size: 14px;
+  color: var(--uc-gray-400);
+  margin-top: 4px;
+}
 
-<!-- SEARCH -->
-<section class="mb-xl">
+/* ── Search bar ── */
+.search-row { display: flex; gap: 10px; margin-bottom: 16px; }
+.search-input-wrap {
+  flex: 1;
+  position: relative;
+}
+.search-input-wrap .s-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--uc-gray-400);
+  font-size: 20px;
+  pointer-events: none;
+}
+.search-input-wrap input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px 0 44px;
+  border: 1.5px solid var(--uc-gray-200);
+  border-radius: var(--radius-pill);
+  background: var(--uc-gray-50);
+  font-size: 14px;
+  color: var(--uc-gray-900);
+  outline: none;
+  font-family: inherit;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.search-input-wrap input:focus {
+  border-color: var(--uc-purple);
+  background: var(--uc-white);
+  box-shadow: 0 0 0 4px rgba(124,58,237,.08);
+}
+.search-input-wrap input::placeholder { color: var(--uc-gray-400); }
+.search-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-pill);
+  background: var(--uc-purple);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity .15s, transform .1s;
+  color: #fff;
+}
+.search-btn:hover { opacity: .9; }
+.search-btn:active { transform: scale(.95); }
+.search-btn .material-symbols-outlined { font-size: 20px; }
 
-    <form method="GET">
+/* ── Active search results banner ── */
+.results-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--uc-purple-soft);
+  border: 1px solid var(--uc-purple-light);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+.results-banner span { font-size: 13px; font-weight: 600; color: var(--uc-purple); }
+.results-banner a { font-size: 12px; font-weight: 700; color: var(--uc-gray-500); text-decoration: none; }
+.results-banner a:hover { color: var(--uc-gray-900); }
 
-        <div class="flex items-center gap-md mb-lg">
+/* ── Category filter chips ── */
+.filter-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin: 0 -20px 20px;
+  padding: 0 20px;
+}
+.filter-scroll::-webkit-scrollbar { display: none; }
+.filter-inner { display: flex; gap: 8px; width: max-content; padding-bottom: 2px; }
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1.5px solid var(--uc-gray-200);
+  background: var(--uc-white);
+  color: var(--uc-gray-600);
+  transition: all .15s;
+  font-family: inherit;
+}
+.filter-chip:hover { border-color: var(--uc-purple); color: var(--uc-purple); background: var(--uc-purple-soft); }
+.filter-chip.active {
+  background: var(--uc-purple);
+  border-color: var(--uc-purple);
+  color: #fff;
+}
+.filter-chip .material-symbols-outlined { font-size: 14px; }
 
-            <div class="relative flex-1">
+/* ── Sort/filter toolbar ── */
+.sort-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.results-count { font-size: 13px; color: var(--uc-gray-400); font-weight: 500; }
+.results-count strong { color: var(--uc-gray-900); font-weight: 700; }
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--uc-gray-200);
+  border-radius: var(--radius-pill);
+  background: var(--uc-white);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--uc-gray-600);
+  cursor: pointer;
+  transition: all .15s;
+  font-family: inherit;
+}
+.sort-btn .material-symbols-outlined { font-size: 14px; }
+.sort-btn:hover { border-color: var(--uc-purple); color: var(--uc-purple); }
 
-                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
-                    search
-                </span>
+/* ── Service cards ── */
+.svc-grid { display: flex; flex-direction: column; gap: 16px; padding-bottom: 28px; }
 
-                <input type="text"
-                       name="search"
-                       value="{{ search_query }}"
-                       placeholder="Search electricians, plumbers..."
-                       class="w-full h-14 pl-12 pr-4 rounded-[16px] bg-surface-container-lowest border border-outline-variant outline-none focus:ring-2 focus:ring-primary">
+.svc-card {
+  background: var(--uc-white);
+  border: 1px solid var(--uc-gray-200);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: box-shadow .2s, transform .15s;
+  cursor: pointer;
+}
+.svc-card:hover { box-shadow: 0 8px 32px rgba(15,23,42,.08); }
 
-            </div>
+/* Image section */
+.svc-img-wrap { position: relative; height: 200px; overflow: hidden; background: var(--uc-gray-100); }
+.svc-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+.svc-card:hover .svc-img-wrap img { transform: scale(1.03); }
+.svc-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px; background: var(--uc-gray-50);
+}
+.svc-img-placeholder .material-symbols-outlined { font-size: 44px; color: var(--uc-gray-300); }
+.svc-img-placeholder span:last-child { font-size: 12px; color: var(--uc-gray-400); }
 
-            <button type="submit"
-                    class="w-14 h-14 rounded-[16px] bg-primary text-on-primary flex items-center justify-center shadow-lg active:scale-95">
+/* Floating badges on image */
+.img-badge-cat {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--uc-purple);
+  border: 1px solid rgba(124,58,237,.15);
+}
+.img-badge-avail {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(22,163,74,.9);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.img-badge-avail .dot {
+  width: 5px; height: 5px;
+  background: rgba(255,255,255,.8);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
 
-                <span class="material-symbols-outlined">
-                    search
-                </span>
+/* Wishlist btn */
+.wishlist-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 34px; height: 34px;
+  background: rgba(255,255,255,.9);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer;
+  color: var(--uc-gray-400);
+  transition: color .15s, background .15s;
+}
+.wishlist-btn:hover { color: var(--uc-red); background: #fff; }
+.wishlist-btn .material-symbols-outlined { font-size: 18px; }
 
-            </button>
+/* Card body */
+.svc-body { padding: 16px; }
 
-        </div>
+/* Provider row */
+.provider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.provider-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--uc-purple-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--uc-purple);
+  flex-shrink: 0;
+}
+.provider-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--uc-gray-600);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rating-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--uc-amber-light);
+  border-radius: var(--radius-pill);
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--uc-amber);
+  flex-shrink: 0;
+}
+.rating-chip .material-symbols-outlined { font-size: 12px; }
 
-    </form>
+/* Title & description */
+.svc-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--uc-gray-900);
+  line-height: 1.25;
+  margin-bottom: 6px;
+  letter-spacing: -.2px;
+}
+.svc-desc {
+  font-size: 13px;
+  color: var(--uc-gray-500);
+  line-height: 1.55;
+  margin-bottom: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
+/* Trust tags */
+.trust-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.trust-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--uc-green-light);
+  color: var(--uc-green);
+}
+.trust-tag .material-symbols-outlined { font-size: 12px; }
 
-    <!-- CATEGORY FILTERS -->
-    <div class="flex gap-sm overflow-x-auto hide-scrollbar pb-2">
+/* Price + actions row */
+.price-action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.price-block { flex: 1; }
+.price-label { font-size: 10px; font-weight: 600; color: var(--uc-gray-400); text-transform: uppercase; letter-spacing: .5px; }
+.price-value { font-size: 22px; font-weight: 800; color: var(--uc-gray-900); letter-spacing: -.5px; line-height: 1.1; }
+.price-note { font-size: 11px; color: var(--uc-gray-400); font-weight: 400; }
+.action-group { display: flex; gap: 8px; }
+.btn-details {
+  height: 42px;
+  padding: 0 16px;
+  border: 1.5px solid var(--uc-gray-200);
+  border-radius: var(--radius-md);
+  background: var(--uc-white);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--uc-gray-700);
+  text-decoration: none;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  transition: border-color .15s, color .15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.btn-details:hover { border-color: var(--uc-purple); color: var(--uc-purple); }
+.btn-book {
+  height: 42px;
+  padding: 0 20px;
+  background: var(--uc-purple);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  transition: opacity .15s, transform .1s;
+  font-family: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.btn-book:hover { opacity: .9; }
+.btn-book:active { transform: scale(.97); }
+.btn-book .material-symbols-outlined,
+.btn-details .material-symbols-outlined { font-size: 15px; }
 
-        <a href="{% url 'explore_services' %}"
-           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
-           {% if not active_category %}
-           bg-primary text-on-primary
-           {% else %}
-           bg-surface-container-high text-on-surface-variant
-           {% endif %}">
+/* Divider line inside card */
+.card-divider {
+  height: 1px;
+  background: var(--uc-gray-100);
+  margin: 14px 0;
+}
 
-            All
+/* ── Empty state ── */
+.empty-state {
+  background: var(--uc-gray-50);
+  border-radius: var(--radius-xl);
+  padding: 56px 24px;
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center; gap: 10px;
+  border: 1px dashed var(--uc-gray-200);
+}
+.empty-icon-wrap {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: var(--uc-gray-100);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 4px;
+}
+.empty-icon-wrap .material-symbols-outlined { font-size: 34px; color: var(--uc-gray-400); }
+.empty-state h3 { font-size: 18px; font-weight: 800; color: var(--uc-gray-900); }
+.empty-state p { font-size: 14px; color: var(--uc-gray-400); max-width: 240px; line-height: 1.5; }
+.empty-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 10px 20px;
+  background: var(--uc-purple);
+  color: #fff;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity .15s;
+}
+.empty-cta:hover { opacity: .9; }
 
-        </a>
+/* ── Sticky search bar on scroll ── */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  background: var(--uc-white);
+  z-index: 10;
+  padding: 12px 0 8px;
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-bottom: 1px solid var(--uc-gray-100);
+  margin-bottom: 16px;
+}
+</style>
 
-        {% for category in categories %}
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <h1>
+    {% if active_category %}
+      {{ active_category }}
+    {% else %}
+      Explore Services
+    {% endif %}
+  </h1>
+  <p>
+    {% if active_category %}
+      {{ services|length }} service{{ services|length|pluralize }} available near you
+    {% else %}
+      Find trusted professionals near you
+    {% endif %}
+  </p>
+</div>
 
-        <a href="{% url 'explore_services' %}?category={{ category }}"
-           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
-           {% if active_category == category %}
-           bg-primary text-on-primary
-           {% else %}
-           bg-surface-container-high text-on-surface-variant
-           {% endif %}">
-
-            {{ category }}
-
-        </a>
-
-        {% endfor %}
-
+<!-- ── STICKY SEARCH + FILTERS ── -->
+<div class="sticky-top">
+  <form method="GET">
+    {% if active_category %}
+    <input type="hidden" name="category" value="{{ active_category }}">
+    {% endif %}
+    <div class="search-row">
+      <div class="search-input-wrap">
+        <span class="material-symbols-outlined s-icon">search</span>
+        <input type="text" name="search" value="{{ search_query|default:'' }}"
+               placeholder="Search electricians, plumbers..."/>
+      </div>
+      <button type="submit" class="search-btn">
+        <span class="material-symbols-outlined">search</span>
+      </button>
     </div>
+  </form>
 
-</section>
+  <!-- Category filter chips -->
+  <div class="filter-scroll">
+    <div class="filter-inner">
+      <a href="{% url 'explore_services' %}{% if search_query %}?search={{ search_query }}{% endif %}"
+         class="filter-chip {% if not active_category %}active{% endif %}">
+        <span class="material-symbols-outlined">apps</span> All
+      </a>
+      {% for category in categories %}
+      <a href="{% url 'explore_services' %}?category={{ category }}{% if search_query %}&search={{ search_query }}{% endif %}"
+         class="filter-chip {% if active_category == category %}active{% endif %}">
+        {% if category == "Cleaning" %}<span class="material-symbols-outlined">cleaning_services</span>
+        {% elif category == "Electrician" %}<span class="material-symbols-outlined">electrical_services</span>
+        {% elif category == "Plumber" %}<span class="material-symbols-outlined">plumbing</span>
+        {% elif category == "Carpenter" %}<span class="material-symbols-outlined">carpenter</span>
+        {% elif category == "Painter" %}<span class="material-symbols-outlined">format_paint</span>
+        {% elif category == "Pest Control" %}<span class="material-symbols-outlined">pest_control</span>
+        {% else %}<span class="material-symbols-outlined">home_repair_service</span>
+        {% endif %}
+        {{ category }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 
+<!-- ── SEARCH RESULTS BANNER ── -->
+{% if search_query %}
+<div class="results-banner">
+  <span>
+    <span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px;">search</span>
+    Results for "{{ search_query }}"
+  </span>
+  <a href="{% url 'explore_services' %}{% if active_category %}?category={{ active_category }}{% endif %}">
+    ✕ Clear
+  </a>
+</div>
+{% endif %}
 
-<!-- SERVICES GRID -->
+<!-- ── SORT TOOLBAR ── -->
 {% if services %}
+<div class="sort-toolbar">
+  <span class="results-count">
+    <strong>{{ services|length }}</strong> service{{ services|length|pluralize }} found
+  </span>
+  <button class="sort-btn" type="button">
+    <span class="material-symbols-outlined">tune</span> Filter &amp; Sort
+  </button>
+</div>
+{% endif %}
 
-<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- ── SERVICE CARDS ── -->
+{% if services %}
+<div class="svc-grid">
+  {% for service in services %}
 
-    {% for service in services %}
+  {% with initials=service.provider.get_full_name|default:service.provider.username|slice:":2"|upper %}
+  <div class="svc-card">
 
-    <div class="bg-surface-container-lowest rounded-[24px] overflow-hidden border border-surface-container shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+    <!-- Image -->
+    <div class="svc-img-wrap">
+      {% if service.image %}
+      <img src="{{ service.image.url }}" alt="{{ service.service_name }}"/>
+      {% else %}
+      <div class="svc-img-placeholder">
+        <span class="material-symbols-outlined">home_repair_service</span>
+        <span>No image available</span>
+      </div>
+      {% endif %}
 
-        <!-- IMAGE -->
-        <div class="relative h-52 overflow-hidden">
-
-            {% if service.image %}
-            <img src="{{ service.image.url }}"
-                 class="w-full h-full object-cover">
-            {% else %}
-            <div class="w-full h-full bg-surface-container flex items-center justify-center">
-
-                <span class="material-symbols-outlined text-[48px] text-primary">
-                    handyman
-                </span>
-
-            </div>
-            {% endif %}
-
-            <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow-md">
-
-                <span class="text-label-sm text-primary font-bold">
-                    {{ service.category }}
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- CONTENT -->
-        <div class="p-gutter">
-
-            <div class="flex justify-between items-start gap-md mb-sm">
-
-                <div>
-
-                    <h3 class="text-headline-md text-on-surface">
-                        {{ service.provider.get_full_name|default:service.provider.username }}
-                    </h3>
-
-                    <p class="text-body-md text-on-surface-variant">
-                        {{ service.service_name }}
-                    </p>
-
-                </div>
-
-                <div class="text-right">
-
-                    <p class="text-label-sm text-on-surface-variant">
-                        Starts at
-                    </p>
-
-                    <h4 class="text-headline-md text-primary">
-                        ₹{{ service.price }}
-                    </h4>
-
-                </div>
-
-            </div>
-
-
-            <p class="text-body-md text-on-surface-variant mb-lg line-clamp-2">
-                {{ service.description }}
-            </p>
-
-
-            <!-- ACTIONS -->
-            <div class="grid grid-cols-2 gap-sm">
-
-                <a href="{% url 'provider_details' service.id %}"
-                   class="h-12 rounded-[14px] border border-outline-variant flex items-center justify-center text-label-lg text-on-surface active:scale-95">
-
-                    View Details
-
-                </a>
-
-                <a href="{% url 'book_service' service.id %}"
-                   class="h-12 rounded-[14px] bg-primary text-on-primary flex items-center justify-center text-label-lg shadow-md active:scale-95">
-
-                    Book Now
-
-                </a>
-
-            </div>
-
-        </div>
-
+      <div class="img-badge-cat">{{ service.category }}</div>
+      <div class="img-badge-avail"><span class="dot"></span> Available now</div>
+      <button class="wishlist-btn" type="button" aria-label="Save to wishlist">
+        <span class="material-symbols-outlined">favorite</span>
+      </button>
     </div>
 
-    {% endfor %}
+    <!-- Body -->
+    <div class="svc-body">
 
-</section>
+      <!-- Provider row -->
+      <div class="provider-row">
+        <div class="provider-avatar">{{ initials }}</div>
+        <span class="provider-name">
+          {{ service.provider.get_full_name|default:service.provider.username }}
+        </span>
+        <div class="rating-chip">
+          <span class="material-symbols-outlined">star</span> 4.8
+        </div>
+      </div>
+
+      <!-- Name -->
+      <div class="svc-name">{{ service.service_name }}</div>
+
+      <!-- Description -->
+      <p class="svc-desc">{{ service.description }}</p>
+
+      <!-- Trust tags -->
+      <div class="trust-tags">
+        <span class="trust-tag">
+          <span class="material-symbols-outlined">verified</span> Background checked
+        </span>
+        <span class="trust-tag">
+          <span class="material-symbols-outlined">shield</span> Insured
+        </span>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <!-- Price + CTAs -->
+      <div class="price-action-row">
+        <div class="price-block">
+          <div class="price-label">Starts at</div>
+          <div class="price-value">₹{{ service.price }}</div>
+          <div class="price-note">Inclusive of taxes</div>
+        </div>
+        <div class="action-group">
+          <a href="{% url 'provider_details' service.id %}" class="btn-details">
+            <span class="material-symbols-outlined">info</span> Details
+          </a>
+          <a href="{% url 'book_service' service.id %}" class="btn-book">
+            <span class="material-symbols-outlined">calendar_add_on</span> Book
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endwith %}
+
+  {% endfor %}
+</div>
 
 {% else %}
 
-<div class="bg-surface-container-low rounded-[24px] p-xxl flex flex-col items-center text-center">
-
-    <span class="material-symbols-outlined text-[56px] text-on-surface-variant mb-md">
-        search_off
-    </span>
-
-    <h3 class="text-headline-md text-on-surface mb-sm">
-        No services found
-    </h3>
-
-    <p class="text-body-md text-on-surface-variant">
-        Try changing your search or category filter.
-    </p>
-
+<!-- ── EMPTY STATE ── -->
+<div class="empty-state">
+  <div class="empty-icon-wrap">
+    <span class="material-symbols-outlined">search_off</span>
+  </div>
+  <h3>No services found</h3>
+  <p>
+    {% if search_query %}
+      No results for "{{ search_query }}". Try a different search term.
+    {% elif active_category %}
+      No services in "{{ active_category }}" yet. Check back soon!
+    {% else %}
+      No services available right now. Check back later.
+    {% endif %}
+  </p>
+  <a href="{% url 'explore_services' %}" class="empty-cta">
+    <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
+    Browse all services
+  </a>
 </div>
 
 {% endif %}
