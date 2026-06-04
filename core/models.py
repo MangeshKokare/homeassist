@@ -10,7 +10,9 @@ ROLE_CHOICES = (
 BOOKING_STATUS = (
     ('pending', 'Pending'),
     ('accepted', 'Accepted'),
+    ('in_progress', 'In Progress'),
     ('completed', 'Completed'),
+    ('cancelled', 'Cancelled'),
 )
 
 class Profile(models.Model):
@@ -52,7 +54,42 @@ class Profile(models.Model):
         null=True,
         blank=True
     )
-    
+        
+    VERIFICATION_STATUS = (
+        ('pending','Pending'),
+        ('verified','Verified'),
+        ('rejected','Rejected'),
+    )
+
+    aadhaar_number = models.CharField(
+        max_length=12,
+        blank=True,
+        null=True
+    )
+
+    aadhaar_image = models.ImageField(
+        upload_to='verification/aadhaar/',
+        blank=True,
+        null=True
+    )
+
+    pan_number = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
+    )
+
+    pan_image = models.ImageField(
+        upload_to='verification/pan/',
+        blank=True,
+        null=True
+    )
+
+    verification_status = models.CharField(
+        max_length=20,
+        choices=VERIFICATION_STATUS,
+        default='pending'
+    )
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
@@ -83,8 +120,46 @@ class Booking(models.Model):
         default='pending'
     )
 
+    start_otp = models.CharField(
+        max_length=6,
+        blank=True,
+        null=True
+    )
+
+    complete_otp = models.CharField(
+        max_length=6,
+        blank=True,
+        null=True
+    )
+
+    started_at = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    completed_at = models.DateTimeField(
+        blank=True,
+        null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
+    cancelled_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='cancelled_bookings'
+    )
+
+    cancellation_reason = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    cancelled_at = models.DateTimeField(
+        blank=True,
+        null=True
+    )
     def __str__(self):
         return self.service.service_name
 
@@ -98,3 +173,99 @@ class Message(models.Model):
 
     def __str__(self):
         return self.sender.username
+    
+class Notification(models.Model):
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='notifications'
+    )
+
+    title = models.CharField(
+        max_length=200
+    )
+
+    message = models.TextField()
+
+    is_read = models.BooleanField(
+        default=False
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return self.title
+    
+class Review(models.Model):
+
+    booking = models.OneToOneField(
+        Booking,
+        on_delete=models.CASCADE
+    )
+
+    resident = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews_given'
+    )
+
+    provider = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews_received'
+    )
+
+    rating = models.IntegerField()
+
+    review = models.TextField()
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.provider.username} - {self.rating}"
+    
+
+class BookingTimeline(models.Model):
+
+    booking = models.ForeignKey(
+        Booking,
+        on_delete=models.CASCADE
+    )
+
+    status = models.CharField(
+        max_length=100
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+class FavoriteProvider(models.Model):
+
+    resident = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorite_providers'
+    )
+
+    provider = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorited_by'
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+
+        unique_together = (
+            'resident',
+            'provider'
+        )

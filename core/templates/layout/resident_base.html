@@ -63,58 +63,58 @@
 <body class="bg-background text-on-surface min-h-screen pb-24">
 
     <!-- TOP APP BAR -->
-    <header class="bg-surface w-full sticky top-0 shadow-sm z-50 flex justify-between items-center px-safe-margin h-16">
+    <header class="w-full sticky top-0 bg-surface shadow-sm flex justify-between items-center px-safe-margin h-16 z-50">
 
-        <!-- LOCATION -->
-        <div class="flex items-center gap-sm min-w-0">
+        <!-- LOGO -->
+        <div class="flex items-center gap-sm">
 
-            <span class="material-symbols-outlined text-primary shrink-0">
-                location_on
+            <span class="material-symbols-outlined text-primary">
+                home_repair_service
             </span>
 
-            <div class="flex flex-col leading-tight min-w-0">
-
-                <span class="text-label-sm text-on-surface-variant">
-                    Your Location
-                </span>
-
-                <span class="text-label-lg font-bold text-on-surface truncate max-w-[140px] sm:max-w-[180px]">
-                    {{ request.user.profile.address|default:"Set your location" }}
-                </span>
-
-            </div>
+            <h1 class="text-headline-lg font-bold text-primary">
+                HomeAssist
+            </h1>
 
         </div>
 
+        <!-- RIGHT SECTION -->
+        <div class="flex items-center gap-md relative">
 
-        <!-- LOGO -->
-        <h1 class="hidden md:block text-headline-lg font-bold text-primary">
-            HomeAssist
-        </h1>
+            <span class="text-body-md text-on-surface-variant font-medium">
 
+                Welcome,
 
-        <!-- PROFILE AREA -->
-        <div class="flex items-center gap-sm relative">
-
-            <!-- WELCOME TEXT -->
-            <div class="hidden sm:flex items-center">
-
-                <span class="text-body-md text-on-surface-variant whitespace-nowrap">
-
-                    Welcome
-
-                    <span class="text-primary font-semibold">
-                        {{ request.user.first_name }} {{ request.user.last_name }}
-                    </span>
-
+                <span class="text-primary font-semibold">
+                    {{ request.user.first_name }}
+                    {{ request.user.last_name }}
                 </span>
 
-            </div>
+            </span>
 
+            <!-- NOTIFICATION ICON -->
+            <a href="{% url 'resident_notifications' %}"
+            class="relative w-11 h-11 rounded-full bg-surface-container-low flex items-center justify-center">
+
+                <span class="material-symbols-outlined text-primary">
+                    notifications
+                </span>
+
+                {% if unread_notifications_count > 0 %}
+                <span class="absolute -top-1 -right-1 bg-red-600 text-white
+                            text-[10px] min-w-[18px] h-[18px]
+                            rounded-full flex items-center justify-center">
+
+                    {{ unread_notifications_count }}
+
+                </span>
+                {% endif %}
+
+            </a>
 
             <!-- PROFILE BUTTON -->
             <button onclick="toggleProfileMenu()"
-                    class="w-11 h-11 rounded-full overflow-hidden border-2 border-primary-fixed shadow-sm active:scale-95 transition-transform shrink-0">
+                    class="w-11 h-11 rounded-full overflow-hidden border-2 border-primary-fixed active:scale-95 transition-transform shadow-sm">
 
                 {% if request.user.profile.profile_image %}
 
@@ -123,60 +123,33 @@
 
                 {% else %}
 
-                <img src="https://ui-avatars.com/api/?name={{ request.user.first_name }}+{{ request.user.last_name }}&background=003d9b&color=ffffff"
-                    class="w-full h-full object-cover">
+                <div class="w-full h-full bg-primary text-white flex items-center justify-center text-label-lg font-semibold">
+
+                    {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+
+                </div>
 
                 {% endif %}
 
             </button>
 
-
             <!-- DROPDOWN -->
             <div id="profileDropdown"
-                class="hidden absolute top-14 right-0 w-64 bg-surface border border-outline-variant rounded-2xl shadow-[0px_8px_32px_rgba(15,23,42,0.12)] overflow-hidden z-50">
+                class="hidden absolute top-14 right-0 w-56 bg-surface border border-outline-variant rounded-2xl shadow-[0px_8px_32px_rgba(15,23,42,0.12)] overflow-hidden z-50">
 
-                <!-- USER INFO -->
-                <div class="px-lg py-lg border-b border-outline-variant bg-surface-container-low">
+                <div class="px-lg py-md border-b border-outline-variant bg-surface-container-low">
 
-                    <div class="flex items-center gap-md">
+                    <h4 class="text-label-lg text-on-surface">
+                        {{ request.user.first_name }}
+                        {{ request.user.last_name }}
+                    </h4>
 
-                        <!-- USER IMAGE -->
-                        <div class="w-14 h-14 rounded-full overflow-hidden border border-outline-variant shrink-0">
-
-                            {% if request.user.profile.profile_image %}
-
-                            <img src="{{ request.user.profile.profile_image.url }}"
-                                class="w-full h-full object-cover">
-
-                            {% else %}
-
-                            <img src="https://ui-avatars.com/api/?name={{ request.user.first_name }}+{{ request.user.last_name }}&background=003d9b&color=ffffff"
-                                class="w-full h-full object-cover">
-
-                            {% endif %}
-
-                        </div>
-
-
-                        <!-- USER DETAILS -->
-                        <div class="min-w-0">
-
-                            <h4 class="text-label-lg text-on-surface truncate">
-                                {{ request.user.first_name }} {{ request.user.last_name }}
-                            </h4>
-
-                            <p class="text-label-sm text-on-surface-variant truncate mt-xs">
-                                {{ request.user.email }}
-                            </p>
-
-                        </div>
-
-                    </div>
+                    <p class="text-label-sm text-on-surface-variant mt-xs">
+                        {{ request.user.email }}
+                    </p>
 
                 </div>
 
-
-                <!-- PROFILE -->
                 <a href="{% url 'resident_profile' %}"
                 class="flex items-center gap-md px-lg py-md hover:bg-surface-container-low transition-colors">
 
@@ -184,14 +157,23 @@
                         person
                     </span>
 
-                    <span class="text-body-md text-on-surface">
+                    <span class="text-body-md">
                         Profile
                     </span>
 
                 </a>
+                <a href="{% url 'favorite_providers' %}"
+                class="flex items-center gap-md px-lg py-md hover:bg-surface-container-low transition-colors">
 
+                    <span class="material-symbols-outlined text-red-500">
+                        favorite
+                    </span>
 
-                <!-- LOGOUT -->
+                    <span class="text-body-md">
+                        My Favorites
+                    </span>
+
+                </a>
                 <a href="{% url 'logout' %}"
                 class="flex items-center gap-md px-lg py-md text-error hover:bg-error-container transition-colors">
 

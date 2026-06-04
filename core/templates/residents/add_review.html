@@ -1,0 +1,105 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}Rate Service{% endblock %}
+
+{% block content %}
+
+<div class="max-w-lg mx-auto">
+
+    <!-- Header -->
+    <div class="mb-lg">
+
+        <h1 class="text-headline-lg text-on-surface">
+            Rate Service
+        </h1>
+
+        <p class="text-body-md text-on-surface-variant mt-xs">
+            Share your experience with the provider.
+        </p>
+
+    </div>
+
+    <!-- Card -->
+    <div class="bg-surface-container-lowest rounded-[20px]
+                border border-surface-container
+                shadow-[0px_4px_20px_rgba(51,65,85,0.05)]
+                p-gutter">
+
+        <div class="mb-md">
+
+            <h3 class="text-headline-md">
+                {{ booking.service.service_name }}
+            </h3>
+
+            <p class="text-body-md text-on-surface-variant">
+
+                Provider:
+                {{ booking.provider.get_full_name|default:booking.provider.username }}
+
+            </p>
+
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <!-- Rating -->
+
+            <label class="block text-label-lg mb-sm">
+
+                Rating
+
+            </label>
+
+            <select
+                name="rating"
+                required
+                class="w-full p-md rounded-xl border border-outline-variant mb-lg">
+
+                <option value="">Select Rating</option>
+
+                <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+
+                <option value="4">⭐⭐⭐⭐ (4)</option>
+
+                <option value="3">⭐⭐⭐ (3)</option>
+
+                <option value="2">⭐⭐ (2)</option>
+
+                <option value="1">⭐ (1)</option>
+
+            </select>
+
+            <!-- Review -->
+
+            <label class="block text-label-lg mb-sm">
+
+                Review
+
+            </label>
+
+            <textarea
+                name="review"
+                rows="5"
+                required
+                class="w-full p-md rounded-xl border border-outline-variant mb-lg"
+                placeholder="Write your experience..."></textarea>
+
+            <!-- Submit -->
+
+            <button
+                type="submit"
+                class="w-full bg-primary text-on-primary py-md rounded-xl font-semibold">
+
+                Submit Review
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

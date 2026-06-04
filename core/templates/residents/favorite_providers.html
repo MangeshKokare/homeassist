@@ -1,0 +1,201 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}My Favorites{% endblock %}
+
+{% block content %}
+
+<div class="mb-xl">
+
+    <h1 class="text-headline-lg font-semibold">
+        My Favorite Providers
+    </h1>
+
+    <p class="text-body-md text-on-surface-variant mt-xs">
+        Quickly access your saved providers.
+    </p>
+
+</div>
+
+{% if favorites %}
+
+<div class="space-y-gutter">
+
+    {% for favorite in favorites %}
+
+    <div class="bg-surface-container-lowest
+                border border-surface-container
+                rounded-[20px]
+                p-gutter
+                shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+
+        <div class="flex items-center gap-md">
+
+            {% if favorite.provider.profile.profile_image %}
+
+            <img
+                src="{{ favorite.provider.profile.profile_image.url }}"
+                class="w-16 h-16 rounded-full object-cover">
+
+            {% else %}
+
+            <div class="w-16 h-16 rounded-full
+                        bg-primary-fixed
+                        flex items-center
+                        justify-center">
+
+                <span class="text-primary font-bold">
+
+                    {{ favorite.provider.username|first|upper }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+            <div class="flex-1">
+
+                <div class="flex items-center gap-2">
+
+                    <h3 class="text-headline-md">
+
+                        {{ favorite.provider.get_full_name|default:favorite.provider.username }}
+
+                    </h3>
+
+                    {% if favorite.provider.profile.verification_status == 'verified' %}
+
+                    <span class="bg-green-100
+                                text-green-700
+                                px-2 py-1
+                                rounded-full
+                                text-xs">
+
+                        ✓ Verified
+
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+                {% if favorite.provider.profile.phone %}
+                <p class="text-body-md text-on-surface-variant">
+                    {{ favorite.provider.profile.phone }}
+                </p>
+                {% endif %}
+                <div class="mt-2">
+
+                    {% for service in favorite.provider.service_set.all|slice:":3" %}
+
+                    <span class="inline-block
+                                bg-primary-fixed
+                                text-primary
+                                px-2 py-1
+                                rounded-lg
+                                text-xs
+                                mr-1
+                                mb-1">
+
+                        {{ service.service_name }}
+
+                    </span>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-3 gap-sm mt-md">
+
+            <a href="{% url 'provider_details' favorite.provider.service_set.first.id %}"
+            class="flex items-center justify-center gap-sm
+                py-sm rounded-xl
+                border border-outline-variant
+                text-on-surface">
+
+                <span class="material-symbols-outlined">
+                    visibility
+                </span>
+
+                Details
+
+            </a>
+            <a href="{% url 'chat' favorite.provider.id %}"
+            class="flex items-center justify-center gap-sm
+                    py-sm rounded-xl
+                    bg-secondary-container">
+
+                <span class="material-symbols-outlined">
+                    chat
+                </span>
+
+                Message
+
+            </a>
+
+            <a href="{% url 'toggle_favorite' favorite.provider.id %}"
+            class="flex items-center justify-center gap-sm
+                    py-sm rounded-xl
+                    bg-red-500 text-white">
+
+                <span class="material-symbols-outlined">
+                    favorite
+                </span>
+
+                Remove
+
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="bg-surface-container-low
+            rounded-[20px]
+            p-xxl
+            text-center">
+
+    <span class="material-symbols-outlined
+                text-[60px]
+                text-on-surface-variant">
+
+        favorite
+
+    </span>
+
+    <h3 class="text-headline-md mt-md">
+
+        No Favorites Yet
+
+    </h3>
+
+    <p class="text-body-md text-on-surface-variant mt-sm">
+
+        Save providers you like and access them quickly later.
+
+    </p>
+
+    <a href="{% url 'explore_services' %}"
+    class="inline-flex items-center gap-sm
+            mt-lg
+            bg-primary text-on-primary
+            px-lg py-sm rounded-full">
+
+        Browse Services
+
+    </a>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -59,9 +59,22 @@
         </div>
         {% endif %}
         <div class="flex-1">
+            <div class="flex items-center gap-2">
+
             <h4 class="text-headline-md text-on-surface">
-                {{ service.provider.get_full_name|default:service.provider.username }}
+            {{ service.provider.get_full_name|default:service.provider.username }}
             </h4>
+
+            {% if service.provider.profile.verification_status == 'verified' %}
+            <span
+            class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
+
+            ✓ Verified
+
+            </span>
+            {% endif %}
+
+            </div>
             {% if service.provider.profile.phone %}
             <p class="text-body-md text-on-surface-variant flex items-center gap-xs mt-xs">
                 <span class="material-symbols-outlined text-[16px]">phone</span>
@@ -78,20 +91,102 @@
     </div>
 
     <!-- CONTACT ACTIONS -->
-    <div class="flex gap-sm mt-md">
+    <div class="grid grid-cols-3 gap-sm mt-md">
+
         {% if service.provider.profile.phone %}
         <a href="tel:{{ service.provider.profile.phone }}"
-           class="flex-1 flex items-center justify-center gap-sm py-sm bg-surface border border-outline-variant rounded-xl text-label-lg text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">
-            <span class="material-symbols-outlined text-[18px]">call</span>
-            Call
+        class="flex items-center justify-center gap-sm py-sm bg-surface border border-outline-variant rounded-xl">
+            <span class="material-symbols-outlined">call</span>
         </a>
         {% endif %}
+
         <a href="{% url 'chat' service.provider.id %}"
-           class="flex-1 flex items-center justify-center gap-sm py-sm bg-secondary-container text-on-secondary-container rounded-xl text-label-lg hover:opacity-90 transition-opacity active:scale-95">
-            <span class="material-symbols-outlined text-[18px]">chat_bubble</span>
-            Message
+        class="flex items-center justify-center gap-sm py-sm bg-secondary-container rounded-xl">
+            <span class="material-symbols-outlined">chat</span>
         </a>
+
+        <a href="{% url 'toggle_favorite' service.provider.id %}"
+        class="flex items-center justify-center gap-sm py-sm rounded-xl
+        {% if is_favorite %}
+        bg-red-500 text-white
+        {% else %}
+        bg-surface border border-outline-variant text-on-surface
+        {% endif %}">
+
+            <span class="material-symbols-outlined">
+
+                {% if is_favorite %}
+                    favorite
+                {% else %}
+                    favorite_border
+                {% endif %}
+
+            </span>
+
+        </a>
+
     </div>
+</div>
+
+<div class="bg-surface-container-lowest rounded-[20px]
+border border-surface-container
+shadow-[0px_4px_20px_rgba(51,65,85,0.05)]
+p-gutter mb-lg">
+
+    <div class="flex justify-between items-center mb-md">
+
+        <h3 class="text-label-lg">
+
+            Reviews
+
+        </h3>
+
+        <span class="font-semibold text-yellow-600">
+
+            ⭐ {{ avg_rating|default:"0"|floatformat:1 }}
+
+        </span>
+
+    </div>
+
+    {% for review in reviews %}
+
+    <div class="border-t pt-md mt-md">
+
+        <div class="flex justify-between">
+
+            <strong>
+
+                {{ review.resident.username }}
+
+            </strong>
+
+            <span>
+
+                ⭐ {{ review.rating }}/5
+
+            </span>
+
+        </div>
+
+        <p class="mt-sm text-body-md">
+
+            {{ review.review }}
+
+        </p>
+
+    </div>
+
+    {% empty %}
+
+    <p class="text-body-md text-on-surface-variant">
+
+        No reviews yet.
+
+    </p>
+
+    {% endfor %}
+
 </div>
 
 <!-- BOOK CTA -->

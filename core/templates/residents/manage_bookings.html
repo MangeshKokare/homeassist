@@ -42,7 +42,17 @@
            {% endif %}">
             Accepted ({{ accepted_count }})
         </a>
+        <a href="{% url 'resident_bookings' %}?status=in_progress"
+        class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg active:scale-95 transition-transform
+        {% if active_status == 'in_progress' %}
+        bg-primary text-on-primary
+        {% else %}
+        bg-surface-container-high text-on-surface-variant
+        {% endif %}">
 
+            In Progress ({{ in_progress_count }})
+
+        </a>
         <a href="{% url 'resident_bookings' %}?status=completed"
            class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg active:scale-95 transition-transform
            {% if active_status == 'completed' %}
@@ -120,13 +130,20 @@
 
             <span class="px-sm py-xs rounded-lg text-label-sm capitalize
                 {% if booking.status == 'pending' %}
-                bg-yellow-100 text-yellow-700
+                    bg-yellow-100 text-yellow-700
+
                 {% elif booking.status == 'accepted' %}
-                bg-green-100 text-green-700
+                    bg-green-100 text-green-700
+
+                {% elif booking.status == 'in_progress' %}
+                    bg-purple-100 text-purple-700
+
                 {% elif booking.status == 'completed' %}
-                bg-blue-100 text-blue-700
+                    bg-blue-100 text-blue-700
+
                 {% else %}
-                bg-red-100 text-red-700
+                    bg-red-100 text-red-700
+
                 {% endif %}">
 
                 {{ booking.status }}
@@ -174,8 +191,113 @@
             </div>
 
         </div>
+        {% if booking.status == 'pending' %}
 
+        <form method="POST"
+            action="{% url 'cancel_booking' booking.id %}"
+            class="mb-md">
 
+            {% csrf_token %}
+
+            <input type="hidden"
+                name="reason"
+                value="Cancelled by Resident">
+
+            <button type="submit"
+                    class="w-full py-sm rounded-xl bg-red-500 text-white">
+
+                Cancel Booking
+
+            </button>
+
+        </form>
+
+        {% endif %}
+
+        {% if booking.status == 'cancelled' %}
+
+        <div class="mt-md p-md rounded-xl bg-red-50">
+
+            <p>
+
+                <strong>Cancelled By:</strong>
+
+                {{ booking.cancelled_by }}
+
+            </p>
+
+            <p class="mt-1">
+
+                <strong>Reason:</strong>
+
+                {{ booking.cancellation_reason }}
+
+            </p>
+
+        </div>
+
+        {% endif %}
+        {% if booking.status == 'accepted' %}
+
+        <div class="mt-md p-md rounded-xl bg-primary-fixed">
+
+            <p class="text-label-md font-semibold">
+                Service Start OTP
+            </p>
+
+            <h2 class="text-display-md text-primary">
+                {{ booking.start_otp }}
+            </h2>
+
+            <p class="text-body-sm">
+                Share this OTP only when the provider arrives.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+        {% if booking.status == 'in_progress' %}
+
+        <div class="mt-md p-md rounded-xl bg-green-100">
+
+            <p class="text-label-md font-semibold">
+                Completion OTP
+            </p>
+
+            <h2 class="text-display-md text-green-700">
+                {{ booking.complete_otp }}
+            </h2>
+
+            <p class="text-body-sm">
+                Share this OTP after the service is completed.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+        {% if booking.status == 'completed' %}
+
+        <div class="grid grid-cols-2 gap-sm mt-md mb-md">
+
+            <a href="{% url 'submit_review' booking.id %}"
+            class="bg-yellow-500 text-white py-sm rounded-xl text-center">
+
+                ⭐ Rate
+
+            </a>
+
+            <a href="{% url 'rebook_service' booking.id %}"
+            class="bg-primary text-on-primary py-sm rounded-xl text-center">
+
+                Book Again
+
+            </a>
+
+        </div>
+
+        {% endif %}
         <!-- ACTIONS -->
         <div class="grid grid-cols-2 gap-sm">
 

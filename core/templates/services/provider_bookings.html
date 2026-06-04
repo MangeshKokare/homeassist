@@ -48,6 +48,19 @@
             {% endif %}
 
         </a>
+        <a href="?status=in_progress"
+        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
+        {% if active_status == 'in_progress' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
+
+            In Progress
+
+            {% if in_progress_count > 0 %}
+            <span class="ml-xs bg-purple-100 text-purple-700 px-xs rounded-full text-label-sm font-bold">
+                {{ in_progress_count }}
+            </span>
+            {% endif %}
+
+        </a>
         <a href="?status=completed"
         class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
         {% if active_status == 'completed' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
@@ -112,7 +125,8 @@
 
                 {% elif booking.status == 'accepted' %}
                 bg-green-100 text-green-700
-
+                {% elif booking.status == 'in_progress' %}
+                bg-purple-100 text-purple-700
                 {% elif booking.status == 'completed' %}
                 bg-blue-100 text-blue-700
 
@@ -166,15 +180,23 @@
         </div>
         {% elif booking.status == 'accepted' %}
 
-        <button type="button"
-                onclick="openCompletedModal('{{ booking.id }}')"
-                class="flex items-center justify-center gap-sm py-sm bg-secondary-container text-on-secondary-container rounded-xl text-label-lg active:scale-95 transition-transform">
+        <button
+            type="button"
+            onclick="openStartOtpModal('{{ booking.id }}')"
+            class="flex items-center justify-center gap-sm py-sm bg-primary text-white rounded-xl">
 
-            <span class="material-symbols-outlined text-[18px]">
-                check_circle
-            </span>
+            Start Service
 
-            Mark as Completed
+        </button>
+
+        {% elif booking.status == 'in_progress' %}
+
+        <button
+            type="button"
+            onclick="openCompleteOtpModal('{{ booking.id }}')"
+            class="flex items-center justify-center gap-sm py-sm bg-green-600 text-white rounded-xl">
+
+            Complete Service
 
         </button>
 
@@ -183,11 +205,11 @@
         <!-- CALL / MESSAGE -->
         <div class="flex gap-sm">
             {% if booking.resident.profile.phone %}
-            <a href="tel:{{ booking.resident.profile.phone }}"
+            <!-- <a href="tel:{{ booking.resident.profile.phone }}"
                class="flex-1 flex items-center justify-center gap-sm py-sm text-primary text-label-lg hover:bg-surface-container-low rounded-xl transition-colors">
                 <span class="material-symbols-outlined text-[18px]">call</span>
                 Call
-            </a>
+            </a> -->
             {% endif %}
             <a href="{% url 'chat' booking.resident.id %}"
                class="flex-1 flex items-center justify-center gap-sm py-sm text-primary text-label-lg hover:bg-surface-container-low rounded-xl transition-colors">
@@ -236,6 +258,7 @@
     <p class="text-body-md text-on-surface-variant">
         {% if active_status == 'pending' %}No pending booking requests right now.
         {% elif active_status == 'accepted' %}No accepted bookings.
+        {% elif active_status == 'in_progress' %}
         {% elif active_status == 'completed' %}
         No completed bookings yet.
 
@@ -347,51 +370,70 @@
     </div>
 
 </div>
-
-<!-- COMPLETED MODAL -->
-<div id="completedModal"
+<!-- START OTP MODAL -->
+<div id="startOtpModal"
      class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-lg">
 
-    <div class="bg-surface rounded-[28px] w-full max-w-md p-xl animate-in fade-in zoom-in duration-200">
+    <div class="bg-surface rounded-[28px] w-full max-w-md p-xl">
 
-        <div class="flex flex-col items-center text-center">
+        <h3 class="text-headline-md mb-lg">
+            Enter Start OTP
+        </h3>
 
-            <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-lg">
+        <form id="startOtpForm" method="POST">
 
-                <span class="material-symbols-outlined text-green-600 text-[32px]">
-                    task_alt
-                </span>
+            {% csrf_token %}
 
-            </div>
+            <input
+                type="text"
+                name="otp"
+                maxlength="4"
+                required
+                class="w-full h-12 border rounded-xl px-md">
 
-            <h3 class="text-headline-md text-on-surface mb-sm">
-                Complete Booking?
-            </h3>
+            <button
+                type="submit"
+                class="w-full mt-lg h-12 bg-primary text-white rounded-xl">
 
-            <p class="text-body-md text-on-surface-variant mb-xl">
-                Are you sure you want to mark this booking as completed?
-            </p>
+                Verify OTP
 
-            <div class="grid grid-cols-2 gap-md w-full">
+            </button>
 
-                <button onclick="closeCompletedModal()"
-                        class="h-12 rounded-xl border border-outline-variant text-on-surface active:scale-95">
+        </form>
 
-                    Cancel
+    </div>
 
-                </button>
+</div>
+<!-- COMPLETE OTP MODAL -->
+<div id="completeOtpModal"
+     class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-lg">
 
-                <a id="completedConfirmBtn"
-                   href="#"
-                   class="h-12 rounded-xl bg-green-600 text-white flex items-center justify-center active:scale-95">
+    <div class="bg-surface rounded-[28px] w-full max-w-md p-xl">
 
-                    Complete
+        <h3 class="text-headline-md mb-lg">
+            Enter Completion OTP
+        </h3>
 
-                </a>
+        <form id="completeOtpForm" method="POST">
 
-            </div>
+            {% csrf_token %}
 
-        </div>
+            <input
+                type="text"
+                name="otp"
+                maxlength="4"
+                required
+                class="w-full h-12 border rounded-xl px-md">
+
+            <button
+                type="submit"
+                class="w-full mt-lg h-12 bg-green-600 text-white rounded-xl">
+
+                Complete Service
+
+            </button>
+
+        </form>
 
     </div>
 
@@ -458,35 +500,57 @@ function closeRejectModal() {
         .classList
         .add('hidden')
 }
-function openCompletedModal(bookingId) {
+function openStartOtpModal(id){
 
     document
-        .getElementById('completedModal')
-        .classList
-        .remove('hidden')
+        .getElementById('startOtpModal')
+        .classList.remove('hidden')
 
     document
-        .getElementById('completedModal')
-        .classList
-        .add('flex')
+        .getElementById('startOtpModal')
+        .classList.add('flex')
 
     document
-        .getElementById('completedConfirmBtn')
-        .href = `/provider/bookings/${bookingId}/status/completed/`
+        .getElementById('startOtpForm')
+        .action =
+        `/provider/bookings/${id}/verify-start-otp/`
 }
 
-
-function closeCompletedModal() {
-
-    document
-        .getElementById('completedModal')
-        .classList
-        .remove('flex')
+function openCompleteOtpModal(id){
 
     document
-        .getElementById('completedModal')
-        .classList
-        .add('hidden')
+        .getElementById('completeOtpModal')
+        .classList.remove('hidden')
+
+    document
+        .getElementById('completeOtpModal')
+        .classList.add('flex')
+
+    document
+        .getElementById('completeOtpForm')
+        .action =
+        `/provider/bookings/${id}/verify-complete-otp/`
+}
+function closeStartOtpModal(){
+
+    document
+        .getElementById('startOtpModal')
+        .classList.remove('flex')
+
+    document
+        .getElementById('startOtpModal')
+        .classList.add('hidden')
+}
+
+function closeCompleteOtpModal(){
+
+    document
+        .getElementById('completeOtpModal')
+        .classList.remove('flex')
+
+    document
+        .getElementById('completeOtpModal')
+        .classList.add('hidden')
 }
 </script>
 {% endblock %}

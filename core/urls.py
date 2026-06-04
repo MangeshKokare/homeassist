@@ -24,6 +24,15 @@ from .service_views import (
     provider_messages,
     provider_profile,
     edit_profile,
+    verify_start_otp,
+    verify_complete_otp,
+    resident_notifications,
+    provider_notifications,
+    submit_review,
+    cancel_booking,
+    toggle_favorite,
+    rebook_service,
+    favorite_providers,
 )
 
 from .message_views import chat_view
@@ -73,4 +82,21 @@ urlpatterns = [
 
     path('chat/<int:user_id>/', chat_view, name='chat'),
 
+    path('provider/bookings/<int:booking_id>/verify-start-otp/',verify_start_otp,name='verify_start_otp'),
+    
+    path('provider/bookings/<int:booking_id>/verify-complete-otp/',verify_complete_otp,name='verify_complete_otp'),
+
+    path('resident/notifications/',resident_notifications,name='resident_notifications'),
+
+    path('provider/notifications/',provider_notifications,name='provider_notifications'),
+
+    path('booking/<int:booking_id>/review/',submit_review,name='submit_review'),
+
+    path('booking/<int:booking_id>/cancel/',cancel_booking,name='cancel_booking'),
+
+    path('provider/<int:provider_id>/favorite/',toggle_favorite,name='toggle_favorite'),
+
+    path('booking/<int:booking_id>/rebook/',rebook_service,name='rebook_service'),
+
+    path('resident/favorites/',favorite_providers,name='favorite_providers'),
 ]

@@ -17,10 +17,27 @@ class ProfileForm(forms.ModelForm):
 
 
 class ServiceForm(forms.ModelForm):
+
+    CATEGORY_CHOICES = [
+        ('Cleaning', '🧹 Cleaning'),
+        ('Electrician', '⚡ Electrician'),
+        ('Plumber', '🚰 Plumbing'),
+        ('Appliance', '🛠 Appliance Repair'),
+        ('Carpenter', '🪚 Carpenter'),
+        ('Pest Control', '🐜 Pest Control'),
+    ]
+
+    category = forms.ChoiceField(
+        choices=CATEGORY_CHOICES,
+        widget=forms.Select(attrs={
+            'class': 'w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent'
+        })
+    )
+
     class Meta:
         model = Service
-        fields = ['service_name', 'category', 'description', 'price', 'image']
-        # DO NOT include 'provider' — it's set automatically in the view
+        fields = '__all__'
+        exclude = ['provider']
 
 class BookingForm(forms.ModelForm):
     class Meta:

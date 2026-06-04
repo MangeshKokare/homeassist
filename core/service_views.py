@@ -4,9 +4,18 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib import messages
-from .models import Service, Booking, Message
+from django.db.models import Avg
+from .models import (
+    Service,
+    Booking,
+    Message,
+    Notification,
+    Review,
+    FavoriteProvider,
+)
 from .forms import ServiceForm, BookingForm
 from datetime import datetime
+import random
 
 # =========================
 # RESIDENT HOME
@@ -66,13 +75,29 @@ def explore_services(request):
         'active_category': active_category,
         'categories': categories,
     }
+    favorite_providers = []
 
+    if request.user.is_authenticated:
+
+        favorite_providers = list(
+            FavoriteProvider.objects.filter(
+                resident=request.user
+            ).values_list(
+                'provider_id',
+                flat=True
+            )
+        )
     return render(
         request,
         'residents/explore_services.html',
-        context
+        {
+            'services': services,
+            'categories': categories,
+            'active_category': active_category,
+            'search_query': search_query,
+            'favorite_providers': favorite_providers,
+        }
     )
-
 
 @login_required
 def resident_bookings(request):
@@ -96,6 +121,7 @@ def resident_bookings(request):
     elif active_status in [
         'pending',
         'accepted',
+        'in_progress',
         'completed',
         'cancelled'
     ]:
@@ -130,6 +156,10 @@ def resident_bookings(request):
         ).count(),
 
         'total_count': all_bookings.count(),
+        'in_progress_count':
+        all_bookings.filter(
+            status='in_progress'
+        ).count(),
     }
 
     return render(
@@ -381,6 +411,7 @@ def provider_bookings(request):
     elif active_status in [
         'pending',
         'accepted',
+        'in_progress',
         'completed',
         'cancelled'
     ]:
@@ -405,7 +436,9 @@ def provider_bookings(request):
             'accepted_count': all_bookings.filter(
                 status='accepted'
             ).count(),
-
+            'in_progress_count': all_bookings.filter(
+                status='in_progress'
+            ).count(),
             'completed_count': all_bookings.filter(
                 status='completed'
             ).count(),
@@ -419,29 +452,186 @@ def provider_bookings(request):
     )
 
 
+def generate_otp():
+
+    return str(
+        random.randint(1000, 9999)
+    )
 # =========================
 # UPDATE BOOKING STATUS
 # =========================
 @login_required
-def update_booking_status(request, booking_id, new_status):
-    booking = get_object_or_404(Booking, id=booking_id, provider=request.user)
+def update_booking_status(
+    request,
+    booking_id,
+    new_status
+):
 
-    valid_statuses = [
-        'pending',
-        'accepted',
-        'completed',
-        'cancelled'
-    ]
-    if new_status in valid_statuses:
-        booking.status = new_status
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        provider=request.user
+    )
+
+    if new_status == "accepted":
+
+        booking.status = "accepted"
+
+        booking.start_otp = generate_otp()
+
         booking.save()
-        messages.success(request, f'Booking marked as {new_status}.')
+
+        Notification.objects.create(
+            user=booking.resident,
+            title='Booking Accepted',
+            message='Your service provider has accepted the booking.'
+        )
+
+        Notification.objects.create(
+            user=booking.resident,
+            title='Service OTP Generated',
+            message=f'Share OTP {booking.start_otp} when the provider arrives.'
+        )
+        Notification.objects.create(
+            user=request.user,
+            title='Booking Accepted',
+            message=f'You accepted booking #{booking.id}.'
+        )
+        messages.success(
+            request,
+            "Booking accepted."
+        )
+
+    elif new_status == "cancelled":
+
+        booking.status = "cancelled"
+
+        booking.save()
+        Notification.objects.create(
+            user=booking.resident,
+            title='Booking Rejected',
+            message='The provider rejected your booking request.'
+        )
+        Notification.objects.create(
+            user=request.user,
+            title='Booking Rejected',
+            message=f'You rejected booking #{booking.id}.'
+        )
+        messages.success(
+            request,
+            "Booking cancelled."
+        )
+
+    return redirect(
+        "provider_bookings"
+    )
+from django.utils import timezone
+@login_required
+def verify_start_otp(
+    request,
+    booking_id
+):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        provider=request.user
+    )
+
+    entered_otp = request.POST.get(
+        "otp"
+    )
+
+    if entered_otp == booking.start_otp:
+
+        booking.status = "in_progress"
+
+        booking.started_at = timezone.now()
+
+        booking.complete_otp = generate_otp()
+
+        booking.save()
+        Notification.objects.create(
+            user=booking.resident,
+            title='Service Started',
+            message='The provider has started the service.'
+        )
+
+        Notification.objects.create(
+            user=booking.resident,
+            title='Completion OTP Generated',
+            message=f'Completion OTP: {booking.complete_otp}'
+        )
+        Notification.objects.create(
+            user=request.user,
+            title='Service Started',
+            message=f'Service for booking #{booking.id} is now in progress.'
+        )
+        messages.success(
+            request,
+            "Service started."
+        )
+
     else:
-        messages.error(request, 'Invalid status.')
 
-    return redirect('provider_bookings')
+        messages.error(
+            request,
+            "Invalid OTP."
+        )
 
+    return redirect(
+        "provider_bookings"
+    )
 
+@login_required
+def verify_complete_otp(
+    request,
+    booking_id
+):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        provider=request.user
+    )
+
+    otp = request.POST.get(
+        "otp"
+    )
+
+    if otp == booking.complete_otp:
+
+        booking.status = "completed"
+
+        booking.completed_at = timezone.now()
+
+        booking.save()
+        
+        Notification.objects.create(
+            user=booking.resident,
+            title='Service Completed',
+            message='Your booking has been completed successfully.'
+        )
+        Notification.objects.create(
+            user=request.user,
+            title='Service Completed',
+            message=f'Booking #{booking.id} has been completed.'
+        )
+        messages.success(
+            request,
+            "Booking completed."
+        )
+
+    else:
+
+        messages.error(
+            request,
+            "Invalid OTP."
+        )
+
+    return redirect(
+        "provider_bookings"
+    )
 # =========================
 # PROVIDER MESSAGES LIST
 # =========================
@@ -479,7 +669,26 @@ def provider_messages(request):
         'conversations': conversations,
     })
 
+@login_required
+def provider_notifications(request):
 
+    notifications = request.user.notifications.all().order_by(
+        '-created_at'
+    )
+
+    notifications.filter(
+        is_read=False
+    ).update(
+        is_read=True
+    )
+
+    return render(
+        request,
+        'services/provider_notifications.html',
+        {
+            'notifications': notifications
+        }
+    )
 # =========================
 # PROVIDER PROFILE
 # =========================
@@ -490,12 +699,22 @@ def provider_profile(request):
         return redirect('resident_home')
 
     all_bookings = Booking.objects.filter(provider=request.user)
+    reviews = Review.objects.filter(
+        provider=request.user
+    )
 
+    avg_rating = reviews.aggregate(
+        Avg('rating')
+    )['rating__avg']
+
+    review_count = reviews.count()
     return render(request, 'services/provider_profile.html', {
         'services_count': Service.objects.filter(provider=request.user).count(),
         'total_bookings': all_bookings.count(),
         'completed_bookings': all_bookings.filter(status='completed').count(),
         'pending_bookings': all_bookings.filter(status='pending').count(),
+        'avg_rating': avg_rating,
+        'review_count': review_count,
     })
 
 
@@ -540,11 +759,39 @@ def edit_profile(request):
 # =========================
 # PROVIDER DETAILS (for residents)
 # =========================
+from django.db.models import Avg
+
 @login_required
 def provider_details(request, id):
-    service = get_object_or_404(Service, id=id)
-    return render(request, 'residents/provider_details.html', {'service': service})
 
+    service = get_object_or_404(
+        Service,
+        id=id
+    )
+
+    reviews = Review.objects.filter(
+        provider=service.provider
+    ).order_by('-created_at')
+
+    avg_rating = reviews.aggregate(
+        Avg('rating')
+    )['rating__avg']
+
+    is_favorite = FavoriteProvider.objects.filter(
+        resident=request.user,
+        provider=service.provider
+    ).exists()
+
+    return render(
+        request,
+        'residents/provider_details.html',
+        {
+            'service': service,
+            'reviews': reviews,
+            'avg_rating': avg_rating,
+            'is_favorite': is_favorite,
+        }
+    )
 # =========================
 # BOOK SERVICE
 # =========================
@@ -606,13 +853,24 @@ def book_service(request, id):
                     id=service.id
                 )
 
-        Booking.objects.create(
+        booking = Booking.objects.create(
             resident=request.user,
             provider=service.provider,
             service=service,
             booking_date=booking_date,
             booking_time=booking_time,
             status='pending'
+        )
+
+        Notification.objects.create(
+            user=service.provider,
+            title='New Booking Request',
+            message=f'You received a new booking for {service.service_name}.'
+        )
+        Notification.objects.create(
+            user=request.user,
+            title='Booking Created',
+            message=f'Your booking for {service.service_name} has been submitted successfully.'
         )
 
         messages.success(
@@ -630,3 +888,192 @@ def book_service(request, id):
             'payment_methods': payment_methods,
         }
     )
+
+
+@login_required
+def resident_notifications(request):
+
+    notifications = request.user.notifications.all().order_by(
+        '-created_at'
+    )
+
+    notifications.filter(
+        is_read=False
+    ).update(
+        is_read=True
+    )
+
+    return render(
+        request,
+        'residents/notifications.html',
+        {
+            'notifications': notifications
+        }
+    )
+
+
+@login_required
+def submit_review(request, booking_id):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        resident=request.user,
+        status='completed'
+    )
+
+    if Review.objects.filter(
+        booking=booking
+    ).exists():
+
+        messages.error(
+            request,
+            'Review already submitted.'
+        )
+
+        return redirect(
+            'resident_bookings'
+        )
+
+    if request.method == "POST":
+
+        Review.objects.create(
+            booking=booking,
+            resident=request.user,
+            provider=booking.provider,
+            rating=request.POST.get('rating'),
+            review=request.POST.get('review')
+        )
+
+        messages.success(
+            request,
+            "Review submitted."
+        )
+
+        return redirect(
+            'resident_bookings'
+        )
+
+    return render(
+        request,
+        'residents/add_review.html',
+        {
+            'booking': booking
+        }
+    )
+
+from django.utils import timezone
+
+@login_required
+def cancel_booking(
+    request,
+    booking_id
+):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id
+    )
+
+    if request.method == "POST":
+
+        booking.status = 'cancelled'
+
+        booking.cancelled_by = request.user
+
+        booking.cancellation_reason = request.POST.get(
+            'reason'
+        )
+
+        booking.cancelled_at = timezone.now()
+
+        booking.save()
+
+        messages.success(
+            request,
+            "Booking cancelled."
+        )
+
+        return redirect(
+            'resident_bookings'
+        )
+    
+@login_required
+def toggle_favorite(request, provider_id):
+
+    provider = get_object_or_404(
+        User,
+        id=provider_id
+    )
+
+    favorite, created = FavoriteProvider.objects.get_or_create(
+        resident=request.user,
+        provider=provider
+    )
+
+    if created:
+
+        messages.success(
+            request,
+            "Provider added to favorites."
+        )
+
+    else:
+
+        favorite.delete()
+
+        messages.success(
+            request,
+            "Provider removed from favorites."
+        )
+
+    return redirect(
+        request.META.get(
+            'HTTP_REFERER',
+            'resident_home'
+        )
+    )
+
+@login_required
+def rebook_service(
+    request,
+    booking_id
+):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        resident=request.user
+    )
+
+    return redirect(
+        'book_service',
+        booking.service.id
+    )
+
+@login_required
+def favorite_providers(request):
+
+    favorites = FavoriteProvider.objects.filter(
+        resident=request.user
+    ).select_related(
+        'provider'
+    ).prefetch_related(
+        'provider__service_set'
+    )
+
+    for favorite in favorites:
+
+        favorite.first_service = Service.objects.filter(
+            provider=favorite.provider
+        ).first()
+
+    return render(
+        request,
+        'residents/favorite_providers.html',
+        {
+            'favorites': favorites
+        }
+    )
+
+

@@ -27,9 +27,22 @@
                 <span class="material-symbols-outlined text-[20px]">edit</span>
             </a>
         </div>
+        <div class="flex items-center justify-center gap-2">
+
         <h1 class="text-headline-lg text-on-surface">
             {{ request.user.get_full_name|default:request.user.username }}
         </h1>
+
+        {% if request.user.profile.verification_status == 'verified' %}
+        <span
+        class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
+
+        ✓ Verified
+
+        </span>
+        {% endif %}
+
+        </div>
         <p class="text-body-md text-on-surface-variant">{{ request.user.email }}</p>
         {% if request.user.profile.phone %}
         <p class="text-body-md text-on-surface-variant flex items-center gap-xs mt-xs">
@@ -62,6 +75,21 @@
         <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
             <span class="text-headline-md text-primary font-bold">{{ pending_bookings }}</span>
             <span class="text-label-sm text-secondary mt-xs">Pending</span>
+        </div>
+        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
+
+            <span class="text-headline-md text-primary font-bold">
+
+                ⭐ {{ avg_rating|default:"0"|floatformat:1 }}
+
+            </span>
+
+            <span class="text-label-sm text-secondary mt-xs">
+
+                {{ review_count }} Reviews
+
+            </span>
+
         </div>
     </section>
 

@@ -1,0 +1,81 @@
+{% extends "layout/resident_base.html" %}
+
+{% block title %}
+Notifications
+{% endblock %}
+
+{% block content %}
+
+<div class="mb-xl">
+
+    <h2 class="text-display-lg">
+        Notifications
+    </h2>
+
+    <p class="text-body-md text-on-surface-variant">
+        Service updates and alerts
+    </p>
+
+</div>
+
+{% if notifications %}
+
+<div class="space-y-md">
+
+    {% for notification in notifications %}
+
+    <div class="bg-surface-container-low rounded-[20px] p-lg">
+
+        <div class="flex justify-between items-start">
+
+            <div>
+
+                <h4 class="text-headline-md">
+
+                    {{ notification.title }}
+
+                </h4>
+
+                <p class="text-body-md text-on-surface-variant mt-sm">
+
+                    {{ notification.message }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="mt-md text-label-sm text-on-surface-variant">
+
+            {{ notification.created_at }}
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="bg-surface-container-low rounded-[20px] p-xxl text-center">
+
+    <span class="material-symbols-outlined text-[56px] text-on-surface-variant">
+
+        notifications_off
+
+    </span>
+
+    <h4 class="text-headline-md mt-md">
+
+        No Notifications
+
+    </h4>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

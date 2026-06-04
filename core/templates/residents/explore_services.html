@@ -256,13 +256,20 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   position: absolute;
   bottom: 12px;
   right: 12px;
-  width: 34px; height: 34px;
-  background: rgba(255,255,255,.9);
+  width: 34px;
+  height: 34px;
+  background: rgba(255,255,255,.95);
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  border: none; cursor: pointer;
-  color: var(--uc-gray-400);
-  transition: color .15s, background .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #94A3B8;
+  transition: all .2s;
+}
+
+.wishlist-btn:hover {
+  transform: scale(1.1);
 }
 .wishlist-btn:hover { color: var(--uc-red); background: #fff; }
 .wishlist-btn .material-symbols-outlined { font-size: 18px; }
@@ -560,9 +567,24 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
 
       <div class="img-badge-cat">{{ service.category }}</div>
       <div class="img-badge-avail"><span class="dot"></span> Available now</div>
-      <button class="wishlist-btn" type="button" aria-label="Save to wishlist">
-        <span class="material-symbols-outlined">favorite</span>
-      </button>
+      <a href="{% url 'toggle_favorite' service.provider.id %}"
+        class="wishlist-btn">
+
+          {% if service.provider.id in favorite_providers %}
+
+              <span class="material-symbols-outlined text-red-500">
+                  favorite
+              </span>
+
+          {% else %}
+
+              <span class="material-symbols-outlined">
+                  favorite_border
+              </span>
+
+          {% endif %}
+
+      </a>
     </div>
 
     <!-- Body -->

@@ -120,7 +120,24 @@
 
             </span>
 
+            <a href="{% url 'provider_notifications' %}"
+            class="relative w-11 h-11 rounded-full bg-surface-container-low flex items-center justify-center">
 
+                <span class="material-symbols-outlined text-primary">
+                    notifications
+                </span>
+
+                {% if unread_notifications_count > 0 %}
+                <span class="absolute -top-1 -right-1 bg-red-600 text-white
+                            text-[10px] min-w-[18px] h-[18px]
+                            rounded-full flex items-center justify-center">
+
+                    {{ unread_notifications_count }}
+
+                </span>
+                {% endif %}
+
+            </a>
             <!-- PROFILE BUTTON -->
             <button onclick="toggleProfileMenu()"
                     class="w-11 h-11 rounded-full overflow-hidden border-2 border-primary-fixed active:scale-95 transition-transform shadow-sm">
@@ -159,6 +176,20 @@
                     </p>
 
                 </div>
+
+                <!-- <a href="{% url 'provider_notifications' %}"
+                class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
+                {% block nav_notifications %}text-secondary{% endblock %}">
+
+                    <span class="material-symbols-outlined {% block nav_notifications_fill %}{% endblock %}">
+                        notifications
+                    </span>
+
+                    <span class="text-label-sm mt-0.5">
+                        Alerts
+                    </span>
+
+                </a> -->
 
 
                 <!-- PROFILE -->

@@ -1,0 +1,74 @@
+{% extends "layout/provider_base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block nav_notifications %}text-primary font-bold{% endblock %}
+{% block nav_notifications_fill %}fill-icon{% endblock %}
+
+{% block content %}
+
+<section class="mb-xl">
+
+    <h2 class="text-display-lg">
+        Notifications
+    </h2>
+
+    <p class="text-body-md text-on-surface-variant">
+        Service updates and booking alerts
+    </p>
+
+</section>
+
+{% if notifications %}
+
+<div class="space-y-md">
+
+    {% for notification in notifications %}
+
+    <div class="bg-surface-container-low rounded-[20px] p-lg">
+
+        <h4 class="text-headline-md">
+
+            {{ notification.title }}
+
+        </h4>
+
+        <p class="text-body-md text-on-surface-variant mt-sm">
+
+            {{ notification.message }}
+
+        </p>
+
+        <div class="mt-md text-label-sm text-on-surface-variant">
+
+            {{ notification.created_at }}
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="bg-surface-container-low rounded-[20px] p-xxl text-center">
+
+    <span class="material-symbols-outlined text-[56px] text-on-surface-variant">
+
+        notifications_off
+
+    </span>
+
+    <h4 class="text-headline-md mt-md">
+
+        No Notifications
+
+    </h4>
+
+</div>
+
+{% endif %}
+
+{% endblock %}
