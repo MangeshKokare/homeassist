@@ -708,14 +708,37 @@ def provider_profile(request):
     )['rating__avg']
 
     review_count = reviews.count()
-    return render(request, 'services/provider_profile.html', {
-        'services_count': Service.objects.filter(provider=request.user).count(),
-        'total_bookings': all_bookings.count(),
-        'completed_bookings': all_bookings.filter(status='completed').count(),
-        'pending_bookings': all_bookings.filter(status='pending').count(),
-        'avg_rating': avg_rating,
-        'review_count': review_count,
-    })
+    return render(
+        request,
+        'services/provider_profile.html',
+        {
+            'profile': request.user.profile,
+
+            'services_count':
+                Service.objects.filter(
+                    provider=request.user
+                ).count(),
+
+            'total_bookings':
+                all_bookings.count(),
+
+            'completed_bookings':
+                all_bookings.filter(
+                    status='completed'
+                ).count(),
+
+            'pending_bookings':
+                all_bookings.filter(
+                    status='pending'
+                ).count(),
+
+            'avg_rating':
+                avg_rating,
+
+            'review_count':
+                review_count,
+        }
+    )
 
 
 # =========================
@@ -738,6 +761,88 @@ def edit_profile(request):
         profile.phone = request.POST.get('phone', '').strip()
         profile.address = request.POST.get('address', '').strip()
 
+        profile.business_name = request.POST.get(
+            'business_name',
+            ''
+        ).strip()
+
+        profile.experience_years = (
+            request.POST.get(
+                'experience_years'
+            ) or 0
+        )
+
+        profile.about_me = request.POST.get(
+            'about_me',
+            ''
+        ).strip()
+
+        profile.gender = request.POST.get(
+            'gender',
+            ''
+        ).strip()
+
+        profile.date_of_birth = request.POST.get(
+            'date_of_birth'
+        ) or None
+
+        profile.city = request.POST.get(
+            'city',
+            ''
+        ).strip()
+
+        profile.state = request.POST.get(
+            'state',
+            ''
+        ).strip()
+
+        profile.pincode = request.POST.get(
+            'pincode',
+            ''
+        ).strip()
+
+        profile.service_radius = (
+            request.POST.get(
+                'service_radius'
+            ) or 10
+        )
+
+        profile.working_days = request.POST.get(
+            'working_days',
+            ''
+        ).strip()
+
+        profile.emergency_available = (
+            request.POST.get(
+                'emergency_available'
+            ) == 'on'
+        )
+
+        profile.starting_price = (
+            request.POST.get(
+                'starting_price'
+            ) or None
+        )
+
+        profile.website = request.POST.get(
+            'website',
+            ''
+        ).strip()
+
+        profile.instagram_url = request.POST.get(
+            'instagram_url',
+            ''
+        ).strip()
+
+        profile.facebook_url = request.POST.get(
+            'facebook_url',
+            ''
+        ).strip()
+
+        profile.linkedin_url = request.POST.get(
+            'linkedin_url',
+            ''
+        ).strip()
         profile.working_start_time = request.POST.get(
             'working_start_time'
         )
@@ -749,6 +854,25 @@ def edit_profile(request):
         if 'profile_image' in request.FILES:
             profile.profile_image = request.FILES['profile_image']
 
+        profile.aadhaar_number = request.POST.get(
+            'aadhaar_number',
+            ''
+        ).strip()
+
+        profile.pan_number = request.POST.get(
+            'pan_number',
+            ''
+        ).strip()
+
+        if 'aadhaar_image' in request.FILES:
+            profile.aadhaar_image = request.FILES[
+                'aadhaar_image'
+            ]
+
+        if 'pan_image' in request.FILES:
+            profile.pan_image = request.FILES[
+                'pan_image'
+            ]
         profile.save()
         messages.success(request, 'Profile updated successfully.')
         return redirect('provider_profile')

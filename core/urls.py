@@ -36,9 +36,10 @@ from .service_views import (
 )
 
 from .message_views import chat_view
-
+from .views import home
 
 urlpatterns = [
+    path('api/home/', home),
 
     path('', login_view, name='login'),
 

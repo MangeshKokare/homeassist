@@ -88,9 +88,40 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = (
         'user',
         'role',
-        'phone'
+        'phone',
+        'verification_status'
     )
 
     list_filter = (
         'role',
+        'verification_status'
+    )
+
+    search_fields = (
+        'user__username',
+        'user__first_name',
+        'user__last_name',
+        'aadhaar_number',
+        'pan_number'
+    )
+
+    fields = (
+        'user',
+        'role',
+        'phone',
+        'address',
+
+        'aadhaar_number',
+        'aadhaar_image',
+
+        'pan_number',
+        'pan_image',
+
+        'verification_status',
+
+        'profile_image'
+    )
+
+    readonly_fields = (
+        'user',
     )

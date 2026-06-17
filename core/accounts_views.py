@@ -29,12 +29,40 @@ def register_view(request):
     # Register Form Submit
     if request.method == 'POST':
 
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+
         username = request.POST.get('username')
         email = request.POST.get('email')
+
         password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
         role = request.POST.get('role')
 
-        # Validation
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+
+        profile_image = request.FILES.get('profile_image')
+
+        aadhaar_number = request.POST.get('aadhaar_number')
+        pan_number = request.POST.get('pan_number')
+
+        aadhaar_image = request.FILES.get('aadhaar_image')
+        pan_image = request.FILES.get('pan_image')
+
+        working_start_time = request.POST.get('working_start_time')
+        working_end_time = request.POST.get('working_end_time')
+
+        if password != confirm_password:
+
+            messages.error(
+                request,
+                'Passwords do not match.'
+            )
+
+            return redirect('register')
+
         if User.objects.filter(username=username).exists():
 
             messages.error(
@@ -53,17 +81,26 @@ def register_view(request):
 
             return redirect('register')
 
-        # Create User
         user = User.objects.create_user(
             username=username,
             email=email,
-            password=password
+            password=password,
+            first_name=first_name,
+            last_name=last_name
         )
 
-        # Create Profile
         Profile.objects.create(
             user=user,
-            role=role
+            role=role,
+            phone=phone,
+            address=address,
+            profile_image=profile_image,
+            aadhaar_number=aadhaar_number,
+            aadhaar_image=aadhaar_image,
+            pan_number=pan_number,
+            pan_image=pan_image,
+            working_start_time=working_start_time or None,
+            working_end_time=working_end_time or None
         )
 
         messages.success(

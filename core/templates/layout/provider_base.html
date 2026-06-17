@@ -94,132 +94,173 @@
         .fill-icon { font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        body { min-height: max(884px, 100dvh); }
+        body {min-height: 100dvh;}
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 640px) {
+
+            .text-headline-lg {
+                font-size: 20px !important;
+            }
+
+            .text-display-lg {
+                font-size: 26px !important;
+            }
+        }
+
+        nav {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+        }
+
+        main {
+            overflow-x: hidden;
+        }
     </style>
 
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="bg-background text-on-surface min-h-screen pb-24">
+<body class="bg-background text-on-surface min-h-screen overflow-x-hidden pb-32">
 
     <!-- TOP APP BAR -->
-    <header class="w-full sticky top-0 bg-surface shadow-sm flex justify-between items-center px-safe-margin h-16 z-50">
-        <div class="flex items-center gap-sm">
-            <span class="material-symbols-outlined text-primary">home_repair_service</span>
-            <h1 class="text-headline-lg font-bold text-primary">HomeAssist</h1>
-        </div>
-        <div class="flex items-center gap-md relative">
+    <header class="
+    sticky top-0 z-50
+    backdrop-blur-xl
+    bg-white/80
+    border-b border-outline-variant
+    shadow-sm">
 
-            <span class="text-body-md text-on-surface-variant font-medium">
+        <div class="
+        max-w-7xl mx-auto
+        h-16 md:h-18
+        px-3 sm:px-5 lg:px-8
+        flex items-center justify-between">
 
-                Welcome,
+            <!-- Logo -->
+            <div class="flex items-center gap-2 min-w-0">
 
-                <span class="text-primary font-semibold">
-                    {{ request.user.first_name }} {{ request.user.last_name }}
-                </span>
+                <div class="
+                h-10 w-10
+                rounded-xl
+                bg-primary
+                text-white
+                flex items-center justify-center
+                shadow-md">
 
-            </span>
-
-            <a href="{% url 'provider_notifications' %}"
-            class="relative w-11 h-11 rounded-full bg-surface-container-low flex items-center justify-center">
-
-                <span class="material-symbols-outlined text-primary">
-                    notifications
-                </span>
-
-                {% if unread_notifications_count > 0 %}
-                <span class="absolute -top-1 -right-1 bg-red-600 text-white
-                            text-[10px] min-w-[18px] h-[18px]
-                            rounded-full flex items-center justify-center">
-
-                    {{ unread_notifications_count }}
-
-                </span>
-                {% endif %}
-
-            </a>
-            <!-- PROFILE BUTTON -->
-            <button onclick="toggleProfileMenu()"
-                    class="w-11 h-11 rounded-full overflow-hidden border-2 border-primary-fixed active:scale-95 transition-transform shadow-sm">
-
-                {% if request.user.profile.profile_image %}
-
-                <img src="{{ request.user.profile.profile_image.url }}"
-                    class="w-full h-full object-cover">
-
-                {% else %}
-
-                <div class="w-full h-full bg-primary text-white flex items-center justify-center text-label-lg font-semibold">
-
-                    {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+                    <span class="material-symbols-outlined">
+                        home_repair_service
+                    </span>
 
                 </div>
 
-                {% endif %}
+                <div class="hidden sm:block">
 
-            </button>
+                    <h1 class="font-bold text-lg text-primary leading-none">
+                        HomeAssist
+                    </h1>
 
-
-            <!-- DROPDOWN -->
-            <div id="profileDropdown"
-                class="hidden absolute top-14 right-0 w-56 bg-surface border border-outline-variant rounded-2xl shadow-[0px_8px_32px_rgba(15,23,42,0.12)] overflow-hidden z-50">
-
-                <!-- USER INFO -->
-                <div class="px-lg py-md border-b border-outline-variant bg-surface-container-low">
-
-                    <h4 class="text-label-lg text-on-surface">
-                        {{ request.user.first_name }} {{ request.user.last_name }}
-                    </h4>
-
-                    <p class="text-label-sm text-on-surface-variant mt-xs">
-                        {{ request.user.email }}
+                    <p class="text-xs text-on-surface-variant">
+                        Provider Portal
                     </p>
 
                 </div>
 
-                <!-- <a href="{% url 'provider_notifications' %}"
-                class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
-                {% block nav_notifications %}text-secondary{% endblock %}">
+            </div>
 
-                    <span class="material-symbols-outlined {% block nav_notifications_fill %}{% endblock %}">
+            <!-- Right Side -->
+            <div class="flex items-center gap-2 md:gap-4">
+
+                <div class="hidden lg:block text-right">
+
+                    <p class="text-xs text-on-surface-variant">
+                        Welcome Back
+                    </p>
+
+                    <p class="font-semibold text-primary truncate max-w-[180px]">
+                        {{ request.user.first_name }} {{ request.user.last_name }}
+                    </p>
+
+                </div>
+
+                <!-- Notifications -->
+                <a href="{% url 'provider_notifications' %}"
+                class="
+                relative
+                h-11 w-11
+                rounded-full
+                bg-surface-container-low
+                flex items-center justify-center
+                hover:bg-surface-container
+                transition">
+
+                    <span class="material-symbols-outlined text-primary">
                         notifications
                     </span>
 
-                    <span class="text-label-sm mt-0.5">
-                        Alerts
+                    {% if unread_notifications_count > 0 %}
+                    <span class="
+                    absolute -top-1 -right-1
+                    min-w-[18px]
+                    h-[18px]
+                    px-1
+                    rounded-full
+                    bg-red-500
+                    text-white
+                    text-[10px]
+                    flex items-center justify-center">
+
+                        {{ unread_notifications_count }}
+
                     </span>
-
-                </a> -->
-
-
-                <!-- PROFILE -->
-                <a href="{% url 'provider_profile' %}"
-                class="flex items-center gap-md px-lg py-md hover:bg-surface-container-low transition-colors">
-
-                    <span class="material-symbols-outlined text-primary">
-                        person
-                    </span>
-
-                    <span class="text-body-md">
-                        Profile
-                    </span>
+                    {% endif %}
 
                 </a>
 
+                <!-- Profile -->
+                <button onclick="toggleProfileMenu()"
+                    class="
+                    h-11 w-11
+                    rounded-full
+                    overflow-hidden
+                    border-2 border-primary/20
+                    shadow-md">
 
-                <!-- LOGOUT -->
-                <a href="{% url 'logout' %}"
-                class="flex items-center gap-md px-lg py-md text-error hover:bg-error-container transition-colors">
+                    {% if request.user.profile.profile_image %}
 
-                    <span class="material-symbols-outlined">
-                        logout
-                    </span>
+                    <img src="{{ request.user.profile.profile_image.url }}"
+                        class="w-full h-full object-cover">
 
-                    <span class="text-body-md">
-                        Logout
-                    </span>
+                    {% else %}
 
-                </a>
+                    <div class="
+                    w-full h-full
+                    bg-primary
+                    text-white
+                    flex items-center justify-center
+                    font-semibold">
+
+                        {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+
+                    </div>
+
+                    {% endif %}
+
+                </button>
 
             </div>
 
@@ -244,47 +285,87 @@
     {% endif %}
 
     <!-- MAIN CONTENT -->
-    <main class="max-w-5xl mx-auto px-safe-margin py-lg">
+    <main class="
+    w-full
+    max-w-7xl
+    mx-auto
+    px-3
+    sm:px-5
+    lg:px-8
+    py-4
+    md:py-6
+    pb-32">
         {% block content %}{% endblock %}
     </main>
 
     <!-- BOTTOM NAVBAR -->
-    <nav class="fixed bottom-0 w-full z-50 flex justify-around items-center h-20 px-2 bg-surface shadow-[0px_-4px_24px_rgba(51,65,85,0.08)]">
+    <nav class="
+    fixed bottom-0 left-0 right-0
+    z-[9999]
+    backdrop-blur-xl
+    bg-white/90
+    border-t border-outline-variant
+    shadow-[0_-10px_30px_rgba(0,0,0,0.08)]
+    pb-[env(safe-area-inset-bottom)]">
 
-        <a href="{% url 'provider_dashboard' %}"
-           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
-           {% block nav_home %}text-secondary{% endblock %}">
-            <span class="material-symbols-outlined {% block nav_home_fill %}{% endblock %}">home</span>
-            <span class="text-label-sm mt-0.5">Home</span>
-        </a>
+        <div class="
+        w-full
+        max-w-4xl
+        mx-auto
+        h-16
+        flex items-center justify-around">
 
-        <a href="{% url 'add_service' %}"
-           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
-           {% block nav_add %}text-secondary{% endblock %}">
-            <span class="material-symbols-outlined {% block nav_add_fill %}{% endblock %}">add_circle</span>
-            <span class="text-label-sm mt-0.5">Add Service</span>
-        </a>
+            <!-- Home -->
+            <a href="{% url 'provider_dashboard' %}"
+            class="flex flex-col items-center text-xs gap-1
+            {% block nav_home %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_home_fill %}{% endblock %}">
+                    home
+                </span>
+                <span>Home</span>
+            </a>
 
-        <a href="{% url 'provider_bookings' %}"
-           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
-           {% block nav_bookings %}text-secondary{% endblock %}">
-            <span class="material-symbols-outlined {% block nav_bookings_fill %}{% endblock %}">calendar_today</span>
-            <span class="text-label-sm mt-0.5">Bookings</span>
-        </a>
+            <!-- Add -->
+            <a href="{% url 'add_service' %}"
+            class="flex flex-col items-center text-xs gap-1
+            {% block nav_add %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_add_fill %}{% endblock %}">
+                    add_circle
+                </span>
+                <span>Add</span>
+            </a>
 
-        <a href="{% url 'provider_messages' %}"
-           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
-           {% block nav_messages %}text-secondary{% endblock %}">
-            <span class="material-symbols-outlined {% block nav_messages_fill %}{% endblock %}">chat_bubble</span>
-            <span class="text-label-sm mt-0.5">Messages</span>
-        </a>
+            <!-- Bookings -->
+            <a href="{% url 'provider_bookings' %}"
+            class="flex flex-col items-center text-xs gap-1
+            {% block nav_bookings %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_bookings_fill %}{% endblock %}">
+                    calendar_today
+                </span>
+                <span>Bookings</span>
+            </a>
 
-        <a href="{% url 'provider_profile' %}"
-           class="flex flex-col items-center justify-center px-4 py-1 rounded-xl transition-all active:scale-95
-           {% block nav_profile %}text-secondary{% endblock %}">
-            <span class="material-symbols-outlined {% block nav_profile_fill %}{% endblock %}">person</span>
-            <span class="text-label-sm mt-0.5">Profile</span>
-        </a>
+            <!-- Messages -->
+            <a href="{% url 'provider_messages' %}"
+            class="flex flex-col items-center text-xs gap-1
+            {% block nav_messages %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_messages_fill %}{% endblock %}">
+                    chat
+                </span>
+                <span>Chat</span>
+            </a>
+
+            <!-- Profile -->
+            <a href="{% url 'provider_profile' %}"
+            class="flex flex-col items-center text-xs gap-1
+            {% block nav_profile %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_profile_fill %}{% endblock %}">
+                    person
+                </span>
+                <span>Profile</span>
+            </a>
+
+        </div>
 
     </nav>
 

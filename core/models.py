@@ -85,6 +85,97 @@ class Profile(models.Model):
         null=True
     )
 
+    # Professional Information
+    business_name = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True
+    )
+
+    experience_years = models.PositiveIntegerField(
+        default=0
+    )
+
+    about_me = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    # Personal Information
+    gender = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
+    )
+
+    date_of_birth = models.DateField(
+        blank=True,
+        null=True
+    )
+
+    # Service Area
+    city = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    state = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    pincode = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True
+    )
+
+    service_radius = models.PositiveIntegerField(
+        default=10,
+        help_text="Radius in KM"
+    )
+
+    # Availability
+    working_days = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    emergency_available = models.BooleanField(
+        default=False
+    )
+
+    # Pricing
+    starting_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True
+    )
+
+    # Social Links
+    website = models.URLField(
+        blank=True,
+        null=True
+    )
+
+    instagram_url = models.URLField(
+        blank=True,
+        null=True
+    )
+
+    facebook_url = models.URLField(
+        blank=True,
+        null=True
+    )
+
+    linkedin_url = models.URLField(
+        blank=True,
+        null=True
+    )
     verification_status = models.CharField(
         max_length=20,
         choices=VERIFICATION_STATUS,

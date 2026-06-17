@@ -34,16 +34,33 @@
         </h1>
 
         {% if request.user.profile.verification_status == 'verified' %}
-        <span
-        class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
+        <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
+            ✓ Verified
+        </span>
+        {% endif %}
 
-        ✓ Verified
-
+        {% if avg_rating %}
+        <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs">
+            ⭐ {{ avg_rating|floatformat:1 }}
         </span>
         {% endif %}
 
         </div>
-        <p class="text-body-md text-on-surface-variant">{{ request.user.email }}</p>
+        <p class="text-body-md text-on-surface-variant">
+            {{ request.user.email }}
+        </p>
+
+        {% if request.user.profile.business_name %}
+        <p class="text-body-md text-primary font-medium mt-1">
+            {{ request.user.profile.business_name }}
+        </p>
+        {% endif %}
+
+        {% if request.user.profile.experience_years %}
+        <p class="text-label-md text-on-surface-variant">
+            {{ request.user.profile.experience_years }} Years Experience
+        </p>
+        {% endif %}
         {% if request.user.profile.phone %}
         <p class="text-body-md text-on-surface-variant flex items-center gap-xs mt-xs">
             <span class="material-symbols-outlined text-[16px]">phone</span>
@@ -57,6 +74,159 @@
         </p>
         {% endif %}
     </section>
+
+
+    <!-- PROVIDER DETAILS -->
+
+    <div class="bg-surface-container-lowest rounded-[20px] p-lg shadow-[0px_4px_20px_rgba(51,65,85,0.05)] mb-xl">
+
+        <h2 class="text-title-medium text-on-surface mb-md">
+            Professional Information
+        </h2>
+
+        {% if request.user.profile.business_name %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">Business</span>
+            <span class="font-medium">{{ request.user.profile.business_name }}</span>
+        </div>
+        {% endif %}
+
+        {% if request.user.profile.experience_years %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">Experience</span>
+            <span class="font-medium">
+                {{ request.user.profile.experience_years }} Years
+            </span>
+        </div>
+        {% endif %}
+
+        {% if request.user.profile.city %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">City</span>
+            <span class="font-medium">
+                {{ request.user.profile.city }}
+            </span>
+        </div>
+        {% endif %}
+
+        {% if request.user.profile.state %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">State</span>
+            <span class="font-medium">
+                {{ request.user.profile.state }}
+            </span>
+        </div>
+        {% endif %}
+
+        {% if request.user.profile.service_radius %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">Service Radius</span>
+            <span class="font-medium">
+                {{ request.user.profile.service_radius }} KM
+            </span>
+        </div>
+        {% endif %}
+
+        {% if request.user.profile.working_days %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">Working Days</span>
+            <span class="font-medium">
+                {{ request.user.profile.working_days }}
+            </span>
+        </div>
+        {% endif %}
+
+        {% if request.user.profile.working_start_time and request.user.profile.working_end_time %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">Working Hours</span>
+            <span class="font-medium">
+                {{ request.user.profile.working_start_time }}
+                -
+                {{ request.user.profile.working_end_time }}
+            </span>
+        </div>
+        {% endif %}
+
+        {% if request.user.profile.starting_price %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">Starting Price</span>
+            <span class="font-medium">
+                ₹{{ request.user.profile.starting_price }}
+            </span>
+        </div>
+        {% endif %}
+
+        {% if request.user.profile.emergency_available %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">Emergency Service</span>
+            <span class="text-green-600 font-medium">
+                Available
+            </span>
+        </div>
+        {% endif %}
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">
+                Aadhaar
+            </span>
+
+            {% if request.user.profile.aadhaar_image %}
+                <span class="text-green-600 font-medium">
+                    Uploaded
+                </span>
+            {% else %}
+                <span class="text-red-600 font-medium">
+                    Not Uploaded
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">
+                PAN
+            </span>
+
+            {% if request.user.profile.pan_image %}
+                <span class="text-green-600 font-medium">
+                    Uploaded
+                </span>
+            {% else %}
+                <span class="text-red-600 font-medium">
+                    Not Uploaded
+                </span>
+            {% endif %}
+        </div>
+        <div class="flex justify-between py-2 border-b border-surface-container">
+            <span class="text-on-surface-variant">
+                Verification
+            </span>
+
+            {% if request.user.profile.verification_status == 'verified' %}
+            <span class="text-green-600 font-medium">
+                Verified
+            </span>
+            {% elif request.user.profile.verification_status == 'pending' %}
+            <span class="text-yellow-600 font-medium">
+                Pending
+            </span>
+            {% else %}
+            <span class="text-red-600 font-medium">
+                Rejected
+            </span>
+            {% endif %}
+        </div>
+        {% if request.user.profile.about_me %}
+        <div class="mt-md">
+            <h3 class="text-label-lg mb-2">
+                About Me
+            </h3>
+
+            <p class="text-body-md text-on-surface-variant">
+                {{ request.user.profile.about_me }}
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
 
     <!-- STATS GRID -->
     <section class="grid grid-cols-2 gap-gutter mb-xl">

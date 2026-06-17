@@ -108,7 +108,114 @@
                 <textarea name="address" rows="3" placeholder="Your service area or address"
                           class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none">{{ request.user.profile.address|default:'' }}</textarea>
             </div>
+            <!-- VERIFICATION DOCUMENTS -->
 
+            <div class="border border-outline-variant rounded-[20px] p-lg">
+
+                <h3 class="text-title-medium text-on-surface mb-lg">
+                    Verification Documents
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+
+                    <!-- Aadhaar Number -->
+
+                    <div class="flex flex-col gap-sm">
+                        <label class="text-label-lg text-on-surface">
+                            Aadhaar Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="aadhaar_number"
+                            maxlength="12"
+                            value="{{ request.user.profile.aadhaar_number|default:'' }}"
+                            placeholder="Enter Aadhaar Number"
+                            class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm">
+                    </div>
+
+                    <!-- PAN Number -->
+
+                    <div class="flex flex-col gap-sm">
+                        <label class="text-label-lg text-on-surface">
+                            PAN Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="pan_number"
+                            value="{{ request.user.profile.pan_number|default:'' }}"
+                            placeholder="Enter PAN Number"
+                            class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm">
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-lg mt-lg">
+
+                    <!-- Aadhaar Image -->
+
+                    <div class="flex flex-col gap-sm">
+                        <label class="text-label-lg text-on-surface">
+                            Aadhaar Image
+                        </label>
+
+                        <input
+                            type="file"
+                            name="aadhaar_image"
+                            accept="image/*"
+                            class="w-full">
+
+                        {% if request.user.profile.aadhaar_image %}
+                        <img
+                            src="{{ request.user.profile.aadhaar_image.url }}"
+                            class="w-28 h-20 object-cover rounded-lg border mt-2">
+                        {% endif %}
+                    </div>
+
+                    <!-- PAN Image -->
+
+                    <div class="flex flex-col gap-sm">
+                        <label class="text-label-lg text-on-surface">
+                            PAN Image
+                        </label>
+
+                        <input
+                            type="file"
+                            name="pan_image"
+                            accept="image/*"
+                            class="w-full">
+
+                        {% if request.user.profile.pan_image %}
+                        <img
+                            src="{{ request.user.profile.pan_image.url }}"
+                            class="w-28 h-20 object-cover rounded-lg border mt-2">
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="mt-md">
+
+                    {% if request.user.profile.verification_status == 'verified' %}
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                        ✓ Verified
+                    </span>
+
+                    {% elif request.user.profile.verification_status == 'pending' %}
+                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
+                        ⏳ Verification Pending
+                    </span>
+
+                    {% else %}
+                    <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
+                        ✕ Verification Rejected
+                    </span>
+                    {% endif %}
+
+                </div>
+
+            </div>
             <div class="flex gap-sm pt-sm">
                 <a href="{% url 'provider_profile' %}"
                    class="flex-1 flex items-center justify-center py-md rounded-xl border border-outline-variant text-label-lg text-on-surface hover:bg-surface-container-low transition-colors active:scale-95">
