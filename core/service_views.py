@@ -752,65 +752,91 @@ def edit_profile(request):
 
     if request.method == 'POST':
         user = request.user
-        user.first_name = request.POST.get('first_name', '').strip()
-        user.last_name = request.POST.get('last_name', '').strip()
-        user.email = request.POST.get('email', '').strip()
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        email = request.POST.get('email', '').strip()
+
+        if first_name:
+            user.first_name = first_name
+
+        if last_name:
+            user.last_name = last_name
+
+        if email:
+            user.email = email
         user.save()
 
         profile = user.profile
-        profile.phone = request.POST.get('phone', '').strip()
-        profile.address = request.POST.get('address', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        address = request.POST.get('address', '').strip()
 
-        profile.business_name = request.POST.get(
+        if phone:
+            profile.phone = phone
+
+        if address:
+            profile.address = address
+
+        business_name = request.POST.get(
             'business_name',
             ''
         ).strip()
 
-        profile.experience_years = (
-            request.POST.get(
-                'experience_years'
-            ) or 0
-        )
+        if business_name:
+            profile.business_name = business_name
 
-        profile.about_me = request.POST.get(
+        if request.POST.get('experience_years'):
+            profile.experience_years = request.POST.get(
+                'experience_years'
+            )
+
+        about_me = request.POST.get(
             'about_me',
             ''
         ).strip()
 
-        profile.gender = request.POST.get(
+        if about_me:
+            profile.about_me = about_me
+
+        gender = request.POST.get(
             'gender',
             ''
         ).strip()
 
-        profile.date_of_birth = request.POST.get(
+        if gender:
+            profile.gender = gender
+
+        date_of_birth = request.POST.get(
             'date_of_birth'
-        ) or None
-
-        profile.city = request.POST.get(
-            'city',
-            ''
-        ).strip()
-
-        profile.state = request.POST.get(
-            'state',
-            ''
-        ).strip()
-
-        profile.pincode = request.POST.get(
-            'pincode',
-            ''
-        ).strip()
-
-        profile.service_radius = (
-            request.POST.get(
-                'service_radius'
-            ) or 10
         )
 
-        profile.working_days = request.POST.get(
+        if date_of_birth:
+            profile.date_of_birth = date_of_birth
+
+        city = request.POST.get('city', '').strip()
+        state = request.POST.get('state', '').strip()
+        pincode = request.POST.get('pincode', '').strip()
+
+        if city:
+            profile.city = city
+
+        if state:
+            profile.state = state
+
+        if pincode:
+            profile.pincode = pincode
+
+        if request.POST.get('service_radius'):
+            profile.service_radius = request.POST.get(
+                'service_radius'
+            )
+
+        working_days = request.POST.get(
             'working_days',
             ''
         ).strip()
+
+        if working_days:
+            profile.working_days = working_days
 
         profile.emergency_available = (
             request.POST.get(
@@ -818,51 +844,59 @@ def edit_profile(request):
             ) == 'on'
         )
 
-        profile.starting_price = (
-            request.POST.get(
+        if request.POST.get('starting_price'):
+            profile.starting_price = request.POST.get(
                 'starting_price'
-            ) or None
-        )
+            )
 
-        profile.website = request.POST.get(
-            'website',
-            ''
-        ).strip()
+        website = request.POST.get('website', '').strip()
+        instagram = request.POST.get('instagram_url', '').strip()
+        facebook = request.POST.get('facebook_url', '').strip()
+        linkedin = request.POST.get('linkedin_url', '').strip()
 
-        profile.instagram_url = request.POST.get(
-            'instagram_url',
-            ''
-        ).strip()
+        if website:
+            profile.website = website
 
-        profile.facebook_url = request.POST.get(
-            'facebook_url',
-            ''
-        ).strip()
+        if instagram:
+            profile.instagram_url = instagram
 
-        profile.linkedin_url = request.POST.get(
-            'linkedin_url',
-            ''
-        ).strip()
-        profile.working_start_time = request.POST.get(
+        if facebook:
+            profile.facebook_url = facebook
+
+        if linkedin:
+            profile.linkedin_url = linkedin
+            
+        working_start_time = request.POST.get(
             'working_start_time'
         )
 
-        profile.working_end_time = request.POST.get(
+        working_end_time = request.POST.get(
             'working_end_time'
         )
 
+        if working_start_time:
+            profile.working_start_time = working_start_time
+
+        if working_end_time:
+            profile.working_end_time = working_end_time
         if 'profile_image' in request.FILES:
             profile.profile_image = request.FILES['profile_image']
 
-        profile.aadhaar_number = request.POST.get(
+        aadhaar = request.POST.get(
             'aadhaar_number',
             ''
         ).strip()
 
-        profile.pan_number = request.POST.get(
+        pan = request.POST.get(
             'pan_number',
             ''
         ).strip()
+
+        if aadhaar:
+            profile.aadhaar_number = aadhaar
+
+        if pan:
+            profile.pan_number = pan
 
         if 'aadhaar_image' in request.FILES:
             profile.aadhaar_image = request.FILES[
@@ -877,7 +911,13 @@ def edit_profile(request):
         messages.success(request, 'Profile updated successfully.')
         return redirect('provider_profile')
 
-    return render(request, 'services/edit_profile.html')
+    return render(
+        request,
+        'services/edit_profile.html',
+        {
+            'profile': request.user.profile
+        }
+    )
 
 
 # =========================
