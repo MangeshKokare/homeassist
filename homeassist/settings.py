@@ -26,8 +26,14 @@ SECRET_KEY = 'django-insecure-3wlfx9cbkbpyd_!k$u3o66&3w)%02537$q1lk!mi7t!g))6aa4
 DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://homeassist-production-d991.up.railway.app",
+]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+SESSION_COOKIE_SECURE = True
 
+CSRF_COOKIE_SECURE = True
 # Application definition
 
 INSTALLED_APPS = [
