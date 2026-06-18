@@ -23,6 +23,15 @@
 <section class="mb-lg sticky top-16 z-40 bg-background py-sm">
     <div class="flex gap-sm overflow-x-auto hide-scrollbar">
 
+        <a href="{% url 'resident_bookings' %}?status=all"
+           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg active:scale-95 transition-transform
+           {% if active_status == 'all' %}
+           bg-primary text-on-primary
+           {% else %}
+           bg-surface-container-high text-on-surface-variant
+           {% endif %}">
+            All ({{ total_count }})
+        </a>
         <a href="{% url 'resident_bookings' %}?status=pending"
            class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg active:scale-95 transition-transform
            {% if active_status == 'pending' %}
@@ -73,15 +82,7 @@
             Cancelled ({{ cancelled_count }})
         </a>
 
-        <a href="{% url 'resident_bookings' %}?status=all"
-           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg active:scale-95 transition-transform
-           {% if active_status == 'all' %}
-           bg-primary text-on-primary
-           {% else %}
-           bg-surface-container-high text-on-surface-variant
-           {% endif %}">
-            All ({{ total_count }})
-        </a>
+
 
     </div>
 </section>

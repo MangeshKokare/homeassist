@@ -13,84 +13,71 @@
     <p class="text-body-md text-secondary mt-xs">Manage your upcoming service schedule</p>
 </div>
 
-<!-- STATUS FILTER TABS -->
-<div class="bg-background py-sm mb-lg">
-    <nav class="flex gap-sm overflow-x-auto no-scrollbar">
+<!-- STATUS FILTERS -->
+<section class="mb-lg sticky top-16 z-40 bg-background py-sm">
+    <div class="flex gap-sm overflow-x-auto hide-scrollbar">
+
         <a href="?status=all"
-        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
-        {% if active_status == 'all' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
-
-            All
-
-            {% if total_count > 0 %}
-            <span class="ml-xs bg-white text-primary px-xs rounded-full text-label-sm font-bold">
-                {{ total_count }}
-            </span>
-            {% endif %}
-
+           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
+           {% if active_status == 'all' %}
+           bg-primary text-on-primary
+           {% else %}
+           bg-surface-container-high text-on-surface-variant
+           {% endif %}">
+            All ({{ total_count }})
         </a>
         <a href="?status=pending"
-           class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
-           {% if active_status == 'pending' or not active_status %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
-            Pending
-            {% if pending_count > 0 %}<span class="ml-xs bg-yellow-100 text-yellow-700 px-xs rounded-full text-label-sm font-bold">{{ pending_count }}</span>{% endif %}
+           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
+           {% if active_status == 'pending' %}
+           bg-primary text-on-primary
+           {% else %}
+           bg-surface-container-high text-on-surface-variant
+           {% endif %}">
+            Pending ({{ pending_count }})
         </a>
+
         <a href="?status=accepted"
-        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
-        {% if active_status == 'accepted' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
-
-            Accepted
-
-            {% if accepted_count > 0 %}
-            <span class="ml-xs bg-green-100 text-green-700 px-xs rounded-full text-label-sm font-bold">
-                {{ accepted_count }}
-            </span>
-            {% endif %}
-
+           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
+           {% if active_status == 'accepted' %}
+           bg-primary text-on-primary
+           {% else %}
+           bg-surface-container-high text-on-surface-variant
+           {% endif %}">
+            Accepted ({{ accepted_count }})
         </a>
+
         <a href="?status=in_progress"
-        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
-        {% if active_status == 'in_progress' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
-
-            In Progress
-
-            {% if in_progress_count > 0 %}
-            <span class="ml-xs bg-purple-100 text-purple-700 px-xs rounded-full text-label-sm font-bold">
-                {{ in_progress_count }}
-            </span>
-            {% endif %}
-
+           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
+           {% if active_status == 'in_progress' %}
+           bg-primary text-on-primary
+           {% else %}
+           bg-surface-container-high text-on-surface-variant
+           {% endif %}">
+            In Progress ({{ in_progress_count }})
         </a>
+
         <a href="?status=completed"
-        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
-        {% if active_status == 'completed' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
-
-            Completed
-
-            {% if completed_count > 0 %}
-            <span class="ml-xs bg-blue-100 text-blue-700 px-xs rounded-full text-label-sm font-bold">
-                {{ completed_count }}
-            </span>
-            {% endif %}
-
+           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
+           {% if active_status == 'completed' %}
+           bg-primary text-on-primary
+           {% else %}
+           bg-surface-container-high text-on-surface-variant
+           {% endif %}">
+            Completed ({{ completed_count }})
         </a>
 
         <a href="?status=cancelled"
-        class="px-lg py-sm rounded-full text-label-lg whitespace-nowrap active:scale-95 transition-transform
-        {% if active_status == 'cancelled' %}bg-primary text-on-primary shadow-sm{% else %}bg-surface text-secondary border border-surface-container-high hover:bg-surface-container-low{% endif %}">
-
-            Rejected
-
-            {% if cancelled_count > 0 %}
-            <span class="ml-xs bg-red-100 text-red-700 px-xs rounded-full text-label-sm font-bold">
-                {{ cancelled_count }}
-            </span>
-            {% endif %}
-
+           class="px-lg py-sm rounded-full whitespace-nowrap text-label-lg
+           {% if active_status == 'cancelled' %}
+           bg-primary text-on-primary
+           {% else %}
+           bg-surface-container-high text-on-surface-variant
+           {% endif %}">
+            Rejected ({{ cancelled_count }})
         </a>
 
-    </nav>
-</div>
+    </div>
+</section>
 
 <!-- BOOKING CARDS -->
 {% if bookings %}

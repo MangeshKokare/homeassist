@@ -113,7 +113,7 @@ def resident_bookings(request):
         'service'
     ).order_by('-id')
 
-    active_status = request.GET.get('status', 'pending')
+    active_status = request.GET.get('status', 'all')
 
     if active_status == 'all':
         bookings = all_bookings
@@ -130,10 +130,8 @@ def resident_bookings(request):
         )
 
     else:
-        bookings = all_bookings.filter(
-            status='pending'
-        )
-        active_status = 'pending'
+        bookings = all_bookings
+        active_status = 'all'
 
     context = {
         'bookings': bookings,
@@ -404,7 +402,7 @@ def provider_bookings(request):
         return redirect('resident_home')
 
     all_bookings = Booking.objects.filter(provider=request.user)
-    active_status = request.GET.get('status', 'pending')
+    active_status = request.GET.get('status', 'all')
 
     if active_status == 'all':
         bookings = all_bookings.order_by('-created_at')
@@ -419,8 +417,8 @@ def provider_bookings(request):
             status=active_status
         ).order_by('-created_at')
     else:
-        bookings = all_bookings.filter(status='pending').order_by('-created_at')
-        active_status = 'pending'
+        bookings = all_bookings.order_by('-created_at')
+        active_status = 'all'
 
     return render(
         request,
