@@ -8,93 +8,193 @@
 {% block content %}
 
 <!-- PROFILE HEADER -->
-<section class="flex flex-col items-center text-center mb-xl">
+<!-- PREMIUM PROFILE CARD -->
+<section class="mb-xl">
 
-    <div class="relative mb-md">
+    <div class="bg-surface-container-lowest rounded-[28px] p-xl border border-outline-variant shadow-[0px_8px_30px_rgba(15,23,42,0.08)]">
 
-        {% if profile.profile_image %}
-        <img src="{{ profile.profile_image.url }}"
-             class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
-        {% else %}
-        <div class="w-32 h-32 rounded-full bg-primary-fixed flex items-center justify-center shadow-lg">
-            <span class="text-display-lg text-primary font-bold">
-                {{ user_obj.username|first|upper }}
-            </span>
+        <div class="flex flex-col items-center text-center">
+
+            <div class="relative">
+
+                {% if profile.profile_image %}
+                <img src="{{ profile.profile_image.url }}"
+                     class="w-36 h-36 rounded-full object-cover border-[5px] border-white shadow-xl">
+                {% else %}
+                <div class="w-36 h-36 rounded-full bg-primary-fixed flex items-center justify-center shadow-xl">
+                    <span class="text-display-lg text-primary font-bold">
+                        {{ user_obj.username|first|upper }}
+                    </span>
+                </div>
+                {% endif %}
+
+                <a href="{% url 'resident_edit_profile' %}"
+                   class="absolute bottom-2 right-2 w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
+
+                    <span class="material-symbols-outlined">
+                        edit
+                    </span>
+
+                </a>
+
+            </div>
+
+            <h1 class="text-headline-lg mt-lg">
+                {{ user_obj.get_full_name|default:user_obj.username }}
+            </h1>
+
+            <p class="text-body-md text-on-surface-variant mt-xs">
+                {{ user_obj.email }}
+            </p>
+
         </div>
-        {% endif %}
-
-        <a href="{% url 'resident_edit_profile' %}"
-           class="absolute bottom-1 right-1 bg-primary text-white p-3 rounded-full shadow-lg active:scale-95 transition-transform">
-
-            <span class="material-symbols-outlined text-[20px]">
-                edit
-            </span>
-
-        </a>
 
     </div>
-
-    <h1 class="text-headline-lg text-on-surface">
-        {{ user_obj.get_full_name|default:user_obj.username }}
-    </h1>
-
-    <p class="text-body-md text-on-surface-variant mt-xs">
-        {{ user_obj.email }}
-    </p>
-
-    {% if profile.phone %}
-    <p class="text-body-md text-on-surface-variant mt-xs flex items-center gap-xs">
-        <span class="material-symbols-outlined text-[16px]">
-            call
-        </span>
-
-        {{ profile.phone }}
-    </p>
-    {% endif %}
-
-    {% if profile.address %}
-    <p class="text-body-md text-on-surface-variant mt-xs flex items-center gap-xs text-center">
-        <span class="material-symbols-outlined text-[16px]">
-            location_on
-        </span>
-
-        {{ profile.address }}
-    </p>
-    {% endif %}
 
 </section>
 
 
+
+<!-- CONTACT INFO -->
+<section class="mb-xl">
+
+    <div class="bg-surface-container-lowest rounded-[24px] p-lg border border-outline-variant shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+
+        <h3 class="text-label-lg mb-md">
+            Contact Information
+        </h3>
+
+        <div class="space-y-md">
+
+            <div class="flex items-center gap-md">
+
+                <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center">
+
+                    <span class="material-symbols-outlined text-primary">
+                        call
+                    </span>
+
+                </div>
+
+                <div>
+
+                    <p class="text-label-sm text-on-surface-variant">
+                        Phone Number
+                    </p>
+
+                    <p class="text-body-lg">
+                        {{ profile.phone|default:"Not Added" }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="flex items-start gap-md">
+
+                <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center">
+
+                    <span class="material-symbols-outlined text-primary">
+                        location_on
+                    </span>
+
+                </div>
+
+                <div>
+
+                    <p class="text-label-sm text-on-surface-variant">
+                        Address
+                    </p>
+
+                    <p class="text-body-lg">
+                        {{ profile.address|default:"Not Added" }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
 <!-- STATS -->
-<section class="grid grid-cols-2 gap-gutter mb-xl">
+<section class="grid grid-cols-2 gap-md mb-xl">
 
-    <div class="bg-surface-container-low rounded-[20px] p-lg text-center shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+    <div class="bg-primary text-white rounded-[24px] p-lg shadow-lg">
 
-        <h3 class="text-display-lg text-primary font-bold">
+        <p class="text-label-sm opacity-80">
+            Active
+        </p>
+
+        <h3 class="text-display-lg font-bold">
             {{ active_bookings }}
         </h3>
 
-        <p class="text-label-lg text-on-surface-variant">
-            Active Bookings
+        <p class="text-label-sm">
+            Bookings
         </p>
 
     </div>
 
-    <div class="bg-surface-container-low rounded-[20px] p-lg text-center shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+    <div class="bg-surface-container-lowest rounded-[24px] p-lg border border-outline-variant shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+
+        <p class="text-label-sm text-on-surface-variant">
+            Completed
+        </p>
 
         <h3 class="text-display-lg text-primary font-bold">
             {{ completed_bookings }}
         </h3>
 
-        <p class="text-label-lg text-on-surface-variant">
-            Completed Services
+        <p class="text-label-sm text-on-surface-variant">
+            Services
         </p>
 
     </div>
 
 </section>
 
+<!-- QUICK ACTIONS -->
+<section class="mb-xl">
 
+    <h2 class="text-label-lg mb-md">
+        Quick Actions
+    </h2>
+
+    <div class="grid grid-cols-2 gap-md">
+
+        <a href="{% url 'resident_bookings' %}"
+           class="bg-surface-container-lowest rounded-[20px] p-lg border border-outline-variant shadow-sm">
+
+            <span class="material-symbols-outlined text-primary text-[28px]">
+                calendar_today
+            </span>
+
+            <h3 class="mt-sm font-semibold">
+                My Bookings
+            </h3>
+
+        </a>
+
+        <a href="{% url 'resident_messages' %}"
+           class="bg-surface-container-lowest rounded-[20px] p-lg border border-outline-variant shadow-sm">
+
+            <span class="material-symbols-outlined text-primary text-[28px]">
+                chat_bubble
+            </span>
+
+            <h3 class="mt-sm font-semibold">
+                Messages
+            </h3>
+
+        </a>
+
+    </div>
+
+</section>
 <!-- ACCOUNT OPTIONS -->
 <section class="space-y-sm mb-xl">
 
@@ -102,12 +202,12 @@
         Account Preferences
     </h2>
 
-    <div class="bg-surface-container-lowest rounded-[20px] overflow-hidden border border-surface-container shadow-[0px_4px_20px_rgba(51,65,85,0.05)]">
+    <div class="bg-surface-container-lowest rounded-[28px] overflow-hidden border border-outline-variant shadow-[0px_8px_30px_rgba(15,23,42,0.06)]">
 
 
         <!-- BOOKINGS -->
         <a href="{% url 'resident_bookings' %}"
-           class="flex items-center justify-between p-md hover:bg-surface-container-low transition-colors">
+           class="flex items-center justify-between p-lg hover:bg-surface-container-low transition-colors">
 
             <div class="flex items-center gap-md">
 
@@ -141,7 +241,7 @@
 
         <!-- MESSAGES -->
         <a href="{% url 'resident_messages' %}"
-           class="flex items-center justify-between p-md hover:bg-surface-container-low transition-colors">
+           class="flex items-center justify-between p-lg hover:bg-surface-container-low transition-colors">
 
             <div class="flex items-center gap-md">
 
@@ -175,7 +275,7 @@
 
         <!-- EDIT PROFILE -->
         <a href="{% url 'resident_edit_profile' %}"
-           class="flex items-center justify-between p-md hover:bg-surface-container-low transition-colors">
+           class="flex items-center justify-between p-lg hover:bg-surface-container-low transition-colors">
 
             <div class="flex items-center gap-md">
 
@@ -243,10 +343,14 @@
 
 
 <!-- APP INFO -->
-<section class="text-center py-lg">
+<section class="text-center py-xl">
 
-    <p class="text-label-sm text-outline">
+    <p class="text-label-sm text-on-surface-variant">
         HomeAssist v1.0
+    </p>
+
+    <p class="text-label-sm text-outline mt-xs">
+        Smart Home Services Platform
     </p>
 
 </section>

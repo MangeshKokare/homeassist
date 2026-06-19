@@ -7,83 +7,305 @@
 
 {% block content %}
 
-<div class="max-w-md mx-auto">
+<div class="max-w-6xl mx-auto">
 
-    <!-- PROFILE HEADER -->
-    <section class="flex flex-col items-center text-center mb-xl">
-        <div class="relative mb-md">
-            <div class="w-32 h-32 rounded-full overflow-hidden shadow-[0px_4px_20px_rgba(51,65,85,0.1)] border-4 border-white">
-                {% if request.user.profile.profile_image %}
-                <img src="{{ request.user.profile.profile_image.url }}" alt="{{ request.user.username }}"
-                     class="w-full h-full object-cover"/>
-                {% else %}
-                <div class="w-full h-full bg-primary-fixed flex items-center justify-center">
-                    <span class="text-[48px] font-bold text-primary">{{ request.user.username|first|upper }}</span>
+    <!-- HERO CARD -->
+
+    <section class="mb-xl">
+
+        <div class="bg-surface-container-lowest rounded-[32px] p-xl border border-outline-variant shadow-[0px_10px_40px_rgba(15,23,42,0.08)]">
+
+            <div class="flex flex-col md:flex-row md:items-center gap-xl">
+
+                <!-- IMAGE -->
+
+                <div class="relative shrink-0 mx-auto md:mx-0">
+
+                    {% if request.user.profile.profile_image %}
+
+                    <img src="{{ request.user.profile.profile_image.url }}"
+                        class="w-36 h-36 rounded-full object-cover border-4 border-white shadow-xl">
+
+                    {% else %}
+
+                    <div class="w-36 h-36 rounded-full bg-primary-fixed flex items-center justify-center">
+
+                        <span class="text-[52px] font-bold text-primary">
+                            {{ request.user.username|first|upper }}
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+                    <a href="{% url 'edit_profile' %}"
+                    class="absolute bottom-2 right-2 w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
+
+                        <span class="material-symbols-outlined">
+                            edit
+                        </span>
+
+                    </a>
+
                 </div>
-                {% endif %}
+
+                <!-- DETAILS -->
+
+                <div class="flex-1 text-center md:text-left">
+
+                    <div class="flex flex-wrap items-center gap-2 justify-center md:justify-start">
+
+                        <h1 class="text-display-lg">
+                            {{ request.user.get_full_name|default:request.user.username }}
+                        </h1>
+
+                        {% if request.user.profile.verification_status == 'verified' %}
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            ✓ Verified
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+                    {% if request.user.profile.business_name %}
+                    <p class="text-primary text-lg font-semibold mt-1">
+                        {{ request.user.profile.business_name }}
+                    </p>
+                    {% endif %}
+
+                    <div class="flex flex-wrap gap-4 mt-3 justify-center md:justify-start">
+
+                        <span>
+                            ⭐ {{ avg_rating|default:"0"|floatformat:1 }}
+                            ({{ review_count }} Reviews)
+                        </span>
+
+                        {% if request.user.profile.experience_years %}
+                        <span>
+                            💼 {{ request.user.profile.experience_years }} Years
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="flex flex-wrap gap-4 mt-3 text-on-surface-variant justify-center md:justify-start">
+
+                        {% if request.user.profile.city %}
+                        <span>
+                            📍 {{ request.user.profile.city }}
+                        </span>
+                        {% endif %}
+
+                        {% if request.user.profile.state %}
+                        <span>
+                            {{ request.user.profile.state }}
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
             </div>
-            <a href="{% url 'edit_profile' %}"
-               class="absolute bottom-1 right-1 bg-primary text-on-primary p-sm rounded-full shadow-lg hover:scale-105 transition-transform">
-                <span class="material-symbols-outlined text-[20px]">edit</span>
-            </a>
-        </div>
-        <div class="flex items-center justify-center gap-2">
-
-        <h1 class="text-headline-lg text-on-surface">
-            {{ request.user.get_full_name|default:request.user.username }}
-        </h1>
-
-        {% if request.user.profile.verification_status == 'verified' %}
-        <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
-            ✓ Verified
-        </span>
-        {% endif %}
-
-        {% if avg_rating %}
-        <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs">
-            ⭐ {{ avg_rating|floatformat:1 }}
-        </span>
-        {% endif %}
 
         </div>
-        <p class="text-body-md text-on-surface-variant">
-            {{ request.user.email }}
-        </p>
 
-        {% if request.user.profile.business_name %}
-        <p class="text-body-md text-primary font-medium mt-1">
-            {{ request.user.profile.business_name }}
-        </p>
-        {% endif %}
-
-        {% if request.user.profile.experience_years %}
-        <p class="text-label-md text-on-surface-variant">
-            {{ request.user.profile.experience_years }} Years Experience
-        </p>
-        {% endif %}
-        {% if request.user.profile.phone %}
-        <p class="text-body-md text-on-surface-variant flex items-center gap-xs mt-xs">
-            <span class="material-symbols-outlined text-[16px]">phone</span>
-            {{ request.user.profile.phone }}
-        </p>
-        {% endif %}
-        {% if request.user.profile.address %}
-        <p class="text-body-md text-on-surface-variant flex items-center gap-xs mt-xs">
-            <span class="material-symbols-outlined text-[16px]">location_on</span>
-            {{ request.user.profile.address }}
-        </p>
-        {% endif %}
     </section>
+    
+    <section class="mb-xl">
 
+        <div class="bg-primary-fixed rounded-[24px] p-lg">
+
+            <div class="flex justify-between items-center">
+
+                <div>
+
+                    <h3 class="font-semibold text-primary">
+                        Complete Your Profile
+                    </h3>
+
+                    <p class="text-body-md">
+                        Complete all professional details to get more bookings.
+                    </p>
+
+                </div>
+
+                <span class="material-symbols-outlined text-primary">
+                    trending_up
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
 
     <!-- PROVIDER DETAILS -->
 
     <div class="bg-surface-container-lowest rounded-[20px] p-lg shadow-[0px_4px_20px_rgba(51,65,85,0.05)] mb-xl">
 
-        <h2 class="text-title-medium text-on-surface mb-md">
+        <h2 class="text-headline-md text-on-surface mb-lg flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">
+                business_center
+            </span>
             Professional Information
         </h2>
+        <section class="mb-xl">
 
+            <div class="bg-surface-container-lowest rounded-[24px] p-lg border border-outline-variant">
+
+                <h2 class="text-headline-md mb-lg">
+                    Service Availability
+                </h2>
+
+                <div class="space-y-md">
+
+                    <div class="flex justify-between">
+
+                        <span>Working Days</span>
+
+                        <strong>
+                            {{ request.user.profile.working_days }}
+                        </strong>
+
+                    </div>
+
+                    <div class="flex justify-between">
+
+                        <span>Working Hours</span>
+
+                        <strong>
+
+                            {{ request.user.profile.working_start_time }}
+                            -
+                            {{ request.user.profile.working_end_time }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="flex justify-between">
+
+                        <span>Service Radius</span>
+
+                        <strong>
+                            {{ request.user.profile.service_radius }} KM
+                        </strong>
+
+                    </div>
+
+                    <div class="flex justify-between">
+
+                        <span>Emergency Service</span>
+
+                        {% if request.user.profile.emergency_available %}
+                        <strong class="text-green-600">
+                            Available
+                        </strong>
+                        {% else %}
+                        <strong class="text-red-600">
+                            Not Available
+                        </strong>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+        <section class="mb-xl">
+
+            <div class="bg-surface-container-lowest rounded-[24px] p-lg border border-outline-variant">
+
+                <h2 class="text-headline-md mb-lg">
+                    Verification Center
+                </h2>
+
+                <div class="space-y-md">
+
+                    <div class="flex justify-between">
+
+                        <span>Aadhaar</span>
+
+                        {% if request.user.profile.aadhaar_image %}
+                        <span class="text-green-600">✓ Uploaded</span>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="flex justify-between">
+
+                        <span>PAN Card</span>
+
+                        {% if request.user.profile.pan_image %}
+                        <span class="text-green-600">✓ Uploaded</span>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="flex justify-between">
+
+                        <span>Account Status</span>
+
+                        <span class="text-green-600">
+                            {{ request.user.profile.verification_status|title }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="mb-xl">
+
+            <div class="bg-surface-container-lowest rounded-[24px] p-lg border border-outline-variant">
+
+                <h2 class="text-headline-md mb-lg">
+                    Contact Information
+                </h2>
+
+                <div class="space-y-md">
+
+                    <div>
+                        <p class="text-label-sm text-on-surface-variant">
+                            Phone
+                        </p>
+
+                        <p>
+                            {{ request.user.profile.phone }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-label-sm text-on-surface-variant">
+                            Email
+                        </p>
+
+                        <p>
+                            {{ request.user.email }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-label-sm text-on-surface-variant">
+                            Address
+                        </p>
+
+                        <p>
+                            {{ request.user.profile.address }}
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
         {% if request.user.profile.business_name %}
         <div class="flex justify-between py-2 border-b border-surface-container">
             <span class="text-on-surface-variant">Business</span>
@@ -229,40 +451,70 @@
     </div>
 
     <!-- STATS GRID -->
-    <section class="grid grid-cols-2 gap-gutter mb-xl">
-        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
-            <span class="text-headline-md text-primary font-bold">{{ services_count }}</span>
-            <span class="text-label-sm text-secondary mt-xs">Active Services</span>
+    <section class="grid grid-cols-2 lg:grid-cols-5 gap-md mb-xl">
+        <div class="bg-primary text-white rounded-[24px] p-lg text-center">
+            <h3 class="text-display-lg font-bold">
+                {{ services_count }}
+            </h3>
+            <p>Services</p>
         </div>
-        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
-            <span class="text-headline-md text-primary font-bold">{{ total_bookings }}</span>
-            <span class="text-label-sm text-secondary mt-xs">Total Bookings</span>
-        </div>
-        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
-            <span class="text-headline-md text-primary font-bold">{{ completed_bookings }}</span>
-            <span class="text-label-sm text-secondary mt-xs">Completed</span>
-        </div>
-        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
-            <span class="text-headline-md text-primary font-bold">{{ pending_bookings }}</span>
-            <span class="text-label-sm text-secondary mt-xs">Pending</span>
-        </div>
-        <div class="bg-surface-container-low p-md rounded-[20px] shadow-[0px_4px_20px_rgba(51,65,85,0.05)] flex flex-col items-center justify-center text-center">
 
-            <span class="text-headline-md text-primary font-bold">
+        <div class="bg-surface-container-lowest rounded-[24px] p-lg border border-outline-variant text-center">
+            <h3 class="text-display-lg text-primary font-bold">
+                {{ total_bookings }}
+            </h3>
+            <p>Bookings</p>
+        </div>
 
+        <div class="bg-surface-container-lowest rounded-[24px] p-lg border border-outline-variant text-center">
+            <h3 class="text-display-lg text-primary font-bold">
+                {{ completed_bookings }}
+            </h3>
+            <p>Completed</p>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-[24px] p-lg border border-outline-variant text-center">
+            <h3 class="text-display-lg text-primary font-bold">
+                {{ pending_bookings }}
+            </h3>
+            <p>Pending</p>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-[24px] p-lg border border-outline-variant text-center">
+            <h3 class="text-display-lg text-primary font-bold">
                 ⭐ {{ avg_rating|default:"0"|floatformat:1 }}
-
-            </span>
-
-            <span class="text-label-sm text-secondary mt-xs">
-
-                {{ review_count }} Reviews
-
-            </span>
-
+            </h3>
+            <p>{{ review_count }} Reviews</p>
         </div>
     </section>
 
+    <section class="mb-xl">
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+
+            <a href="{% url 'provider_bookings' %}" class="bg-surface-container-lowest rounded-[20px] p-lg text-center border border-outline-variant">
+                📅
+                <p class="mt-2">Bookings</p>
+            </a>
+
+            <a href="{% url 'provider_messages' %}" class="bg-surface-container-lowest rounded-[20px] p-lg text-center border border-outline-variant">
+                💬
+                <p class="mt-2">Messages</p>
+            </a>
+
+            <a href="{% url 'provider_dashboard' %}" class="bg-surface-container-lowest rounded-[20px] p-lg text-center border border-outline-variant">
+                🛠
+                <p class="mt-2">Services</p>
+            </a>
+
+            <a href="{% url 'edit_profile' %}" class="bg-surface-container-lowest rounded-[20px] p-lg text-center border border-outline-variant">
+                ⚙️
+                <p class="mt-2">Edit</p>
+            </a>
+
+        </div>
+
+    </section>
     <!-- MENU LIST -->
     <section class="space-y-sm mb-xl">
         <h2 class="text-label-lg text-outline ml-base mb-sm">Account</h2>
