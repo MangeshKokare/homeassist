@@ -6,12 +6,15 @@
 {% block nav_profile_fill %}fill-icon{% endblock %}
 
 {% block content %}
-
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"></div>
 <!-- PROFILE HEADER -->
 <!-- PREMIUM PROFILE CARD -->
 <section class="mb-xl">
 
-    <div class="bg-surface-container-lowest rounded-[28px] p-xl border border-outline-variant shadow-[0px_8px_30px_rgba(15,23,42,0.08)]">
+    <div class="bg-surface-container-lowest rounded-2xl sm:rounded-[28px]
+                p-4 sm:p-6 lg:p-8
+                border border-outline-variant
+                shadow-[0px_8px_30px_rgba(15,23,42,0.08)]">
 
         <div class="flex flex-col items-center text-center">
 
@@ -19,9 +22,11 @@
 
                 {% if profile.profile_image %}
                 <img src="{{ profile.profile_image.url }}"
-                     class="w-36 h-36 rounded-full object-cover border-[5px] border-white shadow-xl">
+                    class="w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36
+                        rounded-full object-cover border-[5px] border-white shadow-xl">
                 {% else %}
-                <div class="w-36 h-36 rounded-full bg-primary-fixed flex items-center justify-center shadow-xl">
+                <div class="w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36
+                            rounded-full bg-primary-fixed flex items-center justify-center shadow-xl">
                     <span class="text-display-lg text-primary font-bold">
                         {{ user_obj.username|first|upper }}
                     </span>
@@ -43,7 +48,7 @@
                 {{ user_obj.get_full_name|default:user_obj.username }}
             </h1>
 
-            <p class="text-body-md text-on-surface-variant mt-xs">
+            <p class="text-sm sm:text-base text-on-surface-variant mt-2 break-all">
                 {{ user_obj.email }}
             </p>
 
@@ -66,7 +71,7 @@
 
         <div class="space-y-md">
 
-            <div class="flex items-center gap-md">
+            <div class="flex items-start gap-3">
 
                 <div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center">
 
@@ -82,7 +87,7 @@
                         Phone Number
                     </p>
 
-                    <p class="text-body-lg">
+                    <p class="text-sm sm:text-base break-words">
                         {{ profile.phone|default:"Not Added" }}
                     </p>
 
@@ -106,7 +111,7 @@
                         Address
                     </p>
 
-                    <p class="text-body-lg">
+                    <p class="text-sm sm:text-base break-words">
                         {{ profile.address|default:"Not Added" }}
                     </p>
 
@@ -121,7 +126,7 @@
 </section>
 
 <!-- STATS -->
-<section class="grid grid-cols-2 gap-md mb-xl">
+<section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
 
     <div class="bg-primary text-white rounded-[24px] p-lg shadow-lg">
 
@@ -164,10 +169,11 @@
         Quick Actions
     </h2>
 
-    <div class="grid grid-cols-2 gap-md">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
         <a href="{% url 'resident_bookings' %}"
-           class="bg-surface-container-lowest rounded-[20px] p-lg border border-outline-variant shadow-sm">
+            class="bg-surface-container-lowest rounded-[20px] p-lg border border-outline-variant shadow-sm
+                flex flex-col justify-center min-h-[120px]">
 
             <span class="material-symbols-outlined text-primary text-[28px]">
                 calendar_today
@@ -209,7 +215,7 @@
         <a href="{% url 'resident_bookings' %}"
            class="flex items-center justify-between p-lg hover:bg-surface-container-low transition-colors">
 
-            <div class="flex items-center gap-md">
+            <div class="flex items-start gap-3">
 
                 <div class="w-11 h-11 rounded-xl bg-primary-fixed/40 flex items-center justify-center text-primary">
                     <span class="material-symbols-outlined">
@@ -217,8 +223,8 @@
                     </span>
                 </div>
 
-                <div>
-                    <h3 class="text-body-lg text-on-surface">
+                <div class="min-w-0">
+                    <h3 class="text-body-lg text-on-surface truncate">
                         My Bookings
                     </h3>
 
@@ -243,7 +249,7 @@
         <a href="{% url 'resident_messages' %}"
            class="flex items-center justify-between p-lg hover:bg-surface-container-low transition-colors">
 
-            <div class="flex items-center gap-md">
+            <div class="flex items-start gap-3">
 
                 <div class="w-11 h-11 rounded-xl bg-primary-fixed/40 flex items-center justify-center text-primary">
                     <span class="material-symbols-outlined">
@@ -277,7 +283,7 @@
         <a href="{% url 'resident_edit_profile' %}"
            class="flex items-center justify-between p-lg hover:bg-surface-container-low transition-colors">
 
-            <div class="flex items-center gap-md">
+            <div class="flex items-start gap-3">
 
                 <div class="w-11 h-11 rounded-xl bg-primary-fixed/40 flex items-center justify-center text-primary">
                     <span class="material-symbols-outlined">
@@ -311,7 +317,7 @@
         <a href="{% url 'logout' %}"
            class="flex items-center justify-between p-md hover:bg-red-50 transition-colors">
 
-            <div class="flex items-center gap-md">
+            <div class="flex items-start gap-3">
 
                 <div class="w-11 h-11 rounded-xl bg-error-container flex items-center justify-center text-error">
                     <span class="material-symbols-outlined">
@@ -343,7 +349,7 @@
 
 
 <!-- APP INFO -->
-<section class="text-center py-xl">
+<section class="text-center py-8 sm:py-10">
 
     <p class="text-label-sm text-on-surface-variant">
         HomeAssist v1.0
@@ -354,5 +360,5 @@
     </p>
 
 </section>
-
+</div>
 {% endblock %}
