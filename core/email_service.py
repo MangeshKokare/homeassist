@@ -9,7 +9,7 @@ def send_otp_email(email, otp):
     headers = {
         "accept": "application/json",
         "api-key": settings.BREVO_API_KEY,
-        "content-type": "application/json"
+        "content-type": "application/json",
     }
 
     payload = {
@@ -30,8 +30,14 @@ def send_otp_email(email, otp):
     }
 
     print("=" * 60)
-    print("BREVO KEY:", settings.BREVO_API_KEY)
-    print("KEY LENGTH:", len(settings.BREVO_API_KEY or ""))
+    key = settings.BREVO_API_KEY
+
+    print("KEY EXISTS:", key is not None)
+    print("KEY LENGTH:", len(key or ""))
+
+    if key:
+        print("FIRST 10:", key[:10])
+        print("LAST 10:", key[-10:])
 
     response = requests.post(
         url,
