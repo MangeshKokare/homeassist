@@ -22,11 +22,47 @@ class ServiceForm(forms.ModelForm):
         ('Cleaning', '🧹 Cleaning'),
         ('Electrician', '⚡ Electrician'),
         ('Plumber', '🚰 Plumbing'),
-        ('Appliance', '🛠 Appliance Repair'),
+        ('Painter', '🎨 Painter'),
         ('Carpenter', '🪚 Carpenter'),
-        ('Pest Control', '🐜 Pest Control'),
+        ('Waterproofing', '💧 Waterproofing'),
     ]
 
+    SUBCATEGORY_CHOICES = [
+        ("", "Select Subcategory"),
+
+        # Cleaning
+        ("Full Home Cleaning", "🧹 Full Home Cleaning"),
+        ("Bathroom Cleaning", "🚿 Bathroom Cleaning"),
+        ("Kitchen Cleaning", "🍽 Kitchen Cleaning"),
+
+        # Electrician
+        ("Fan Installation", "💡 Fan Installation"),
+        ("Switch & Socket", "🔌 Switch & Socket"),
+        ("Wiring", "⚡ Wiring"),
+
+        # Plumbing
+        ("Tap Repair", "🚰 Tap Repair"),
+        ("Pipe Leakage", "🛠 Pipe Leakage"),
+        ("Bathroom Fitting", "🚿 Bathroom Fitting"),
+
+        # Painter
+        ("Interior Painting", "🎨 Interior Painting"),
+        ("Exterior Painting", "🏠 Exterior Painting"),
+        ("Texture Painting", "🖌 Texture Painting"),
+        ("Waterproof Paint", "💧 Waterproof Paint"),
+
+        # Carpenter
+        ("Furniture Repair", "🪑 Furniture Repair"),
+        ("Door Repair", "🚪 Door Repair"),
+        ("IKEA Assembly", "🧰 IKEA Assembly"),
+        ("Lock & Handle", "🔒 Lock & Handle"),
+
+        # Waterproofing
+        ("Terrace Waterproofing", "🏠 Terrace Waterproofing"),
+        ("Bathroom Waterproofing", "🚿 Bathroom Waterproofing"),
+        ("Wall Waterproofing", "🧱 Wall Waterproofing"),
+        ("Basement Waterproofing", "🏢 Basement Waterproofing"),
+    ]
     category = forms.ChoiceField(
         choices=CATEGORY_CHOICES,
         widget=forms.Select(attrs={
@@ -34,6 +70,14 @@ class ServiceForm(forms.ModelForm):
         })
     )
 
+    subcategory = forms.ChoiceField(
+        choices=SUBCATEGORY_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class': 'w-full bg-surface-container-low border border-outline-variant rounded-xl px-md py-sm text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent'
+        })
+    )
+    
     class Meta:
         model = Service
         fields = '__all__'

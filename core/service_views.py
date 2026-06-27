@@ -44,6 +44,7 @@ def explore_services(request):
 
     search_query = request.GET.get('search', '')
     active_category = request.GET.get('category', '')
+    active_sub = request.GET.get('sub', '')
 
     services = Service.objects.select_related(
         'provider',
@@ -64,15 +65,26 @@ def explore_services(request):
             category__iexact=active_category
         )
 
-    categories = Service.objects.values_list(
-        'category',
-        flat=True
-    ).distinct()
+    # Optional: filter by subcategory (after you add a subcategory field)
+    if active_sub:
+        services = services.filter(
+            subcategory__iexact=active_sub
+        )
+
+    categories = [
+        "Cleaning",
+        "Electrician",
+        "Plumber",
+        "Painter",
+        "Carpenter",
+        "Waterproofing",
+    ]
 
     context = {
         'services': services,
         'search_query': search_query,
         'active_category': active_category,
+        'active_sub': active_sub,
         'categories': categories,
     }
     favorite_providers = []
@@ -94,6 +106,7 @@ def explore_services(request):
             'services': services,
             'categories': categories,
             'active_category': active_category,
+            'active_sub': active_sub,
             'search_query': search_query,
             'favorite_providers': favorite_providers,
         }

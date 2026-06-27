@@ -510,8 +510,11 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
         {% elif category == "Electrician" %}<span class="material-symbols-outlined">electrical_services</span>
         {% elif category == "Plumber" %}<span class="material-symbols-outlined">plumbing</span>
         {% elif category == "Carpenter" %}<span class="material-symbols-outlined">carpenter</span>
-        {% elif category == "Painter" %}<span class="material-symbols-outlined">format_paint</span>
-        {% elif category == "Pest Control" %}<span class="material-symbols-outlined">pest_control</span>
+        {% elif category == "Painter" %}
+        <span class="material-symbols-outlined">format_paint</span>
+
+        {% elif category == "Waterproofing" %}
+        <span class="material-symbols-outlined">water_drop</span>
         {% else %}<span class="material-symbols-outlined">home_repair_service</span>
         {% endif %}
         {{ category }}

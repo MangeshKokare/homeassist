@@ -187,11 +187,29 @@ class Profile(models.Model):
 
 class Service(models.Model):
     provider = models.ForeignKey(User, on_delete=models.CASCADE)
-    service_name = models.CharField(max_length=100)
-    category = models.CharField(max_length=100)
+
+    service_name = models.CharField(
+        max_length=100
+    )
+
+    category = models.CharField(
+        max_length=100
+    )
+
+    # NEW FIELD
+    subcategory = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
     description = models.TextField()
+
     price = models.IntegerField()
-    image = models.ImageField(upload_to='services/')
+
+    image = models.ImageField(
+        upload_to='services/'
+    )
 
     def __str__(self):
         return self.service_name
