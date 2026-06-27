@@ -17,33 +17,21 @@ def send_otp_email(email, otp):
             "name": "HomeAssist",
             "email": "mangesh.kokare@bds.christuniversity.in"
         },
-
         "to": [
             {
                 "email": email
             }
         ],
-
         "subject": "HomeAssist Login OTP",
-
         "htmlContent": f"""
-        <div style="font-family:Arial;padding:30px">
-
-            <h2>HomeAssist Login</h2>
-
-            <p>Your One Time Password is</p>
-
-            <h1 style="color:#2563eb">{otp}</h1>
-
-            <p>This OTP expires in <b>5 minutes</b>.</p>
-
-            <hr>
-
-            <p>Please do not share this OTP.</p>
-
-        </div>
+        <h2>HomeAssist Login</h2>
+        <h1>{otp}</h1>
         """
     }
+
+    print("=" * 60)
+    print("BREVO KEY:", settings.BREVO_API_KEY)
+    print("KEY LENGTH:", len(settings.BREVO_API_KEY or ""))
 
     response = requests.post(
         url,
@@ -51,7 +39,8 @@ def send_otp_email(email, otp):
         json=payload
     )
 
-    print(response.status_code)
-    print(response.text)
+    print("STATUS:", response.status_code)
+    print("RESPONSE:", response.text)
+    print("=" * 60)
 
     response.raise_for_status()
