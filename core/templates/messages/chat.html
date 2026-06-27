@@ -65,7 +65,9 @@
                     {% else %}
                         bg-surface-container-lowest text-on-surface chat-bubble-received border border-outline-variant/30 shadow-[0px_4px_20px_rgba(51,65,85,0.05)]
                     {% endif %}">
-                    <p class="text-body-md">{{ msg.message }}</p>
+                    <p class="text-body-md whitespace-pre-line">
+                        {{ msg.message }}
+                    </p>
                 </div>
 
                 <span class="text-label-sm text-on-surface-variant px-sm flex items-center gap-xs">

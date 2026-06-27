@@ -35,7 +35,7 @@ from .service_views import (
     favorite_providers,
 )
 
-from .message_views import chat_view
+from .message_views import chat_view, chatbot, provider_chatbot
 from .views import home
 
 urlpatterns = [
@@ -100,4 +100,8 @@ urlpatterns = [
     path('booking/<int:booking_id>/rebook/',rebook_service,name='rebook_service'),
 
     path('resident/favorites/',favorite_providers,name='favorite_providers'),
+
+    path("chatbot/",chatbot,name="chatbot"),
+
+    path("provider-chatbot/",provider_chatbot,name="provider_chatbot",),
 ]
