@@ -17,42 +17,36 @@
 
     <!-- HOMEASSIST PROVIDER ASSISTANT -->
     <a href="{% url 'provider_chatbot' %}"
-    class="flex items-center gap-md p-gutter mb-lg bg-gradient-to-r from-green-600 to-emerald-600 rounded-[20px] shadow-lg hover:shadow-xl transition-all">
+       class="flex items-center gap-md p-gutter mb-lg rounded-[20px] shadow-lg hover:shadow-xl transition-all"
+       style="background: linear-gradient(135deg, #1a9e8f 0%, #0d7a6e 100%); box-shadow: 0 6px 24px rgba(26,158,143,0.28);">
 
         <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-
-            <span class="material-symbols-outlined text-[34px] text-green-600">
+            <span class="material-symbols-outlined text-[34px]" style="color:#1a9e8f;">
                 smart_toy
             </span>
-
         </div>
 
         <div class="flex-1">
-
             <div class="flex justify-between items-center">
-
                 <h3 class="text-white text-headline-md">
                     HomeAssist Provider Assistant
                 </h3>
-
                 <span class="bg-white/20 px-3 py-1 rounded-full text-white text-label-sm">
                     AI
                 </span>
-
             </div>
-
-            <p class="text-green-100 text-body-md mt-xs">
+            <p class="text-body-md mt-xs" style="color: rgba(194,240,235,0.9);">
                 Need help managing bookings or your provider account?
             </p>
-
         </div>
 
     </a>
+
     {% if conversations %}
     <div class="space-y-sm">
         {% for convo in conversations %}
         <a href="{% url 'chat' convo.other_user.id %}"
-           class="flex items-center gap-md p-gutter bg-surface-container-lowest rounded-[20px] border border-surface-container shadow-[0px_2px_8px_rgba(51,65,85,0.04)] hover:shadow-[0px_4px_16px_rgba(51,65,85,0.08)] transition-all active:scale-[0.98] group">
+           class="flex items-center gap-md p-gutter bg-surface-container-lowest rounded-[20px] border border-surface-container shadow-[0px_2px_8px_rgba(51,65,85,0.04)] hover:shadow-[0px_4px_16px_rgba(26,158,143,0.10)] transition-all active:scale-[0.98] group">
 
             <!-- AVATAR -->
             <div class="relative flex-shrink-0">

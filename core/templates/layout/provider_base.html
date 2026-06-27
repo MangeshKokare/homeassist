@@ -4,72 +4,65 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
     <title>{% block title %}HomeAssist Provider{% endblock %}</title>
-
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#003d9b",
+                        /* ── Teal primary (from Book Now image ~#3DBFAB) ── */
+                        "primary": "#1a9e8f",
                         "on-primary": "#ffffff",
-                        "primary-container": "#0052cc",
-                        "on-primary-container": "#c4d2ff",
-                        "primary-fixed": "#dae2ff",
-                        "primary-fixed-dim": "#b2c5ff",
-                        "on-primary-fixed": "#001848",
-                        "secondary": "#515f74",
+                        "primary-container": "#24b5a4",
+                        "on-primary-container": "#c2f0eb",
+                        "primary-fixed": "#d0f4f0",
+                        "primary-fixed-dim": "#9de8e0",
+                        "on-primary-fixed": "#00302b",
+                        /* ── Secondary ── */
+                        "secondary": "#4a6e6a",
                         "on-secondary": "#ffffff",
-                        "secondary-container": "#d5e3fd",
-                        "on-secondary-container": "#57657b",
-                        "surface": "#faf8ff",
-                        "surface-dim": "#d9d9e4",
-                        "surface-bright": "#faf8ff",
+                        "secondary-container": "#ceeae6",
+                        "on-secondary-container": "#4a6e6a",
+                        /* ── Tertiary ── */
+                        "tertiary": "#7a4f00",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#a86c00",
+                        "tertiary-fixed": "#ffecd1",
+                        "tertiary-fixed-dim": "#f5c97a",
+                        "on-tertiary-fixed": "#271600",
+                        /* ── Surface ── */
+                        "surface": "#f4fffe",
+                        "surface-dim": "#cee0de",
+                        "surface-bright": "#f4fffe",
                         "surface-container-lowest": "#ffffff",
-                        "surface-container-low": "#f3f3fd",
-                        "surface-container": "#ededf8",
-                        "surface-container-high": "#e7e7f2",
-                        "surface-container-highest": "#e1e2ec",
-                        "on-surface": "#191b23",
-                        "on-surface-variant": "#434654",
-                        "outline": "#737685",
-                        "outline-variant": "#c3c6d6",
-                        "background": "#faf8ff",
-                        "on-background": "#191b23",
+                        "surface-container-low": "#eaf6f5",
+                        "surface-container": "#dff0ee",
+                        "surface-container-high": "#d3eae8",
+                        "surface-container-highest": "#c7e4e2",
+                        "on-surface": "#0d1f1e",
+                        "on-surface-variant": "#3a5553",
+                        "outline": "#5e8280",
+                        "outline-variant": "#aed0ce",
+                        /* ── Background ── */
+                        "background": "#f4fffe",
+                        "on-background": "#0d1f1e",
+                        /* ── Error ── */
                         "error": "#ba1a1a",
                         "error-container": "#ffdad6",
                         "on-error": "#ffffff",
                         "on-error-container": "#93000a",
-                        "tertiary": "#7b2600",
-                        "tertiary-container": "#a33500",
-                        "tertiary-fixed": "#ffdbcf",
-                        "tertiary-fixed-dim": "#ffb59b",
-                        "on-tertiary": "#ffffff",
-                        "on-tertiary-fixed": "#380d00",
-                        "inverse-surface": "#2e3038",
-                        "inverse-on-surface": "#f0f0fb",
-                        "inverse-primary": "#b2c5ff",
+                        /* ── Inverse ── */
+                        "inverse-surface": "#1e3533",
+                        "inverse-on-surface": "#ebf3f2",
+                        "inverse-primary": "#9de8e0",
                     },
-                    borderRadius: {
-                        DEFAULT: "0.25rem",
-                        lg: "0.5rem",
-                        xl: "0.75rem",
-                        full: "9999px",
-                    },
+                    borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
                     spacing: {
-                        "safe-margin": "20px",
-                        base: "4px",
-                        sm: "8px",
-                        gutter: "16px",
-                        xl: "32px",
-                        xs: "4px",
-                        lg: "24px",
-                        xxl: "48px",
-                        md: "16px",
+                        "safe-margin": "20px", base: "4px", sm: "8px", gutter: "16px",
+                        xl: "32px", xs: "4px", lg: "24px", xxl: "48px", md: "16px",
                     },
                     fontSize: {
                         "headline-lg": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
@@ -84,7 +77,6 @@
             },
         };
     </script>
-
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
         .material-symbols-outlined {
@@ -94,176 +86,86 @@
         .fill-icon { font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        body {min-height: 100dvh;}
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            overflow-x: hidden;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
+        body { min-height: 100dvh; overflow-x: hidden; }
+        html { scroll-behavior: smooth; }
+        img { max-width: 100%; height: auto; }
+        main { overflow-x: hidden; }
+        nav { position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; }
         @media (max-width: 640px) {
-
-            .text-headline-lg {
-                font-size: 20px !important;
-            }
-
-            .text-display-lg {
-                font-size: 26px !important;
-            }
-        }
-
-        nav {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-        }
-
-        main {
-            overflow-x: hidden;
+            .text-headline-lg { font-size: 20px !important; }
+            .text-display-lg { font-size: 26px !important; }
         }
     </style>
-
     {% block extra_head %}{% endblock %}
 </head>
 
 <body class="bg-background text-on-surface min-h-screen overflow-x-hidden pb-32">
 
     <!-- TOP APP BAR -->
-    <header class="
-    sticky top-0 z-50
-    backdrop-blur-xl
-    bg-white/80
-    border-b border-outline-variant
-    shadow-sm">
-
-        <div class="
-        max-w-7xl mx-auto
-        h-16 md:h-18
-        px-3 sm:px-5 lg:px-8
-        flex items-center justify-between">
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-outline-variant shadow-sm">
+        <div class="max-w-7xl mx-auto h-16 md:h-18 px-3 sm:px-5 lg:px-8 flex items-center justify-between">
 
             <!-- Logo -->
             <div class="flex items-center gap-2 min-w-0">
-
-                <div class="
-                h-10 w-10
-                rounded-xl
-                bg-primary
-                text-white
-                flex items-center justify-center
-                shadow-md">
-
-                    <span class="material-symbols-outlined">
-                        home_repair_service
-                    </span>
-
+                <div class="h-10 w-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-md">
+                    <span class="material-symbols-outlined">home_repair_service</span>
                 </div>
-
                 <div class="hidden sm:block">
-
-                    <h1 class="font-bold text-lg text-primary leading-none">
-                        HomeAssist
-                    </h1>
-
-                    <p class="text-xs text-on-surface-variant">
-                        Provider Portal
-                    </p>
-
+                    <h1 class="font-bold text-lg text-primary leading-none">HomeAssist</h1>
+                    <p class="text-xs text-on-surface-variant">Provider Portal</p>
                 </div>
-
             </div>
 
             <!-- Right Side -->
             <div class="flex items-center gap-2 md:gap-4">
 
                 <div class="hidden lg:block text-right">
-
-                    <p class="text-xs text-on-surface-variant">
-                        Welcome Back
-                    </p>
-
+                    <p class="text-xs text-on-surface-variant">Welcome Back</p>
                     <p class="font-semibold text-primary truncate max-w-[180px]">
                         {{ request.user.first_name }} {{ request.user.last_name }}
                     </p>
-
                 </div>
 
                 <!-- Notifications -->
                 <a href="{% url 'provider_notifications' %}"
-                class="
-                relative
-                h-11 w-11
-                rounded-full
-                bg-surface-container-low
-                flex items-center justify-center
-                hover:bg-surface-container
-                transition">
-
-                    <span class="material-symbols-outlined text-primary">
-                        notifications
-                    </span>
-
+                   class="relative h-11 w-11 rounded-full bg-surface-container-low flex items-center justify-center hover:bg-surface-container transition">
+                    <span class="material-symbols-outlined text-primary">notifications</span>
                     {% if unread_notifications_count > 0 %}
-                    <span class="
-                    absolute -top-1 -right-1
-                    min-w-[18px]
-                    h-[18px]
-                    px-1
-                    rounded-full
-                    bg-red-500
-                    text-white
-                    text-[10px]
-                    flex items-center justify-center">
-
+                    <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">
                         {{ unread_notifications_count }}
-
                     </span>
                     {% endif %}
-
                 </a>
 
                 <!-- Profile -->
                 <button onclick="toggleProfileMenu()"
-                    class="
-                    h-11 w-11
-                    rounded-full
-                    overflow-hidden
-                    border-2 border-primary/20
-                    shadow-md">
-
+                        class="h-11 w-11 rounded-full overflow-hidden border-2 border-primary/20 shadow-md">
                     {% if request.user.profile.profile_image %}
-
-                    <img src="{{ request.user.profile.profile_image.url }}"
-                        class="w-full h-full object-cover">
-
+                    <img src="{{ request.user.profile.profile_image.url }}" class="w-full h-full object-cover">
                     {% else %}
-
-                    <div class="
-                    w-full h-full
-                    bg-primary
-                    text-white
-                    flex items-center justify-center
-                    font-semibold">
-
+                    <div class="w-full h-full bg-primary text-white flex items-center justify-center font-semibold">
                         {{ request.user.first_name|first }}{{ request.user.last_name|first }}
-
                     </div>
-
                     {% endif %}
-
                 </button>
 
+                <!-- DROPDOWN -->
+                <div id="profileDropdown"
+                     class="hidden absolute top-[72px] right-3 w-[90vw] sm:w-56 max-w-xs bg-surface border border-outline-variant rounded-2xl shadow-[0px_8px_32px_rgba(15,23,42,0.12)] overflow-hidden z-50">
+                    <div class="px-lg py-md border-b border-outline-variant bg-surface-container-low">
+                        <h4 class="text-label-lg text-on-surface">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+                        <p class="text-label-sm text-on-surface-variant mt-xs">{{ request.user.email }}</p>
+                    </div>
+                    <a href="{% url 'provider_profile' %}" class="flex items-center gap-md px-lg py-md hover:bg-surface-container-low transition-colors">
+                        <span class="material-symbols-outlined text-primary">person</span>
+                        <span class="text-body-md">Profile</span>
+                    </a>
+                    <a href="{% url 'logout' %}" class="flex items-center gap-md px-lg py-md text-error hover:bg-error-container transition-colors">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span class="text-body-md">Logout</span>
+                    </a>
+                </div>
             </div>
-
         </div>
     </header>
 
@@ -271,10 +173,8 @@
     {% if messages %}
     <div class="max-w-5xl mx-auto px-safe-margin mt-md space-y-sm">
         {% for message in messages %}
-        <div class="p-md rounded-xl
-            {% if message.tags == 'error' %}bg-error-container text-on-error-container
-            {% else %}bg-secondary-container text-on-secondary-container{% endif %}
-            flex items-center gap-sm">
+        <div class="p-md rounded-xl flex items-center gap-sm
+            {% if message.tags == 'error' %}bg-error-container text-on-error-container{% else %}bg-secondary-container text-on-secondary-container{% endif %}">
             <span class="material-symbols-outlined text-[18px]">
                 {% if message.tags == 'error' %}error{% else %}check_circle{% endif %}
             </span>
@@ -285,115 +185,54 @@
     {% endif %}
 
     <!-- MAIN CONTENT -->
-    <main class="
-    w-full
-    max-w-7xl
-    mx-auto
-    px-3
-    sm:px-5
-    lg:px-8
-    py-4
-    md:py-6
-    pb-32">
+    <main class="w-full max-w-7xl mx-auto px-3 sm:px-5 lg:px-8 py-4 md:py-6 pb-32">
         {% block content %}{% endblock %}
     </main>
 
     <!-- BOTTOM NAVBAR -->
-    <nav class="
-    fixed bottom-0 left-0 right-0
-    z-[9999]
-    backdrop-blur-xl
-    bg-white/90
-    border-t border-outline-variant
-    shadow-[0_-10px_30px_rgba(0,0,0,0.08)]
-    pb-[env(safe-area-inset-bottom)]">
+    <nav class="fixed bottom-0 left-0 right-0 z-[9999] backdrop-blur-xl bg-white/90 border-t border-outline-variant shadow-[0_-10px_30px_rgba(26,158,143,0.10)] pb-[env(safe-area-inset-bottom)]">
+        <div class="w-full max-w-4xl mx-auto h-16 flex items-center justify-around">
 
-        <div class="
-        w-full
-        max-w-4xl
-        mx-auto
-        h-16
-        flex items-center justify-around">
-
-            <!-- Home -->
-            <a href="{% url 'provider_dashboard' %}"
-            class="flex flex-col items-center text-xs gap-1
-            {% block nav_home %}text-secondary{% endblock %}">
-                <span class="material-symbols-outlined {% block nav_home_fill %}{% endblock %}">
-                    home
-                </span>
+            <a href="{% url 'provider_dashboard' %}" class="flex flex-col items-center text-xs gap-1 {% block nav_home %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_home_fill %}{% endblock %}">home</span>
                 <span>Home</span>
             </a>
 
-            <!-- Add -->
-            <a href="{% url 'add_service' %}"
-            class="flex flex-col items-center text-xs gap-1
-            {% block nav_add %}text-secondary{% endblock %}">
-                <span class="material-symbols-outlined {% block nav_add_fill %}{% endblock %}">
-                    add_circle
-                </span>
+            <a href="{% url 'add_service' %}" class="flex flex-col items-center text-xs gap-1 {% block nav_add %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_add_fill %}{% endblock %}">add_circle</span>
                 <span>Add</span>
             </a>
 
-            <!-- Bookings -->
-            <a href="{% url 'provider_bookings' %}"
-            class="flex flex-col items-center text-xs gap-1
-            {% block nav_bookings %}text-secondary{% endblock %}">
-                <span class="material-symbols-outlined {% block nav_bookings_fill %}{% endblock %}">
-                    calendar_today
-                </span>
+            <a href="{% url 'provider_bookings' %}" class="flex flex-col items-center text-xs gap-1 {% block nav_bookings %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_bookings_fill %}{% endblock %}">calendar_today</span>
                 <span>Bookings</span>
             </a>
 
-            <!-- Messages -->
-            <a href="{% url 'provider_messages' %}"
-            class="flex flex-col items-center text-xs gap-1
-            {% block nav_messages %}text-secondary{% endblock %}">
-                <span class="material-symbols-outlined {% block nav_messages_fill %}{% endblock %}">
-                    chat
-                </span>
+            <a href="{% url 'provider_messages' %}" class="flex flex-col items-center text-xs gap-1 {% block nav_messages %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_messages_fill %}{% endblock %}">chat</span>
                 <span>Chat</span>
             </a>
 
-            <!-- Profile -->
-            <a href="{% url 'provider_profile' %}"
-            class="flex flex-col items-center text-xs gap-1
-            {% block nav_profile %}text-secondary{% endblock %}">
-                <span class="material-symbols-outlined {% block nav_profile_fill %}{% endblock %}">
-                    person
-                </span>
+            <a href="{% url 'provider_profile' %}" class="flex flex-col items-center text-xs gap-1 {% block nav_profile %}text-secondary{% endblock %}">
+                <span class="material-symbols-outlined {% block nav_profile_fill %}{% endblock %}">person</span>
                 <span>Profile</span>
             </a>
 
         </div>
-
     </nav>
 
     {% block extra_scripts %}{% endblock %}
 
-
-<script>
-
-function toggleProfileMenu() {
-
-    document
-        .getElementById('profileDropdown')
-        .classList
-        .toggle('hidden')
-}
-
-
-document.addEventListener('click', function(event) {
-
-    const dropdown = document.getElementById('profileDropdown')
-
-    if (!event.target.closest('#profileDropdown') &&
-        !event.target.closest('button')) {
-
-        dropdown.classList.add('hidden')
+    <script>
+    function toggleProfileMenu() {
+        document.getElementById('profileDropdown').classList.toggle('hidden')
     }
-})
-
-</script>
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('profileDropdown')
+        if (!event.target.closest('#profileDropdown') && !event.target.closest('button')) {
+            dropdown.classList.add('hidden')
+        }
+    })
+    </script>
 </body>
 </html>

@@ -25,14 +25,14 @@
 {% if conversations %}
 <!-- HOMEASSIST AI CHATBOT -->
 <a href="{% url 'chatbot' %}"
-   class="block bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[20px] p-gutter mb-lg shadow-[0px_6px_24px_rgba(37,99,235,0.25)] hover:scale-[1.01] transition-all">
+   class="block bg-gradient-to-r from-[#1a9e8f] to-[#0d7a6e] rounded-[20px] p-gutter mb-lg shadow-[0px_6px_24px_rgba(26,158,143,0.28)] hover:scale-[1.01] transition-all">
 
     <div class="flex items-center gap-md">
 
         <!-- BOT ICON -->
         <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center flex-shrink-0">
 
-            <span class="material-symbols-outlined text-[34px] text-blue-600">
+            <span class="material-symbols-outlined text-[34px]" style="color:#1a9e8f;">
                 smart_toy
             </span>
 
@@ -53,7 +53,7 @@
 
             </div>
 
-            <p class="text-blue-100 text-body-md mt-1">
+            <p class="text-body-md mt-1" style="color:rgba(194,240,235,0.9);">
                 Need help? Ask me about bookings, OTP, payments, providers or anything related to HomeAssist.
             </p>
 
@@ -62,12 +62,13 @@
     </div>
 
 </a>
+
 <section class="space-y-md">
 
     {% for convo in conversations %}
 
     <a href="{% url 'chat' convo.other_user.id %}"
-       class="block bg-surface-container-lowest rounded-[20px] border border-surface-container p-gutter shadow-[0px_4px_20px_rgba(51,65,85,0.05)] hover:shadow-[0px_8px_30px_rgba(51,65,85,0.08)] transition-all active:scale-[0.99]">
+       class="block bg-surface-container-lowest rounded-[20px] border border-surface-container p-gutter shadow-[0px_4px_20px_rgba(51,65,85,0.05)] hover:shadow-[0px_8px_30px_rgba(26,158,143,0.10)] transition-all active:scale-[0.99]">
 
         <div class="flex items-center gap-md">
 
@@ -88,7 +89,6 @@
                 <span class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
 
             </div>
-
 
             <!-- CONTENT -->
             <div class="flex-1 min-w-0">

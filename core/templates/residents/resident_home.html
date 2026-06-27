@@ -1,980 +1,601 @@
-  {% extends "layout/resident_base.html" %}
+{% extends "layout/resident_base.html" %}
 
-  {% block title %}Home — HomeAssist{% endblock %}
+{% block title %}Home — HomeAssist{% endblock %}
 
-  {% block nav_home %}text-primary font-bold{% endblock %}
-  {% block nav_home_fill %}fill-icon{% endblock %}
+{% block nav_home %}text-primary font-bold{% endblock %}
+{% block nav_home_fill %}fill-icon{% endblock %}
 
-  {% block content %}
+{% block content %}
 
-  <style>
-    /* ── Reset & Base ── */
-    * { box-sizing: border-box; }
+<style>
+  /* ── Reset & Base ── */
+  * { box-sizing: border-box; }
 
-    :root {
-      --uc-purple: #7C3AED;
-      --uc-purple-light: #EDE9FE;
-      --uc-purple-soft: #F5F3FF;
-      --uc-green: #16A34A;
-      --uc-green-light: #DCFCE7;
-      --uc-gray-50: #F8FAFC;
-      --uc-gray-100: #F1F5F9;
-      --uc-gray-200: #E2E8F0;
-      --uc-gray-400: #94A3B8;
-      --uc-gray-600: #475569;
-      --uc-gray-900: #0F172A;
-      --uc-white: #FFFFFF;
-      --uc-radius-sm: 10px;
-      --uc-radius-md: 14px;
-      --uc-radius-lg: 20px;
-      --uc-radius-xl: 28px;
-    }
+  :root {
+    --uc-teal:         #1a9e8f;
+    --uc-teal-mid:     #24b5a4;
+    --uc-teal-light:   #c2f0eb;
+    --uc-teal-soft:    #eaf6f5;
+    --uc-green:        #16A34A;
+    --uc-green-light:  #DCFCE7;
+    --uc-gray-50:      #F8FAFC;
+    --uc-gray-100:     #F1F5F9;
+    --uc-gray-200:     #E2E8F0;
+    --uc-gray-400:     #94A3B8;
+    --uc-gray-600:     #475569;
+    --uc-gray-900:     #0F172A;
+    --uc-white:        #FFFFFF;
+    --uc-radius-sm:    10px;
+    --uc-radius-md:    14px;
+    --uc-radius-lg:    20px;
+    --uc-radius-xl:    28px;
+  }
 
-    body { background: var(--uc-white); font-family: 'DM Sans', -apple-system, sans-serif; }
+  body { background: var(--uc-white); font-family: 'DM Sans', -apple-system, sans-serif; }
 
-    /* ── Search ── */
-    .search-wrap {
-      position: relative;
-      margin: 0 0 28px;
-    }
-    .search-wrap .icon {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--uc-gray-400);
-      font-size: 20px;
-      pointer-events: none;
-    }
-    .search-wrap input {
-      width: 100%;
-      height: 52px;
-      padding: 0 16px 0 48px;
-      border: 1.5px solid var(--uc-gray-200);
-      border-radius: 100px;
-      font-size: 15px;
-      color: var(--uc-gray-900);
-      background: var(--uc-gray-50);
-      outline: none;
-      transition: border-color .2s, box-shadow .2s;
-    }
-    .search-wrap input:focus {
-      border-color: var(--uc-purple);
-      background: var(--uc-white);
-      box-shadow: 0 0 0 4px rgba(124,58,237,.08);
-    }
-    .search-wrap input::placeholder { color: var(--uc-gray-400); }
+  /* ── Search ── */
+  .search-wrap { position: relative; margin: 0 0 28px; }
+  .search-wrap .icon {
+    position: absolute; left: 16px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--uc-gray-400); font-size: 20px; pointer-events: none;
+  }
+  .search-wrap input {
+    width: 100%; height: 52px; padding: 0 16px 0 48px;
+    border: 1.5px solid var(--uc-gray-200); border-radius: 100px;
+    font-size: 15px; color: var(--uc-gray-900);
+    background: var(--uc-gray-50); outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .search-wrap input:focus {
+    border-color: var(--uc-teal);
+    background: var(--uc-white);
+    box-shadow: 0 0 0 4px rgba(26,158,143,.08);
+  }
+  .search-wrap input::placeholder { color: var(--uc-gray-400); }
 
-    /* ── Section headers ── */
-    .sec-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .sec-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--uc-gray-900);
-      letter-spacing: -.3px;
-    }
-    .sec-link {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--uc-purple);
-      text-decoration: none;
-    }
+  /* ── Section headers ── */
+  .sec-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .sec-title { font-size: 18px; font-weight: 700; color: var(--uc-gray-900); letter-spacing: -.3px; }
+  .sec-link { font-size: 14px; font-weight: 600; color: var(--uc-teal); text-decoration: none; }
 
-    /* ── Category grid ── */
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-    .cat-tile {
-      background: var(--uc-gray-50);
-      border: 1px solid var(--uc-gray-200);
-      border-radius: var(--uc-radius-md);
-      padding: 16px 8px 14px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      transition: transform .15s, box-shadow .15s, border-color .15s;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-    }
-    .cat-tile:active { transform: scale(0.95); }
-    .cat-tile:hover { border-color: var(--uc-purple); box-shadow: 0 4px 16px rgba(124,58,237,.1); }
-    .cat-tile .cat-icon-wrap {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      background: var(--uc-purple-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .cat-tile .cat-icon-wrap .material-symbols-outlined {
-      font-size: 26px;
-      color: var(--uc-purple);
-    }
-    .cat-tile .cat-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--uc-gray-600);
-      text-align: center;
-      line-height: 1.3;
-    }
-    .cat-tile .cat-badge {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--uc-green);
-      color: #fff;
-      font-size: 9px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 20px;
-      letter-spacing: .3px;
-    }
-    .cat-tile.active-cat {
-      border-color: var(--uc-purple);
-      background: var(--uc-purple-soft);
-    }
-    .cat-tile.active-cat .cat-icon-wrap {
-      background: var(--uc-purple);
-    }
-    .cat-tile.active-cat .cat-icon-wrap .material-symbols-outlined {
-      color: #fff;
-    }
+  /* ── Category grid ── */
+  .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+  .cat-tile {
+    background: var(--uc-gray-50); border: 1px solid var(--uc-gray-200);
+    border-radius: var(--uc-radius-md); padding: 16px 8px 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    cursor: pointer; transition: transform .15s, box-shadow .15s, border-color .15s;
+    text-decoration: none; position: relative; overflow: hidden;
+  }
+  .cat-tile:active { transform: scale(0.95); }
+  .cat-tile:hover { border-color: var(--uc-teal); box-shadow: 0 4px 16px rgba(26,158,143,.12); }
+  .cat-tile .cat-icon-wrap {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: var(--uc-teal-light);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cat-tile .cat-icon-wrap .material-symbols-outlined { font-size: 26px; color: var(--uc-teal); }
+  .cat-tile .cat-label { font-size: 12px; font-weight: 600; color: var(--uc-gray-600); text-align: center; line-height: 1.3; }
+  .cat-tile .cat-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--uc-green); color: #fff;
+    font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 20px; letter-spacing: .3px;
+  }
+  .cat-tile.active-cat { border-color: var(--uc-teal); background: var(--uc-teal-soft); }
+  .cat-tile.active-cat .cat-icon-wrap { background: var(--uc-teal); }
+  .cat-tile.active-cat .cat-icon-wrap .material-symbols-outlined { color: #fff; }
 
-    /* ── Horizontal scroll services ── */
-    .hscroll-wrap {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      margin: 0 -20px;
-      padding: 0 20px;
-      margin-bottom: 32px;
-    }
-    .hscroll-wrap::-webkit-scrollbar { display: none; }
-    .hscroll-inner {
-      display: flex;
-      gap: 14px;
-      width: max-content;
-      padding-bottom: 4px;
-    }
-    .hcard {
-      width: 180px;
-      background: var(--uc-white);
-      border: 1px solid var(--uc-gray-200);
-      border-radius: var(--uc-radius-lg);
-      overflow: hidden;
-      flex-shrink: 0;
-      cursor: pointer;
-      transition: transform .15s, box-shadow .15s;
-      text-decoration: none;
-    }
-    .hcard:active { transform: scale(0.97); }
-    .hcard:hover { box-shadow: 0 8px 24px rgba(0,0,0,.1); }
-    .hcard-img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      display: block;
-    }
-    .hcard-img-placeholder {
-      width: 100%;
-      height: 120px;
-      background: var(--uc-gray-100);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hcard-img-placeholder .material-symbols-outlined {
-      font-size: 36px;
-      color: var(--uc-gray-400);
-    }
-    .hcard-body { padding: 12px; }
-    .hcard-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--uc-gray-900);
-      line-height: 1.3;
-      margin-bottom: 4px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .hcard-rating {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      font-size: 11px;
-      color: var(--uc-gray-600);
-      margin-bottom: 6px;
-    }
-    .hcard-rating .star { color: #F59E0B; font-size: 12px; }
-    .hcard-price {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--uc-gray-900);
-    }
-    .hcard-price span { font-size: 11px; font-weight: 400; color: var(--uc-gray-400); }
-    .hcard-add {
-      display: block;
-      width: 100%;
-      margin-top: 8px;
-      padding: 7px 0;
-      background: transparent;
-      border: 1.5px solid var(--uc-purple);
-      border-radius: 8px;
-      color: var(--uc-purple);
-      font-size: 13px;
-      font-weight: 700;
-      text-align: center;
-      cursor: pointer;
-      transition: background .15s, color .15s;
-      text-decoration: none;
-    }
-    .hcard-add:hover { background: var(--uc-purple); color: #fff; }
+  /* ── Horizontal scroll ── */
+  .hscroll-wrap {
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    margin: 0 -20px; padding: 0 20px; margin-bottom: 32px;
+  }
+  .hscroll-wrap::-webkit-scrollbar { display: none; }
+  .hscroll-inner { display: flex; gap: 14px; width: max-content; padding-bottom: 4px; }
 
-    /* ── Service list cards ── */
-    .svc-list { display: flex; flex-direction: column; gap: 14px; padding-bottom: 24px; }
-    .svc-card {
-      background: var(--uc-white);
-      border: 1px solid var(--uc-gray-200);
-      border-radius: var(--uc-radius-lg);
-      overflow: hidden;
-      transition: box-shadow .2s;
-    }
-    .svc-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.08); }
-    .svc-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
-    .svc-img-ph {
-      width: 100%;
-      height: 130px;
-      background: var(--uc-gray-100);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .svc-img-ph .material-symbols-outlined { font-size: 40px; color: var(--uc-gray-400); }
-    .svc-body { padding: 16px; }
-    .svc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-    .svc-name { font-size: 16px; font-weight: 700; color: var(--uc-gray-900); line-height: 1.3; }
-    .svc-cat { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--uc-purple); background: var(--uc-purple-light); padding: 3px 10px; border-radius: 20px; margin-bottom: 6px; }
-    .svc-provider { font-size: 12px; color: var(--uc-gray-400); display: flex; align-items: center; gap: 4px; }
-    .svc-price-block { text-align: right; flex-shrink: 0; margin-left: 12px; }
-    .svc-price-label { font-size: 10px; color: var(--uc-gray-400); }
-    .svc-price { font-size: 20px; font-weight: 800; color: var(--uc-gray-900); }
-    .svc-desc { font-size: 13px; color: var(--uc-gray-600); line-height: 1.5; margin: 8px 0 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .svc-actions { display: flex; gap: 10px; }
-    .btn-details {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 11px 0;
-      border: 1.5px solid var(--uc-gray-200);
-      border-radius: var(--uc-radius-sm);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--uc-gray-600);
-      text-decoration: none;
-      background: var(--uc-white);
-      transition: border-color .15s, color .15s;
-    }
-    .btn-details:hover { border-color: var(--uc-gray-400); color: var(--uc-gray-900); }
-    .btn-book {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 11px 0;
-      background: var(--uc-purple);
-      border: none;
-      border-radius: var(--uc-radius-sm);
-      font-size: 14px;
-      font-weight: 700;
-      color: #fff;
-      text-decoration: none;
-      transition: opacity .15s, transform .1s;
-      cursor: pointer;
-    }
-    .btn-book:hover { opacity: .9; }
-    .btn-book:active { transform: scale(0.97); }
+  /* ── Horizontal service card ── */
+  .hcard {
+    width: 180px; background: var(--uc-white); border: 1px solid var(--uc-gray-200);
+    border-radius: var(--uc-radius-lg); overflow: hidden; flex-shrink: 0;
+    cursor: pointer; transition: transform .15s, box-shadow .15s; text-decoration: none;
+  }
+  .hcard:active { transform: scale(0.97); }
+  .hcard:hover { box-shadow: 0 8px 24px rgba(26,158,143,.12); }
+  .hcard-img { width: 100%; height: 120px; object-fit: cover; display: block; }
+  .hcard-img-placeholder {
+    width: 100%; height: 120px; background: var(--uc-teal-soft);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hcard-img-placeholder .material-symbols-outlined { font-size: 36px; color: var(--uc-teal); opacity: .4; }
+  .hcard-body { padding: 12px; }
+  .hcard-name {
+    font-size: 13px; font-weight: 700; color: var(--uc-gray-900); line-height: 1.3; margin-bottom: 4px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .hcard-rating { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--uc-gray-600); margin-bottom: 6px; }
+  .hcard-rating .star { color: #F59E0B; font-size: 12px; }
+  .hcard-price { font-size: 14px; font-weight: 700; color: var(--uc-gray-900); }
+  .hcard-price span { font-size: 11px; font-weight: 400; color: var(--uc-gray-400); }
+  .hcard-add {
+    display: block; width: 100%; margin-top: 8px; padding: 7px 0;
+    background: transparent; border: 1.5px solid var(--uc-teal);
+    border-radius: 8px; color: var(--uc-teal);
+    font-size: 13px; font-weight: 700; text-align: center;
+    cursor: pointer; transition: background .15s, color .15s; text-decoration: none;
+  }
+  .hcard-add:hover { background: var(--uc-teal); color: #fff; }
 
-    /* ── Empty state ── */
-    .empty-state {
-      background: var(--uc-gray-50);
-      border-radius: var(--uc-radius-lg);
-      padding: 48px 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 8px;
-    }
-    .empty-state .material-symbols-outlined { font-size: 48px; color: var(--uc-gray-400); }
-    .empty-state h4 { font-size: 16px; font-weight: 700; color: var(--uc-gray-900); margin: 0; }
-    .empty-state p { font-size: 14px; color: var(--uc-gray-400); margin: 0; }
+  /* ── Service list cards ── */
+  .svc-list { display: flex; flex-direction: column; gap: 14px; padding-bottom: 24px; }
+  .svc-card {
+    background: var(--uc-white); border: 1px solid var(--uc-gray-200);
+    border-radius: var(--uc-radius-lg); overflow: hidden; transition: box-shadow .2s;
+  }
+  .svc-card:hover { box-shadow: 0 8px 32px rgba(26,158,143,.10); }
+  .svc-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+  .svc-img-ph {
+    width: 100%; height: 130px; background: var(--uc-teal-soft);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .svc-img-ph .material-symbols-outlined { font-size: 40px; color: var(--uc-teal); opacity: .4; }
+  .svc-body { padding: 16px; }
+  .svc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .svc-name { font-size: 16px; font-weight: 700; color: var(--uc-gray-900); line-height: 1.3; }
+  .svc-cat {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; color: var(--uc-teal);
+    background: var(--uc-teal-light); padding: 3px 10px; border-radius: 20px; margin-bottom: 6px;
+  }
+  .svc-provider { font-size: 12px; color: var(--uc-gray-400); display: flex; align-items: center; gap: 4px; }
+  .svc-price-block { text-align: right; flex-shrink: 0; margin-left: 12px; }
+  .svc-price-label { font-size: 10px; color: var(--uc-gray-400); }
+  .svc-price { font-size: 20px; font-weight: 800; color: var(--uc-gray-900); }
+  .svc-desc {
+    font-size: 13px; color: var(--uc-gray-600); line-height: 1.5; margin: 8px 0 14px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .svc-actions { display: flex; gap: 10px; }
+  .btn-details {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 0; border: 1.5px solid var(--uc-gray-200);
+    border-radius: var(--uc-radius-sm); font-size: 14px; font-weight: 600;
+    color: var(--uc-gray-600); text-decoration: none; background: var(--uc-white);
+    transition: border-color .15s, color .15s;
+  }
+  .btn-details:hover { border-color: var(--uc-teal); color: var(--uc-teal); }
+  .btn-book {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 0; background: var(--uc-teal); border: none;
+    border-radius: var(--uc-radius-sm); font-size: 14px; font-weight: 700;
+    color: #fff; text-decoration: none; transition: opacity .15s, transform .1s; cursor: pointer;
+  }
+  .btn-book:hover { opacity: .9; }
+  .btn-book:active { transform: scale(0.97); }
 
-    /* ── Modal overlay ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,.55);
-      z-index: 999;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-sheet {
-      background: var(--uc-white);
-      border-radius: 24px 24px 0 0;
-      width: 100%;
-      max-width: 480px;
-      padding: 12px 20px 32px;
-      transform: translateY(100%);
-      transition: transform .3s cubic-bezier(.32,.72,0,1);
-    }
-    .modal-overlay.open .modal-sheet { transform: translateY(0); }
-    .modal-handle {
-      width: 40px;
-      height: 4px;
-      background: var(--uc-gray-200);
-      border-radius: 4px;
-      margin: 0 auto 20px;
-    }
-    .modal-title { font-size: 18px; font-weight: 700; color: var(--uc-gray-900); margin-bottom: 4px; }
-    .modal-sub { font-size: 13px; color: var(--uc-gray-400); margin-bottom: 20px; }
-    .subcat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .subcat-tile {
-      border: 1.5px solid var(--uc-gray-200);
-      border-radius: var(--uc-radius-md);
-      padding: 14px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      cursor: pointer;
-      transition: border-color .15s, background .15s;
-      text-decoration: none;
-    }
-    .subcat-tile:hover { border-color: var(--uc-purple); background: var(--uc-purple-soft); }
-    .subcat-tile:active { transform: scale(0.97); }
-    .subcat-tile .material-symbols-outlined { font-size: 22px; color: var(--uc-purple); }
-    .subcat-name { font-size: 13px; font-weight: 700; color: var(--uc-gray-900); line-height: 1.3; }
-    .subcat-desc { font-size: 11px; color: var(--uc-gray-400); }
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: var(--uc-gray-100);
-      border: none;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--uc-gray-600);
-    }
-    .modal-sheet { position: relative; }
+  /* ── Empty state ── */
+  .empty-state {
+    background: var(--uc-teal-soft); border-radius: var(--uc-radius-lg);
+    padding: 48px 24px; display: flex; flex-direction: column;
+    align-items: center; text-align: center; gap: 8px;
+    border: 1px dashed rgba(26,158,143,.25);
+  }
+  .empty-state .material-symbols-outlined { font-size: 48px; color: var(--uc-teal); opacity: .5; }
+  .empty-state h4 { font-size: 16px; font-weight: 700; color: var(--uc-gray-900); margin: 0; }
+  .empty-state p { font-size: 14px; color: var(--uc-gray-400); margin: 0; }
 
-    /* ── Banner ── */
-    .promo-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 -20px 28px; padding: 0 20px; }
-    .promo-scroll::-webkit-scrollbar { display: none; }
-    .promo-inner { display: flex; gap: 14px; width: max-content; }
-    .promo-card {
-      width: 280px;
-      height: 140px;
-      border-radius: var(--uc-radius-lg);
-      background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      flex-shrink: 0;
-      overflow: hidden;
-      position: relative;
-    }
-    .promo-card-2 { background: linear-gradient(135deg, #0F766E 0%, #0369A1 100%); }
-    .promo-tag { font-size: 10px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: rgba(255,255,255,.7); }
-    .promo-card h3 { font-size: 17px; font-weight: 800; color: #fff; line-height: 1.25; margin: 4px 0 0; }
-    .promo-card .promo-btn {
-      display: inline-block;
-      background: #fff;
-      color: var(--uc-purple);
-      font-size: 12px;
-      font-weight: 700;
-      padding: 6px 16px;
-      border-radius: 20px;
-      text-decoration: none;
-      width: fit-content;
-    }
-    .promo-card-2 .promo-btn { color: #0F766E; }
-    .promo-card .promo-icon {
-      position: absolute;
-      right: -8px;
-      bottom: -8px;
-      font-size: 80px;
-      color: rgba(255,255,255,.12);
-    }
-    /* ── Category filter row ── */
-    .cat-filter-row {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      margin-bottom: 20px;
-      padding-bottom: 2px;
-    }
-    .cat-filter-row::-webkit-scrollbar { display: none; }
-    .filter-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 7px 14px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 600;
-      white-space: nowrap;
-      flex-shrink: 0;
-      cursor: pointer;
-      border: 1.5px solid var(--uc-gray-200);
-      background: var(--uc-white);
-      color: var(--uc-gray-600);
-      text-decoration: none;
-      transition: all .15s;
-    }
-    .filter-pill:hover, .filter-pill.active { border-color: var(--uc-purple); background: var(--uc-purple-soft); color: var(--uc-purple); }
+  /* ── Modal overlay ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(15,23,42,.55); z-index: 999;
+    align-items: flex-end; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    background: var(--uc-white); border-radius: 24px 24px 0 0;
+    width: 100%; max-width: 480px; padding: 12px 20px 32px;
+    transform: translateY(100%); transition: transform .3s cubic-bezier(.32,.72,0,1);
+    position: relative;
+  }
+  .modal-overlay.open .modal-sheet { transform: translateY(0); }
+  .modal-handle { width: 40px; height: 4px; background: var(--uc-gray-200); border-radius: 4px; margin: 0 auto 20px; }
+  .modal-title { font-size: 18px; font-weight: 700; color: var(--uc-gray-900); margin-bottom: 4px; }
+  .modal-sub { font-size: 13px; color: var(--uc-gray-400); margin-bottom: 20px; }
+  .subcat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .subcat-tile {
+    border: 1.5px solid var(--uc-gray-200); border-radius: var(--uc-radius-md);
+    padding: 14px 12px; display: flex; flex-direction: column; gap: 6px;
+    cursor: pointer; transition: border-color .15s, background .15s; text-decoration: none;
+  }
+  .subcat-tile:hover { border-color: var(--uc-teal); background: var(--uc-teal-soft); }
+  .subcat-tile:active { transform: scale(0.97); }
+  .subcat-tile .material-symbols-outlined { font-size: 22px; color: var(--uc-teal); }
+  .subcat-name { font-size: 13px; font-weight: 700; color: var(--uc-gray-900); line-height: 1.3; }
+  .subcat-desc { font-size: 11px; color: var(--uc-gray-400); }
+  .modal-close {
+    position: absolute; top: 16px; right: 20px;
+    background: var(--uc-gray-100); border: none; border-radius: 50%;
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--uc-gray-600);
+  }
 
-    /* View more button */
-    .view-more-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 14px 0;
-      margin-top: 4px;
-      border: 1.5px solid var(--uc-gray-200);
-      border-radius: var(--uc-radius-md);
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--uc-purple);
-      text-decoration: none;
-      background: var(--uc-white);
-      transition: background .15s, border-color .15s, color .15s;
-    }
-    .view-more-btn:hover {
-      background: var(--uc-purple-soft);
-      border-color: var(--uc-purple);
-    }
-    .view-more-btn:active { transform: scale(0.98); }
-  </style>
+  /* ── Promo banners ── */
+  .promo-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 -20px 28px; padding: 0 20px; }
+  .promo-scroll::-webkit-scrollbar { display: none; }
+  .promo-inner { display: flex; gap: 14px; width: max-content; }
+  .promo-card {
+    width: 280px; height: 140px; border-radius: var(--uc-radius-lg);
+    background: linear-gradient(135deg, #1a9e8f 0%, #0d7a6e 100%);
+    padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+    flex-shrink: 0; overflow: hidden; position: relative;
+  }
+  .promo-card-2 { background: linear-gradient(135deg, #24b5a4 0%, #0f766e 100%); }
+  .promo-tag { font-size: 10px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: rgba(255,255,255,.75); }
+  .promo-card h3 { font-size: 17px; font-weight: 800; color: #fff; line-height: 1.25; margin: 4px 0 0; }
+  .promo-card .promo-btn {
+    display: inline-block; background: #fff; color: var(--uc-teal);
+    font-size: 12px; font-weight: 700; padding: 6px 16px;
+    border-radius: 20px; text-decoration: none; width: fit-content;
+  }
+  .promo-card .promo-icon {
+    position: absolute; right: -8px; bottom: -8px;
+    font-size: 80px; color: rgba(255,255,255,.12);
+  }
 
-  <!-- Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  /* ── Category filter pills ── */
+  .cat-filter-row {
+    display: flex; gap: 8px; overflow-x: auto;
+    scrollbar-width: none; margin-bottom: 20px; padding-bottom: 2px;
+  }
+  .cat-filter-row::-webkit-scrollbar { display: none; }
+  .filter-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 14px; border-radius: 100px; font-size: 13px; font-weight: 600;
+    white-space: nowrap; flex-shrink: 0; cursor: pointer;
+    border: 1.5px solid var(--uc-gray-200); background: var(--uc-white);
+    color: var(--uc-gray-600); text-decoration: none; transition: all .15s;
+  }
+  .filter-pill:hover, .filter-pill.active {
+    border-color: var(--uc-teal); background: var(--uc-teal-soft); color: var(--uc-teal);
+  }
 
-  <!-- ── SEARCH BAR ── -->
-  <section class="mb-xl">
-    <form method="GET">
-      <div class="search-wrap">
-        <span class="material-symbols-outlined icon">search</span>
-        <input type="text" name="search" value="{{ search_query|default:'' }}"
-              placeholder="Search for 'Electricians'"/>
+  /* ── View more ── */
+  .view-more-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 14px 0; margin-top: 4px;
+    border: 1.5px solid var(--uc-gray-200); border-radius: var(--uc-radius-md);
+    font-size: 14px; font-weight: 700; color: var(--uc-teal);
+    text-decoration: none; background: var(--uc-white); transition: background .15s, border-color .15s;
+  }
+  .view-more-btn:hover { background: var(--uc-teal-soft); border-color: var(--uc-teal); }
+  .view-more-btn:active { transform: scale(0.98); }
+</style>
+
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ── SEARCH BAR ── -->
+<section class="mb-xl">
+  <form method="GET">
+    <div class="search-wrap">
+      <span class="material-symbols-outlined icon">search</span>
+      <input type="text" name="search" value="{{ search_query|default:'' }}"
+             placeholder="Search for 'Electricians'"/>
+    </div>
+  </form>
+</section>
+
+{% if not search_query %}
+
+<!-- ── CATEGORY GRID ── -->
+<section style="margin-bottom: 32px;">
+  <div class="sec-header">
+    <span class="sec-title">Categories</span>
+    <a href="{% url 'explore_services' %}" class="sec-link">View all</a>
+  </div>
+  <div class="cat-grid">
+    <button class="cat-tile" onclick="openModal('cleaning')" type="button">
+      <div class="cat-icon-wrap"><span class="material-symbols-outlined">cleaning_services</span></div>
+      <span class="cat-label">Cleaning</span>
+    </button>
+    <button class="cat-tile" onclick="openModal('electrician')" type="button">
+      <div class="cat-icon-wrap"><span class="material-symbols-outlined">electrical_services</span></div>
+      <span class="cat-label">Electrician</span>
+    </button>
+    <button class="cat-tile" onclick="openModal('plumber')" type="button">
+      <div class="cat-icon-wrap"><span class="material-symbols-outlined">plumbing</span></div>
+      <span class="cat-label">Plumbing</span>
+    </button>
+    <button class="cat-tile" onclick="openModal('painter')" type="button">
+      <div class="cat-icon-wrap"><span class="material-symbols-outlined">format_paint</span></div>
+      <span class="cat-label">Painter</span>
+    </button>
+    <button class="cat-tile" onclick="openModal('carpenter')" type="button">
+      <div class="cat-icon-wrap"><span class="material-symbols-outlined">carpenter</span></div>
+      <span class="cat-label">Carpenter</span>
+    </button>
+    <button class="cat-tile" onclick="openModal('waterproofing')" type="button">
+      <div class="cat-icon-wrap"><span class="material-symbols-outlined">water_drop</span></div>
+      <span class="cat-label">Waterproofing</span>
+    </button>
+  </div>
+</section>
+
+<!-- ── PROMO BANNERS ── -->
+<section style="margin-bottom: 32px;">
+  <div class="promo-scroll">
+    <div class="promo-inner">
+      <div class="promo-card">
+        <span class="promo-tag">Special Offer</span>
+        <div>
+          <h3>Find Trusted Pros<br/>Near You</h3>
+          <a href="{% url 'explore_services' %}" class="promo-btn">Browse All</a>
+        </div>
+        <span class="material-symbols-outlined promo-icon">home_repair_service</span>
       </div>
-    </form>
-  </section>
+      <div class="promo-card promo-card-2">
+        <span class="promo-tag">New</span>
+        <div>
+          <h3>Deep Clean,<br/>Zero Hassle</h3>
+          <a href="{% url 'explore_services' %}?category=Cleaning" class="promo-btn">Book Now</a>
+        </div>
+        <span class="material-symbols-outlined promo-icon">cleaning_services</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MOST BOOKED (horizontal scroll) ── -->
+<section style="margin-bottom: 32px;">
+  <div class="sec-header">
+    <span class="sec-title">Most booked services</span>
+    <a href="{% url 'explore_services' %}" class="sec-link">See all</a>
+  </div>
+  <div class="hscroll-wrap">
+    <div class="hscroll-inner">
+      {% for service in services %}
+      <a href="{% url 'provider_details' service.id %}" class="hcard">
+        {% if service.image %}
+          <img src="{{ service.image.url }}" alt="{{ service.service_name }}" class="hcard-img"/>
+        {% else %}
+          <div class="hcard-img-placeholder">
+            <span class="material-symbols-outlined">home_repair_service</span>
+          </div>
+        {% endif %}
+        <div class="hcard-body">
+          <div class="hcard-name">{{ service.service_name }}</div>
+          <div class="hcard-rating">
+            <span class="star">★</span> 4.8
+            <span style="color: var(--uc-gray-400);">(5.5M)</span>
+          </div>
+          <div style="font-size:11px;color:var(--uc-gray-400);margin-bottom:4px;">{{ service.category }}</div>
+          <div class="hcard-price">₹{{ service.price }} <span>onwards</span></div>
+          <a href="{% url 'book_service' service.id %}" class="hcard-add" onclick="event.stopPropagation()">Book Now</a>
+        </div>
+      </a>
+      {% empty %}
+      <p style="color: var(--uc-gray-400); font-size: 14px; padding: 8px 0;">No services yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endif %}
+
+<!-- ── SERVICE LIST ── -->
+<section>
+  <div class="sec-header">
+    <span class="sec-title">
+      {% if search_query %}Results for "{{ search_query }}"{% else %}All Services{% endif %}
+    </span>
+    {% if search_query %}
+    <a href="{% url 'resident_home' %}" class="sec-link" style="color: var(--uc-gray-400);">Clear</a>
+    {% endif %}
+  </div>
 
   {% if not search_query %}
-
-  <!-- ── CATEGORY GRID ── -->
-  <section style="margin-bottom: 32px;">
-    <div class="sec-header">
-      <span class="sec-title">Categories</span>
-      <a href="{% url 'explore_services' %}" class="sec-link">View all</a>
-    </div>
-    <div class="cat-grid">
-      <button class="cat-tile" onclick="openModal('cleaning')" type="button">
-        <!-- <div class="cat-badge">25 min</div> -->
-        <div class="cat-icon-wrap"><span class="material-symbols-outlined">cleaning_services</span></div>
-        <span class="cat-label">Cleaning</span>
-      </button>
-      <button class="cat-tile" onclick="openModal('electrician')" type="button">
-        <div class="cat-icon-wrap"><span class="material-symbols-outlined">electrical_services</span></div>
-        <span class="cat-label">Electrician</span>
-      </button>
-      <button class="cat-tile" onclick="openModal('plumber')" type="button">
-        <div class="cat-icon-wrap"><span class="material-symbols-outlined">plumbing</span></div>
-        <span class="cat-label">Plumbing</span>
-      </button>
-      <button class="cat-tile" onclick="openModal('painter')" type="button">
-          <div class="cat-icon-wrap">
-              <span class="material-symbols-outlined">format_paint</span>
-          </div>
-          <span class="cat-label">Painter</span>
-      </button>
-      <button class="cat-tile" onclick="openModal('carpenter')" type="button">
-        <div class="cat-icon-wrap"><span class="material-symbols-outlined">carpenter</span></div>
-        <span class="cat-label">Carpenter</span>
-      </button>
-      <button class="cat-tile" onclick="openModal('waterproofing')" type="button">
-          <div class="cat-icon-wrap">
-              <span class="material-symbols-outlined">water_drop</span>
-          </div>
-          <span class="cat-label">Waterproofing</span>
-      </button>
-    </div>
-  </section>
-
-  <!-- ── PROMO BANNERS ── -->
-  <section style="margin-bottom: 32px;">
-    <div class="promo-scroll">
-      <div class="promo-inner">
-        <div class="promo-card">
-          <span class="promo-tag">Special Offer</span>
-          <div>
-            <h3>Find Trusted Pros<br/>Near You</h3>
-            <a href="{% url 'explore_services' %}" class="promo-btn">Browse All</a>
-          </div>
-          <span class="material-symbols-outlined promo-icon">home_repair_service</span>
-        </div>
-        <div class="promo-card promo-card-2">
-          <span class="promo-tag">New</span>
-          <div>
-            <h3>Deep Clean,<br/>Zero Hassle</h3>
-            <a href="{% url 'explore_services' %}?category=Cleaning" class="promo-btn">Book Now</a>
-          </div>
-          <span class="material-symbols-outlined promo-icon">cleaning_services</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── MOST BOOKED (horizontal scroll) ── -->
-  <section style="margin-bottom: 32px;">
-    <div class="sec-header">
-      <span class="sec-title">Most booked services</span>
-      <a href="{% url 'explore_services' %}" class="sec-link">See all</a>
-    </div>
-    <div class="hscroll-wrap">
-      <div class="hscroll-inner">
-        {% for service in services %}
-        <a href="{% url 'provider_details' service.id %}" class="hcard">
-          
-        {% if service.image %}
-            <img src="{{ service.image.url }}" alt="{{ service.service_name }}" class="hcard-img"/>
-        {% else %}
-            <div class="hcard-img-placeholder">
-            <span class="material-symbols-outlined">home_repair_service</span>
-            </div>
-        {% endif %}
-
-        <div class="hcard-body">
-
-            <div class="hcard-name">
-            {{ service.service_name }}
-            </div>
-
-            <div class="hcard-rating">
-            <span class="star">★</span>
-            4.8
-            <span style="color: var(--uc-gray-400);">(5.5M)</span>
-            </div>
-
-            <div style="font-size:11px;color:var(--uc-gray-400);margin-bottom:4px;">
-            {{ service.category }}
-            </div>
-
-            <div class="hcard-price">
-            ₹{{ service.price }}
-            <span>onwards</span>
-            </div>
-
-            <a href="{% url 'book_service' service.id %}"
-            class="hcard-add"
-            onclick="event.stopPropagation()">
-            Book Now
-            </a>
-
-        </div>
-        </a>
-        {% empty %}
-        <p style="color: var(--uc-gray-400); font-size: 14px; padding: 8px 0;">
-        No services yet.
-        </p>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-
+  <div class="cat-filter-row">
+    <a href="{% url 'resident_home' %}" class="filter-pill active">
+      <span class="material-symbols-outlined" style="font-size:15px;">apps</span> All
+    </a>
+    <a href="{% url 'explore_services' %}?category=Cleaning" class="filter-pill">Cleaning</a>
+    <a href="{% url 'explore_services' %}?category=Electrician" class="filter-pill">Electrician</a>
+    <a href="{% url 'explore_services' %}?category=Plumber" class="filter-pill">Plumber</a>
+    <a href="{% url 'explore_services' %}?category=Painter" class="filter-pill">Painter</a>
+    <a href="{% url 'explore_services' %}?category=Waterproofing" class="filter-pill">Waterproofing</a>
+  </div>
   {% endif %}
 
-  <!-- ── SERVICE LIST ── -->
-  <section>
-    <div class="sec-header">
-      <span class="sec-title">
-        {% if search_query %}Results for "{{ search_query }}"{% else %}All Services{% endif %}
-      </span>
-      {% if search_query %}
-      <a href="{% url 'resident_home' %}" class="sec-link" style="color: var(--uc-gray-400);">Clear</a>
+  {% if services %}
+  <div class="hscroll-wrap">
+    <div class="hscroll-inner">
+    {% for service in services|slice:":4" %}
+    <div class="svc-card">
+      {% if service.image %}
+        <img src="{{ service.image.url }}" alt="{{ service.service_name }}"/>
+      {% else %}
+        <div class="svc-img-ph"><span class="material-symbols-outlined">home_repair_service</span></div>
       {% endif %}
-    </div>
-
-    {% if not search_query %}
-    <!-- Category filter pills -->
-    <div class="cat-filter-row">
-      <a href="{% url 'resident_home' %}" class="filter-pill active">
-        <span class="material-symbols-outlined" style="font-size:15px;">apps</span> All
-      </a>
-      <a href="{% url 'explore_services' %}?category=Cleaning" class="filter-pill">Cleaning</a>
-      <a href="{% url 'explore_services' %}?category=Electrician" class="filter-pill">Electrician</a>
-      <a href="{% url 'explore_services' %}?category=Plumber" class="filter-pill">Plumber</a>
-      <a href="{% url 'explore_services' %}?category=Painter" class="filter-pill">
-          Painter
-      </a>
-
-      <a href="{% url 'explore_services' %}?category=Waterproofing" class="filter-pill">
-          Waterproofing
-      </a>
-    </div>
-    {% endif %}
-
-    {% if services %}
-    <div class="hscroll-wrap">
-      <div class="hscroll-inner">
-      {% for service in services|slice:":4" %}
-      <div class="svc-card">
-        {% if service.image %}
-          <img src="{{ service.image.url }}" alt="{{ service.service_name }}"/>
-        {% else %}
-          <div class="svc-img-ph"><span class="material-symbols-outlined">home_repair_service</span></div>
-        {% endif %}
-        <div class="svc-body">
-          <div class="svc-top">
-            <div style="flex: 1; min-width: 0; margin-right: 12px;">
-              <div class="svc-name">{{ service.service_name }}</div>
-              <div style="margin-top: 6px;">
-                <span class="svc-cat">
-                  <span class="material-symbols-outlined" style="font-size:12px;">category</span>
-                  {{ service.category }}
-                </span>
-              </div>
-              <div class="svc-provider">
-                <span class="material-symbols-outlined" style="font-size:13px;">person</span>
-                {{ service.provider.get_full_name|default:service.provider.username }}
-              </div>
+      <div class="svc-body">
+        <div class="svc-top">
+          <div style="flex: 1; min-width: 0; margin-right: 12px;">
+            <div class="svc-name">{{ service.service_name }}</div>
+            <div style="margin-top: 6px;">
+              <span class="svc-cat">
+                <span class="material-symbols-outlined" style="font-size:12px;">category</span>
+                {{ service.category }}
+              </span>
             </div>
-            <div class="svc-price-block">
-              <div class="svc-price-label">Starts at</div>
-              <div class="svc-price">₹{{ service.price }}</div>
-              <div style="display:flex;align-items:center;gap:2px;margin-top:3px;justify-content:flex-end;">
-                <span style="color:#F59E0B;font-size:13px;">★</span>
-                <span style="font-size:11px;color:var(--uc-gray-400);">4.8</span>
-              </div>
+            <div class="svc-provider">
+              <span class="material-symbols-outlined" style="font-size:13px;">person</span>
+              {{ service.provider.get_full_name|default:service.provider.username }}
             </div>
           </div>
-          <p class="svc-desc">{{ service.description|truncatechars:120 }}</p>
-          <div class="svc-actions">
-            <a href="{% url 'provider_details' service.id %}" class="btn-details">
-              <span class="material-symbols-outlined" style="font-size:16px;">info</span> Details
-            </a>
-            <a href="{% url 'book_service' service.id %}" class="btn-book">
-              <span class="material-symbols-outlined" style="font-size:16px;">calendar_add_on</span> Book Now
-            </a>
+          <div class="svc-price-block">
+            <div class="svc-price-label">Starts at</div>
+            <div class="svc-price">₹{{ service.price }}</div>
+            <div style="display:flex;align-items:center;gap:2px;margin-top:3px;justify-content:flex-end;">
+              <span style="color:#F59E0B;font-size:13px;">★</span>
+              <span style="font-size:11px;color:var(--uc-gray-400);">4.8</span>
+            </div>
           </div>
         </div>
-      </div>
-      {% endfor %}
+        <p class="svc-desc">{{ service.description|truncatechars:120 }}</p>
+        <div class="svc-actions">
+          <a href="{% url 'provider_details' service.id %}" class="btn-details">
+            <span class="material-symbols-outlined" style="font-size:16px;">info</span> Details
+          </a>
+          <a href="{% url 'book_service' service.id %}" class="btn-book">
+            <span class="material-symbols-outlined" style="font-size:16px;">calendar_add_on</span> Book Now
+          </a>
+        </div>
       </div>
     </div>
-
-    {% if services|length > 0 %}
-    <a href="{% url 'explore_services' %}" class="view-more-btn">
-      View More Services
-      <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
-    </a>
-    {% endif %}
-
-    {% else %}
-    <div class="empty-state">
-      <span class="material-symbols-outlined">search_off</span>
-      <h4>No services found</h4>
-      <p>{% if search_query %}No results for "{{ search_query }}". Try a different search.{% else %}No services available right now.{% endif %}</p>
-    </div>
-    {% endif %}
-  </section>
-
-  <!-- ═══════════════════════════════
-      SUB-CATEGORY MODALS
-      ═══════════════════════════════ -->
-
-  <!-- CLEANING MODAL -->
-  <div class="modal-overlay" id="modal-cleaning" onclick="closeModalOutside(event, 'cleaning')">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <button class="modal-close" onclick="closeModal('cleaning')">
-        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
-      </button>
-      <div class="modal-title">Cleaning</div>
-      <div class="modal-sub">Choose a service type</div>
-      <div class="subcat-grid">
-        <a href="{% url 'explore_services' %}?category=Cleaning&sub=full_home" class="subcat-tile">
-          <span class="material-symbols-outlined">home</span>
-          <div class="subcat-name">Full Home Cleaning</div>
-          <div class="subcat-desc">2–5 BHK, deep clean</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Cleaning&sub=by_room" class="subcat-tile">
-          <span class="material-symbols-outlined">bedroom_parent</span>
-          <div class="subcat-name">By Room</div>
-          <div class="subcat-desc">Single room service</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Cleaning&sub=bathroom" class="subcat-tile">
-          <span class="material-symbols-outlined">bathroom</span>
-          <div class="subcat-name">Bathroom Deep Clean</div>
-          <div class="subcat-desc">Tiles, taps & fixtures</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Cleaning&sub=kitchen" class="subcat-tile">
-          <span class="material-symbols-outlined">kitchen</span>
-          <div class="subcat-name">Kitchen Cleaning</div>
-          <div class="subcat-desc">Chimney, slab, cabinets</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Cleaning&sub=sofa" class="subcat-tile">
-          <span class="material-symbols-outlined">chair</span>
-          <div class="subcat-name">Sofa & Carpet</div>
-          <div class="subcat-desc">Shampoo & dry-clean</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Cleaning&sub=tank" class="subcat-tile">
-          <span class="material-symbols-outlined">water</span>
-          <div class="subcat-name">Water Tank Clean</div>
-          <div class="subcat-desc">Overhead & sump tanks</div>
-        </a>
-      </div>
+    {% endfor %}
     </div>
   </div>
 
-  <!-- ELECTRICIAN MODAL -->
-  <div class="modal-overlay" id="modal-electrician" onclick="closeModalOutside(event, 'electrician')">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <button class="modal-close" onclick="closeModal('electrician')">
-        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
-      </button>
-      <div class="modal-title">Electrician</div>
-      <div class="modal-sub">What do you need fixed?</div>
-      <div class="subcat-grid">
-        <a href="{% url 'explore_services' %}?category=Electrician&sub=wiring" class="subcat-tile">
-          <span class="material-symbols-outlined">cable</span>
-          <div class="subcat-name">Wiring & Switches</div>
-          <div class="subcat-desc">Repair or install</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Electrician&sub=fan" class="subcat-tile">
-          <span class="material-symbols-outlined">mode_fan</span>
-          <div class="subcat-name">Fan Installation</div>
-          <div class="subcat-desc">Ceiling & exhaust fans</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Electrician&sub=mcb" class="subcat-tile">
-          <span class="material-symbols-outlined">electric_meter</span>
-          <div class="subcat-name">MCB & Fuse</div>
-          <div class="subcat-desc">Tripping & short circuit</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Electrician&sub=light" class="subcat-tile">
-          <span class="material-symbols-outlined">lightbulb</span>
-          <div class="subcat-name">Light Fitting</div>
-          <div class="subcat-desc">LED, chandelier & more</div>
-        </a>
-      </div>
+  {% if services|length > 0 %}
+  <a href="{% url 'explore_services' %}" class="view-more-btn">
+    View More Services
+    <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+  </a>
+  {% endif %}
+
+  {% else %}
+  <div class="empty-state">
+    <span class="material-symbols-outlined">search_off</span>
+    <h4>No services found</h4>
+    <p>{% if search_query %}No results for "{{ search_query }}". Try a different search.{% else %}No services available right now.{% endif %}</p>
+  </div>
+  {% endif %}
+</section>
+
+<!-- ═══════════════════════════ MODALS ═══════════════════════════ -->
+
+<!-- CLEANING -->
+<div class="modal-overlay" id="modal-cleaning" onclick="closeModalOutside(event, 'cleaning')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('cleaning')"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    <div class="modal-title">Cleaning</div>
+    <div class="modal-sub">Choose a service type</div>
+    <div class="subcat-grid">
+      <a href="{% url 'explore_services' %}?category=Cleaning&sub=full_home" class="subcat-tile"><span class="material-symbols-outlined">home</span><div class="subcat-name">Full Home Cleaning</div><div class="subcat-desc">2–5 BHK, deep clean</div></a>
+      <a href="{% url 'explore_services' %}?category=Cleaning&sub=by_room" class="subcat-tile"><span class="material-symbols-outlined">bedroom_parent</span><div class="subcat-name">By Room</div><div class="subcat-desc">Single room service</div></a>
+      <a href="{% url 'explore_services' %}?category=Cleaning&sub=bathroom" class="subcat-tile"><span class="material-symbols-outlined">bathroom</span><div class="subcat-name">Bathroom Deep Clean</div><div class="subcat-desc">Tiles, taps & fixtures</div></a>
+      <a href="{% url 'explore_services' %}?category=Cleaning&sub=kitchen" class="subcat-tile"><span class="material-symbols-outlined">kitchen</span><div class="subcat-name">Kitchen Cleaning</div><div class="subcat-desc">Chimney, slab, cabinets</div></a>
+      <a href="{% url 'explore_services' %}?category=Cleaning&sub=sofa" class="subcat-tile"><span class="material-symbols-outlined">chair</span><div class="subcat-name">Sofa & Carpet</div><div class="subcat-desc">Shampoo & dry-clean</div></a>
+      <a href="{% url 'explore_services' %}?category=Cleaning&sub=tank" class="subcat-tile"><span class="material-symbols-outlined">water</span><div class="subcat-name">Water Tank Clean</div><div class="subcat-desc">Overhead & sump tanks</div></a>
     </div>
   </div>
+</div>
 
-  <!-- PLUMBER MODAL -->
-  <div class="modal-overlay" id="modal-plumber" onclick="closeModalOutside(event, 'plumber')">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <button class="modal-close" onclick="closeModal('plumber')">
-        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
-      </button>
-      <div class="modal-title">Plumbing</div>
-      <div class="modal-sub">Select an issue</div>
-      <div class="subcat-grid">
-        <a href="{% url 'explore_services' %}?category=Plumber&sub=leakage" class="subcat-tile">
-          <span class="material-symbols-outlined">water_drop</span>
-          <div class="subcat-name">Pipe Leakage</div>
-          <div class="subcat-desc">Detect & fix leaks</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Plumber&sub=tap" class="subcat-tile">
-          <span class="material-symbols-outlined">faucet</span>
-          <div class="subcat-name">Tap / Mixer</div>
-          <div class="subcat-desc">Install or replace</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Plumber&sub=toilet" class="subcat-tile">
-          <span class="material-symbols-outlined">toilet</span>
-          <div class="subcat-name">Toilet Repair</div>
-          <div class="subcat-desc">Flush, seat, cistern</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Plumber&sub=geyser" class="subcat-tile">
-          <span class="material-symbols-outlined">hot_tub</span>
-          <div class="subcat-name">Geyser / Heater</div>
-          <div class="subcat-desc">Install or repair</div>
-        </a>
-      </div>
+<!-- ELECTRICIAN -->
+<div class="modal-overlay" id="modal-electrician" onclick="closeModalOutside(event, 'electrician')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('electrician')"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    <div class="modal-title">Electrician</div>
+    <div class="modal-sub">What do you need fixed?</div>
+    <div class="subcat-grid">
+      <a href="{% url 'explore_services' %}?category=Electrician&sub=wiring" class="subcat-tile"><span class="material-symbols-outlined">cable</span><div class="subcat-name">Wiring & Switches</div><div class="subcat-desc">Repair or install</div></a>
+      <a href="{% url 'explore_services' %}?category=Electrician&sub=fan" class="subcat-tile"><span class="material-symbols-outlined">mode_fan</span><div class="subcat-name">Fan Installation</div><div class="subcat-desc">Ceiling & exhaust fans</div></a>
+      <a href="{% url 'explore_services' %}?category=Electrician&sub=mcb" class="subcat-tile"><span class="material-symbols-outlined">electric_meter</span><div class="subcat-name">MCB & Fuse</div><div class="subcat-desc">Tripping & short circuit</div></a>
+      <a href="{% url 'explore_services' %}?category=Electrician&sub=light" class="subcat-tile"><span class="material-symbols-outlined">lightbulb</span><div class="subcat-name">Light Fitting</div><div class="subcat-desc">LED, chandelier & more</div></a>
     </div>
   </div>
+</div>
 
-
-  <!-- CARPENTER MODAL -->
-  <div class="modal-overlay" id="modal-carpenter" onclick="closeModalOutside(event, 'carpenter')">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <button class="modal-close" onclick="closeModal('carpenter')">
-        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
-      </button>
-      <div class="modal-title">Carpentry</div>
-      <div class="modal-sub">What do you need?</div>
-      <div class="subcat-grid">
-        <a href="{% url 'explore_services' %}?category=Carpenter&sub=furniture" class="subcat-tile">
-          <span class="material-symbols-outlined">chair_alt</span>
-          <div class="subcat-name">Furniture Repair</div>
-          <div class="subcat-desc">Polish & fix</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Carpenter&sub=door" class="subcat-tile">
-          <span class="material-symbols-outlined">door_front</span>
-          <div class="subcat-name">Door / Window</div>
-          <div class="subcat-desc">Repair & fitting</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Carpenter&sub=ikea" class="subcat-tile">
-          <span class="material-symbols-outlined">handyman</span>
-          <div class="subcat-name">IKEA Assembly</div>
-          <div class="subcat-desc">All flatpack furniture</div>
-        </a>
-        <a href="{% url 'explore_services' %}?category=Carpenter&sub=lock" class="subcat-tile">
-          <span class="material-symbols-outlined">lock</span>
-          <div class="subcat-name">Lock & Handle</div>
-          <div class="subcat-desc">Install or repair</div>
-        </a>
-      </div>
+<!-- PLUMBER -->
+<div class="modal-overlay" id="modal-plumber" onclick="closeModalOutside(event, 'plumber')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('plumber')"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    <div class="modal-title">Plumbing</div>
+    <div class="modal-sub">Select an issue</div>
+    <div class="subcat-grid">
+      <a href="{% url 'explore_services' %}?category=Plumber&sub=leakage" class="subcat-tile"><span class="material-symbols-outlined">water_drop</span><div class="subcat-name">Pipe Leakage</div><div class="subcat-desc">Detect & fix leaks</div></a>
+      <a href="{% url 'explore_services' %}?category=Plumber&sub=tap" class="subcat-tile"><span class="material-symbols-outlined">faucet</span><div class="subcat-name">Tap / Mixer</div><div class="subcat-desc">Install or replace</div></a>
+      <a href="{% url 'explore_services' %}?category=Plumber&sub=toilet" class="subcat-tile"><span class="material-symbols-outlined">toilet</span><div class="subcat-name">Toilet Repair</div><div class="subcat-desc">Flush, seat, cistern</div></a>
+      <a href="{% url 'explore_services' %}?category=Plumber&sub=geyser" class="subcat-tile"><span class="material-symbols-outlined">hot_tub</span><div class="subcat-name">Geyser / Heater</div><div class="subcat-desc">Install or repair</div></a>
     </div>
   </div>
+</div>
 
-  <!-- PAINTER MODAL -->
-  <div class="modal-overlay" id="modal-painter" onclick="closeModalOutside(event, 'painter')">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-
-      <button class="modal-close" onclick="closeModal('painter')">
-        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
-      </button>
-
-      <div class="modal-title">Painter</div>
-      <div class="modal-sub">Choose a painting service</div>
-
-      <div class="subcat-grid">
-
-        <a href="{% url 'explore_services' %}?category=Painter&sub=interior" class="subcat-tile">
-          <span class="material-symbols-outlined">format_paint</span>
-          <div class="subcat-name">Interior Painting</div>
-          <div class="subcat-desc">Walls & ceilings</div>
-        </a>
-
-        <a href="{% url 'explore_services' %}?category=Painter&sub=exterior" class="subcat-tile">
-          <span class="material-symbols-outlined">home</span>
-          <div class="subcat-name">Exterior Painting</div>
-          <div class="subcat-desc">Building exterior</div>
-        </a>
-
-        <a href="{% url 'explore_services' %}?category=Painter&sub=texture" class="subcat-tile">
-          <span class="material-symbols-outlined">palette</span>
-          <div class="subcat-name">Texture Painting</div>
-          <div class="subcat-desc">Designer wall finish</div>
-        </a>
-
-        <a href="{% url 'explore_services' %}?category=Painter&sub=waterproof_paint" class="subcat-tile">
-          <span class="material-symbols-outlined">water_drop</span>
-          <div class="subcat-name">Waterproof Paint</div>
-          <div class="subcat-desc">Moisture protection</div>
-        </a>
-
-      </div>
+<!-- CARPENTER -->
+<div class="modal-overlay" id="modal-carpenter" onclick="closeModalOutside(event, 'carpenter')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('carpenter')"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    <div class="modal-title">Carpentry</div>
+    <div class="modal-sub">What do you need?</div>
+    <div class="subcat-grid">
+      <a href="{% url 'explore_services' %}?category=Carpenter&sub=furniture" class="subcat-tile"><span class="material-symbols-outlined">chair_alt</span><div class="subcat-name">Furniture Repair</div><div class="subcat-desc">Polish & fix</div></a>
+      <a href="{% url 'explore_services' %}?category=Carpenter&sub=door" class="subcat-tile"><span class="material-symbols-outlined">door_front</span><div class="subcat-name">Door / Window</div><div class="subcat-desc">Repair & fitting</div></a>
+      <a href="{% url 'explore_services' %}?category=Carpenter&sub=ikea" class="subcat-tile"><span class="material-symbols-outlined">handyman</span><div class="subcat-name">IKEA Assembly</div><div class="subcat-desc">All flatpack furniture</div></a>
+      <a href="{% url 'explore_services' %}?category=Carpenter&sub=lock" class="subcat-tile"><span class="material-symbols-outlined">lock</span><div class="subcat-name">Lock & Handle</div><div class="subcat-desc">Install or repair</div></a>
     </div>
   </div>
+</div>
 
-  <!-- WATERPROOFING MODAL -->
-  <div class="modal-overlay" id="modal-waterproofing" onclick="closeModalOutside(event, 'waterproofing')">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-
-      <button class="modal-close" onclick="closeModal('waterproofing')">
-        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
-      </button>
-
-      <div class="modal-title">Waterproofing</div>
-      <div class="modal-sub">Select waterproofing service</div>
-
-      <div class="subcat-grid">
-
-        <a href="{% url 'explore_services' %}?category=Waterproofing&sub=terrace" class="subcat-tile">
-          <span class="material-symbols-outlined">roofing</span>
-          <div class="subcat-name">Terrace Waterproofing</div>
-          <div class="subcat-desc">Roof leak protection</div>
-        </a>
-
-        <a href="{% url 'explore_services' %}?category=Waterproofing&sub=bathroom" class="subcat-tile">
-          <span class="material-symbols-outlined">bathroom</span>
-          <div class="subcat-name">Bathroom Waterproofing</div>
-          <div class="subcat-desc">Leak prevention</div>
-        </a>
-
-        <a href="{% url 'explore_services' %}?category=Waterproofing&sub=wall" class="subcat-tile">
-          <span class="material-symbols-outlined">view_quilt</span>
-          <div class="subcat-name">Wall Waterproofing</div>
-          <div class="subcat-desc">Dampness treatment</div>
-        </a>
-
-        <a href="{% url 'explore_services' %}?category=Waterproofing&sub=basement" class="subcat-tile">
-          <span class="material-symbols-outlined">foundation</span>
-          <div class="subcat-name">Basement Waterproofing</div>
-          <div class="subcat-desc">Foundation protection</div>
-        </a>
-
-      </div>
+<!-- PAINTER -->
+<div class="modal-overlay" id="modal-painter" onclick="closeModalOutside(event, 'painter')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('painter')"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    <div class="modal-title">Painter</div>
+    <div class="modal-sub">Choose a painting service</div>
+    <div class="subcat-grid">
+      <a href="{% url 'explore_services' %}?category=Painter&sub=interior" class="subcat-tile"><span class="material-symbols-outlined">format_paint</span><div class="subcat-name">Interior Painting</div><div class="subcat-desc">Walls & ceilings</div></a>
+      <a href="{% url 'explore_services' %}?category=Painter&sub=exterior" class="subcat-tile"><span class="material-symbols-outlined">home</span><div class="subcat-name">Exterior Painting</div><div class="subcat-desc">Building exterior</div></a>
+      <a href="{% url 'explore_services' %}?category=Painter&sub=texture" class="subcat-tile"><span class="material-symbols-outlined">palette</span><div class="subcat-name">Texture Painting</div><div class="subcat-desc">Designer wall finish</div></a>
+      <a href="{% url 'explore_services' %}?category=Painter&sub=waterproof_paint" class="subcat-tile"><span class="material-symbols-outlined">water_drop</span><div class="subcat-name">Waterproof Paint</div><div class="subcat-desc">Moisture protection</div></a>
     </div>
   </div>
-  <script>
-    function openModal(name) {
-      const el = document.getElementById('modal-' + name);
-      if (!el) return;
-      el.classList.add('open');
-      document.body.style.overflow = 'hidden';
+</div>
+
+<!-- WATERPROOFING -->
+<div class="modal-overlay" id="modal-waterproofing" onclick="closeModalOutside(event, 'waterproofing')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('waterproofing')"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    <div class="modal-title">Waterproofing</div>
+    <div class="modal-sub">Select waterproofing service</div>
+    <div class="subcat-grid">
+      <a href="{% url 'explore_services' %}?category=Waterproofing&sub=terrace" class="subcat-tile"><span class="material-symbols-outlined">roofing</span><div class="subcat-name">Terrace Waterproofing</div><div class="subcat-desc">Roof leak protection</div></a>
+      <a href="{% url 'explore_services' %}?category=Waterproofing&sub=bathroom" class="subcat-tile"><span class="material-symbols-outlined">bathroom</span><div class="subcat-name">Bathroom Waterproofing</div><div class="subcat-desc">Leak prevention</div></a>
+      <a href="{% url 'explore_services' %}?category=Waterproofing&sub=wall" class="subcat-tile"><span class="material-symbols-outlined">view_quilt</span><div class="subcat-name">Wall Waterproofing</div><div class="subcat-desc">Dampness treatment</div></a>
+      <a href="{% url 'explore_services' %}?category=Waterproofing&sub=basement" class="subcat-tile"><span class="material-symbols-outlined">foundation</span><div class="subcat-name">Basement Waterproofing</div><div class="subcat-desc">Foundation protection</div></a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal(name) {
+    const el = document.getElementById('modal-' + name);
+    if (!el) return;
+    el.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(name) {
+    const el = document.getElementById('modal-' + name);
+    if (!el) return;
+    el.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeModalOutside(event, name) {
+    if (event.target === event.currentTarget) closeModal(name);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(function(el) {
+        el.classList.remove('open');
+        document.body.style.overflow = '';
+      });
     }
-    function closeModal(name) {
-      const el = document.getElementById('modal-' + name);
-      if (!el) return;
-      el.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-    function closeModalOutside(event, name) {
-      if (event.target === event.currentTarget) closeModal(name);
-    }
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay.open').forEach(function(el) {
-          el.classList.remove('open');
-          document.body.style.overflow = '';
-        });
-      }
-    });
-  </script>
+  });
+</script>
 
-  {% endblock %}
+{% endblock %}

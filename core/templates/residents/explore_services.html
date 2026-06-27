@@ -14,10 +14,11 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --uc-purple:       #7C3AED;
-  --uc-purple-mid:   #6D28D9;
-  --uc-purple-light: #EDE9FE;
-  --uc-purple-soft:  #F5F3FF;
+  /* ── Teal palette (matches base template) ── */
+  --uc-teal:         #1a9e8f;
+  --uc-teal-mid:     #24b5a4;
+  --uc-teal-light:   #c2f0eb;
+  --uc-teal-soft:    #eaf6f5;
   --uc-green:        #16A34A;
   --uc-green-light:  #DCFCE7;
   --uc-amber:        #D97706;
@@ -86,16 +87,16 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   transition: border-color .2s, box-shadow .2s, background .2s;
 }
 .search-input-wrap input:focus {
-  border-color: var(--uc-purple);
+  border-color: var(--uc-teal);
   background: var(--uc-white);
-  box-shadow: 0 0 0 4px rgba(124,58,237,.08);
+  box-shadow: 0 0 0 4px rgba(26,158,143,.08);
 }
 .search-input-wrap input::placeholder { color: var(--uc-gray-400); }
 .search-btn {
   width: 48px;
   height: 48px;
   border-radius: var(--radius-pill);
-  background: var(--uc-purple);
+  background: var(--uc-teal);
   border: none;
   display: flex;
   align-items: center;
@@ -114,13 +115,13 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--uc-purple-soft);
-  border: 1px solid var(--uc-purple-light);
+  background: var(--uc-teal-soft);
+  border: 1px solid var(--uc-teal-light);
   border-radius: var(--radius-md);
   padding: 10px 14px;
   margin-bottom: 16px;
 }
-.results-banner span { font-size: 13px; font-weight: 600; color: var(--uc-purple); }
+.results-banner span { font-size: 13px; font-weight: 600; color: var(--uc-teal); }
 .results-banner a { font-size: 12px; font-weight: 700; color: var(--uc-gray-500); text-decoration: none; }
 .results-banner a:hover { color: var(--uc-gray-900); }
 
@@ -151,10 +152,10 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   transition: all .15s;
   font-family: inherit;
 }
-.filter-chip:hover { border-color: var(--uc-purple); color: var(--uc-purple); background: var(--uc-purple-soft); }
+.filter-chip:hover { border-color: var(--uc-teal); color: var(--uc-teal); background: var(--uc-teal-soft); }
 .filter-chip.active {
-  background: var(--uc-purple);
-  border-color: var(--uc-purple);
+  background: var(--uc-teal);
+  border-color: var(--uc-teal);
   color: #fff;
 }
 .filter-chip .material-symbols-outlined { font-size: 14px; }
@@ -184,7 +185,7 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   font-family: inherit;
 }
 .sort-btn .material-symbols-outlined { font-size: 14px; }
-.sort-btn:hover { border-color: var(--uc-purple); color: var(--uc-purple); }
+.sort-btn:hover { border-color: var(--uc-teal); color: var(--uc-teal); }
 
 /* ── Service cards ── */
 .svc-grid { display: flex; flex-direction: column; gap: 16px; padding-bottom: 28px; }
@@ -197,7 +198,7 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   transition: box-shadow .2s, transform .15s;
   cursor: pointer;
 }
-.svc-card:hover { box-shadow: 0 8px 32px rgba(15,23,42,.08); }
+.svc-card:hover { box-shadow: 0 8px 32px rgba(26,158,143,.10); }
 
 /* Image section */
 .svc-img-wrap { position: relative; height: 200px; overflow: hidden; background: var(--uc-gray-100); }
@@ -207,9 +208,9 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   width: 100%; height: 100%;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 8px; background: var(--uc-gray-50);
+  gap: 8px; background: var(--uc-teal-soft);
 }
-.svc-img-placeholder .material-symbols-outlined { font-size: 44px; color: var(--uc-gray-300); }
+.svc-img-placeholder .material-symbols-outlined { font-size: 44px; color: var(--uc-teal-mid); opacity: .4; }
 .svc-img-placeholder span:last-child { font-size: 12px; color: var(--uc-gray-400); }
 
 /* Floating badges on image */
@@ -223,8 +224,8 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   padding: 4px 12px;
   font-size: 11px;
   font-weight: 700;
-  color: var(--uc-purple);
-  border: 1px solid rgba(124,58,237,.15);
+  color: var(--uc-teal);
+  border: 1px solid rgba(26,158,143,.2);
 }
 .img-badge-avail {
   position: absolute;
@@ -267,11 +268,7 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   color: #94A3B8;
   transition: all .2s;
 }
-
-.wishlist-btn:hover {
-  transform: scale(1.1);
-}
-.wishlist-btn:hover { color: var(--uc-red); background: #fff; }
+.wishlist-btn:hover { transform: scale(1.1); color: var(--uc-red); background: #fff; }
 .wishlist-btn .material-symbols-outlined { font-size: 18px; }
 
 /* Card body */
@@ -287,9 +284,9 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
 .provider-avatar {
   width: 32px; height: 32px;
   border-radius: 50%;
-  background: var(--uc-purple-light);
+  background: var(--uc-teal-light);
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; color: var(--uc-purple);
+  font-size: 12px; font-weight: 700; color: var(--uc-teal);
   flex-shrink: 0;
 }
 .provider-name {
@@ -381,11 +378,11 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   font-family: inherit;
   white-space: nowrap;
 }
-.btn-details:hover { border-color: var(--uc-purple); color: var(--uc-purple); }
+.btn-details:hover { border-color: var(--uc-teal); color: var(--uc-teal); }
 .btn-book {
   height: 42px;
   padding: 0 20px;
-  background: var(--uc-purple);
+  background: var(--uc-teal);
   border: none;
   border-radius: var(--radius-md);
   font-size: 13px;
@@ -412,21 +409,21 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
 
 /* ── Empty state ── */
 .empty-state {
-  background: var(--uc-gray-50);
+  background: var(--uc-teal-soft);
   border-radius: var(--radius-xl);
   padding: 56px 24px;
   display: flex; flex-direction: column;
   align-items: center; text-align: center; gap: 10px;
-  border: 1px dashed var(--uc-gray-200);
+  border: 1px dashed rgba(26,158,143,.25);
 }
 .empty-icon-wrap {
   width: 72px; height: 72px;
   border-radius: 50%;
-  background: var(--uc-gray-100);
+  background: var(--uc-teal-light);
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 4px;
 }
-.empty-icon-wrap .material-symbols-outlined { font-size: 34px; color: var(--uc-gray-400); }
+.empty-icon-wrap .material-symbols-outlined { font-size: 34px; color: var(--uc-teal); }
 .empty-state h3 { font-size: 18px; font-weight: 800; color: var(--uc-gray-900); }
 .empty-state p { font-size: 14px; color: var(--uc-gray-400); max-width: 240px; line-height: 1.5; }
 .empty-cta {
@@ -435,7 +432,7 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
   gap: 6px;
   margin-top: 8px;
   padding: 10px 20px;
-  background: var(--uc-purple);
+  background: var(--uc-teal);
   color: #fff;
   border-radius: var(--radius-pill);
   font-size: 14px;
@@ -510,11 +507,8 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
         {% elif category == "Electrician" %}<span class="material-symbols-outlined">electrical_services</span>
         {% elif category == "Plumber" %}<span class="material-symbols-outlined">plumbing</span>
         {% elif category == "Carpenter" %}<span class="material-symbols-outlined">carpenter</span>
-        {% elif category == "Painter" %}
-        <span class="material-symbols-outlined">format_paint</span>
-
-        {% elif category == "Waterproofing" %}
-        <span class="material-symbols-outlined">water_drop</span>
+        {% elif category == "Painter" %}<span class="material-symbols-outlined">format_paint</span>
+        {% elif category == "Waterproofing" %}<span class="material-symbols-outlined">water_drop</span>
         {% else %}<span class="material-symbols-outlined">home_repair_service</span>
         {% endif %}
         {{ category }}
@@ -570,23 +564,12 @@ body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--uc-w
 
       <div class="img-badge-cat">{{ service.category }}</div>
       <div class="img-badge-avail"><span class="dot"></span> Available now</div>
-      <a href="{% url 'toggle_favorite' service.provider.id %}"
-        class="wishlist-btn">
-
-          {% if service.provider.id in favorite_providers %}
-
-              <span class="material-symbols-outlined text-red-500">
-                  favorite
-              </span>
-
-          {% else %}
-
-              <span class="material-symbols-outlined">
-                  favorite_border
-              </span>
-
-          {% endif %}
-
+      <a href="{% url 'toggle_favorite' service.provider.id %}" class="wishlist-btn">
+        {% if service.provider.id in favorite_providers %}
+          <span class="material-symbols-outlined text-red-500">favorite</span>
+        {% else %}
+          <span class="material-symbols-outlined">favorite_border</span>
+        {% endif %}
       </a>
     </div>
 
