@@ -3,7 +3,8 @@ from django.urls import path
 from .accounts_views import (
     login_view,
     register_view,
-    logout_view
+    logout_view,
+    verify_login_otp
 )
 
 from .service_views import (
@@ -104,4 +105,6 @@ urlpatterns = [
     path("chatbot/",chatbot,name="chatbot"),
 
     path("provider-chatbot/",provider_chatbot,name="provider_chatbot",),
+
+    path("verify-login-otp/",verify_login_otp,name="verify_login_otp",),
 ]

@@ -4,7 +4,17 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 
 from .models import Profile
+import time
 
+from django.conf import settings
+
+from django.core.mail import send_mail
+
+from django.contrib.auth import login
+
+from django.contrib.auth.models import User
+
+from .utils import generate_otp
 
 # =========================
 # REGISTER VIEW
@@ -32,8 +42,10 @@ def register_view(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
 
-        username = request.POST.get('username')
-        email = request.POST.get('email')
+        email = request.POST.get('email').strip().lower()
+
+        # Username will be the email
+        username = email
 
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
@@ -63,14 +75,6 @@ def register_view(request):
 
             return redirect('register')
 
-        if User.objects.filter(username=username).exists():
-
-            messages.error(
-                request,
-                'Username already exists.'
-            )
-
-            return redirect('register')
 
         if User.objects.filter(email=email).exists():
 
@@ -82,7 +86,7 @@ def register_view(request):
             return redirect('register')
 
         user = User.objects.create_user(
-            username=username,
+            username=email,
             email=email,
             password=password,
             first_name=first_name,
@@ -115,111 +119,136 @@ def register_view(request):
         'accounts/register.html'
     )
 
-
-# =========================
-# LOGIN VIEW
-# =========================
 def login_view(request):
 
-    # Already Logged In
     if request.user.is_authenticated:
 
         try:
+
             profile = request.user.profile
 
-            # Provider Dashboard
-            if profile.role == 'provider':
-                return redirect('provider_dashboard')
+            if profile.role == "provider":
+                return redirect("provider_dashboard")
 
-            # Resident Dashboard
-            elif profile.role == 'resident':
-                return redirect('resident_home')
+            return redirect("resident_home")
 
-        except Profile.DoesNotExist:
+        except:
 
             logout(request)
 
-    # Login Submit
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        email = request.POST.get("email").strip().lower()
 
-        user = authenticate(
-            request,
-            username=username,
-            password=password
+        try:
+
+            user = User.objects.get(email=email)
+
+        except User.DoesNotExist:
+
+            messages.error(request,"Email is not registered.")
+
+            return redirect("login")
+
+        otp = generate_otp()
+
+        request.session["otp"] = otp
+
+        request.session["otp_email"] = email
+
+        request.session["otp_time"] = time.time()
+
+        send_mail(
+
+            "HomeAssist Login OTP",
+
+            f"""
+Hello,
+
+Your OTP for HomeAssist Login is:
+
+{otp}
+
+This OTP will expire in 5 minutes.
+
+Do not share this OTP.
+
+HomeAssist Team
+""",
+
+            settings.EMAIL_HOST_USER,
+
+            [email],
+
+            fail_silently=False
+
         )
 
-        # If user exists
-        if user is not None:
+        messages.success(request,"OTP has been sent.")
 
-            login(request, user)
+        return redirect("verify_login_otp")
 
-            try:
-                profile = user.profile
+    return render(request,"accounts/login.html")
 
-                # Provider Login
-                if profile.role == 'provider':
 
-                    messages.success(
-                        request,
-                        'Provider login successful.'
-                    )
+def verify_login_otp(request):
 
-                    return redirect(
-                        'provider_dashboard'
-                    )
+    if request.method=="POST":
 
-                # Resident Login
-                elif profile.role == 'resident':
+        entered_otp=request.POST.get("otp")
 
-                    messages.success(
-                        request,
-                        'Resident login successful.'
-                    )
+        original_otp=request.session.get("otp")
 
-                    return redirect(
-                        'resident_home'
-                    )
+        email=request.session.get("otp_email")
 
-                # Invalid Role
-                else:
+        otp_time=request.session.get("otp_time")
 
-                    messages.error(
-                        request,
-                        'Invalid user role.'
-                    )
+        if not otp_time:
 
-                    logout(request)
+            messages.error(request,"OTP expired.")
 
-                    return redirect('login')
+            return redirect("login")
 
-            except Profile.DoesNotExist:
+        if time.time()-otp_time>300:
 
-                messages.error(
-                    request,
-                    'Profile not found.'
-                )
+            messages.error(request,"OTP expired.")
 
+            return redirect("login")
+
+        if entered_otp!=original_otp:
+
+            messages.error(request,"Invalid OTP")
+
+            return redirect("verify_login_otp")
+
+        user=User.objects.get(email=email)
+
+        login(request,user)
+
+        request.session.pop("otp",None)
+        request.session.pop("otp_email",None)
+        request.session.pop("otp_time",None)
+
+        try:
+            profile = user.profile
+
+            if profile.role == "provider":
+                return redirect("provider_dashboard")
+
+            elif profile.role == "resident":
+                return redirect("resident_home")
+
+            else:
+                messages.error(request, "Invalid role.")
                 logout(request)
+                return redirect("login")
 
-                return redirect('login')
+        except Profile.DoesNotExist:
+            logout(request)
+            messages.error(request, "Profile not found.")
+            return redirect("login")
 
-        # Invalid Credentials
-        else:
-
-            messages.error(
-                request,
-                'Invalid username or password.'
-            )
-
-            return redirect('login')
-
-    return render(
-        request,
-        'accounts/login.html'
-    )
+    return render(request,"accounts/verify_login_otp.html")
 
 
 # =========================
@@ -229,7 +258,7 @@ def logout_view(request):
 
     logout(request)
 
-    messages.success(
+    messages.error(
         request,
         'Logged out successfully.'
     )
