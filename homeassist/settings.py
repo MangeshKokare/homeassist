@@ -145,4 +145,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # ---------------- BREVO API ----------------
 
-BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+import os
+
+print("=" * 60)
+print("ENV BREVO_API_KEY:", os.environ.get("BREVO_API_KEY"))
+print("ALL ENV KEYS:", list(os.environ.keys()))
+print("=" * 60)
+
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY")
