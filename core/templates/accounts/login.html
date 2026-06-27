@@ -196,26 +196,33 @@
     <div class="space-y-base">
 
         <div class="flex justify-between items-center px-base">
-
-            <label
-                class="font-label-lg text-label-lg text-on-surface-variant"
-            >
+            <label class="font-label-lg text-label-lg text-on-surface-variant">
                 Password
             </label>
-
         </div>
 
         <div class="relative">
 
-                <input
+            <input
                 type="password"
                 name="password"
                 id="password"
                 placeholder="••••••••"
                 required
-                class="w-full h-12 px-md pt-base pb-base rounded-[10px]
-                border border-outline-variant bg-surface"
+                class="w-full h-12 px-md pr-12 pt-base pb-base rounded-[10px]
+                    border border-outline-variant bg-surface"
             />
+
+            <!-- Eye Icon -->
+            <button
+                type="button"
+                onclick="togglePassword()"
+                class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-primary"
+            >
+                <span id="eyeIcon" class="material-symbols-outlined">
+                    visibility
+                </span>
+            </button>
 
         </div>
 
@@ -258,4 +265,19 @@
 <span class="material-symbols-outlined" data-icon="headset_mic">headset_mic</span>
 </button>
 </div>
+
+<script>
+function togglePassword() {
+    const password = document.getElementById("password");
+    const eyeIcon = document.getElementById("eyeIcon");
+
+    if (password.type === "password") {
+        password.type = "text";
+        eyeIcon.textContent = "visibility_off";
+    } else {
+        password.type = "password";
+        eyeIcon.textContent = "visibility";
+    }
+}
+</script>
 </body></html>
