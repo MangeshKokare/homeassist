@@ -143,18 +143,6 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
-# ---------------- EMAIL SETTINGS ----------------
+# ---------------- BREVO API ----------------
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-EMAIL_HOST = 'smtp.gmail.com'
-
-EMAIL_PORT = 587
-
-EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = 'mangeshkokare6969@gmail.com'
-
-EMAIL_HOST_PASSWORD = 'ynfxgxqgcrytltav'
-
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")

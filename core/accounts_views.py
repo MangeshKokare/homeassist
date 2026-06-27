@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-
+from .email_service import send_otp_email
 from .models import Profile
 import time
 
@@ -151,38 +151,16 @@ def login_view(request):
             return redirect("login")
 
         otp = generate_otp()
-
+        print("=" * 50)
+        print("Generated OTP:", otp)
+        print("=" * 50)
         request.session["otp"] = otp
 
         request.session["otp_email"] = email
 
         request.session["otp_time"] = time.time()
 
-        send_mail(
-
-            "HomeAssist Login OTP",
-
-            f"""
-Hello,
-
-Your OTP for HomeAssist Login is:
-
-{otp}
-
-This OTP will expire in 5 minutes.
-
-Do not share this OTP.
-
-HomeAssist Team
-""",
-
-            settings.EMAIL_HOST_USER,
-
-            [email],
-
-            fail_silently=False
-
-        )
+        send_otp_email(email, otp)
 
         messages.success(request,"OTP has been sent.")
 
@@ -198,7 +176,10 @@ def verify_login_otp(request):
         entered_otp=request.POST.get("otp")
 
         original_otp=request.session.get("otp")
-
+        print("=" * 50)
+        print("Entered OTP :", entered_otp)
+        print("Session OTP :", original_otp)
+        print("=" * 50)
         email=request.session.get("otp_email")
 
         otp_time=request.session.get("otp_time")
