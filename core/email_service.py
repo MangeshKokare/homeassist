@@ -43,4 +43,6 @@ def send_otp_email(email, otp):
     print("RESPONSE:", response.text)
     print("=" * 60)
 
-    response.raise_for_status()
+    # Stop here if Brevo returned an error
+    if response.status_code != 201:
+        raise Exception(f"Brevo Error: {response.text}")
